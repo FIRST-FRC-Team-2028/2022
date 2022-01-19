@@ -7,13 +7,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Pickup;
 
-public class GetTargets extends CommandBase {
+public class PickupTargets extends CommandBase {
   /** Creates a new GetTargets. 
    * use the Pickup subsystem to get a ball
   */
 
   Pickup subsystem;
-  public GetTargets(Pickup subsystem) {
+  public PickupTargets(Pickup subsystem) {
     this.subsystem = subsystem;
     addRequirements(subsystem);
   }

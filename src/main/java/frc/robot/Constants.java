@@ -77,13 +77,20 @@ public final class Constants {
         }
     }
 
+    // joystick and button numbers
     public static final int JOYSTICK = 0;
+    public static final int SHIFTER_BUTTON = 2;
+    public static final int DRIVE_TO_BALL_BUTTON = 3;
+    public static final int DEPLOY_PICKUP_BUTTON = 6;
+    public static final int RETRACT_PICKUP_BUTTON = 7;
+
+    // motor speed constants
     public static final int PNEUMATICS_CONTROL_MODULE = 0;
     public static final double ROLLER_MOTOR_SPEED = .4;
-    public static final int DEPLOY_PICKUP_BUTTON = 6;
-    public static final int SHIFTER_BUTTON = 2;
-    public static final int RETRACT_PICKUP_BUTTON = 7;
-    public static final double SHIFTER_THRESHOLD = 0.6;
-    public static final int TURRET_PIXY_ANALOG = 0;
+    public static final double SHIFTER_THRESHOLD = 10.6;
     public static final double SHOOTER_SPEED = 0;
+
+    // Camera constants
+    public static final int TURRET_PIXY_ANALOG = 0;
+    public static final int CENTER_OF_CAMERA = 316/2; //hardwired for Pixy2 resolution
 }

@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Pixy2API.Pixy2;
 import frc.robot.Pixy2API.links.I2CLink;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.GetTargets;
+import frc.robot.commands.DriveTowardBall;
+import frc.robot.commands.PickupTargets;
+import frc.robot.commands.StopMotor;
 import frc.robot.commands.TurnoffPickup;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Pickup;
@@ -32,7 +34,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_driveSubsystem;
   private final Pickup pickup;
-  private final Turret turret;
+ // private final Turret turret;
   private final Pixy2 driveCamera;
 
   private final DefaultDriveCommand m_defaultDriveCommand;
@@ -51,7 +53,7 @@ public class RobotContainer {
     //}
 
     //if (Constants.TURRET_AVAILABLE) {
-      turret = new Turret();
+    //  turret = new Turret();
     //}
 
     driveCamera = Pixy2.createInstance(new I2CLink());
@@ -71,10 +73,12 @@ public class RobotContainer {
 
     JoystickButton pickupDeployer = new JoystickButton(m_joystick, Constants.DEPLOY_PICKUP_BUTTON);
     JoystickButton pickupUnDeployer = new JoystickButton(m_joystick, Constants.RETRACT_PICKUP_BUTTON);
-    pickupDeployer.whenPressed(new GetTargets(pickup));
+    pickupDeployer.whenPressed(new PickupTargets(pickup));
     pickupUnDeployer.whenPressed(new TurnoffPickup(pickup));
     
-
+    JoystickButton driveToBall = new JoystickButton(m_joystick, Constants.DRIVE_TO_BALL_BUTTON);
+    driveToBall.whenPressed(new DriveTowardBall(m_driveSubsystem, driveCamera, m_joystick));
+    driveToBall.whenReleased(new StopMotor(m_driveSubsystem));
   }
 
   /**

@@ -7,6 +7,7 @@ package frc.robot.commands;
 //import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class DefaultDriveCommand extends CommandBase {
@@ -29,7 +30,7 @@ public class DefaultDriveCommand extends CommandBase {
   @Override
   public void execute() {
      m_drive.driveMe(m_joystick.getX(), m_joystick.getY());
-     if (m_joystick.getRawButton(2)){
+     if (m_joystick.getRawButton(Constants.SHIFTER_BUTTON)){
        m_drive.switchGears();
      }
   }

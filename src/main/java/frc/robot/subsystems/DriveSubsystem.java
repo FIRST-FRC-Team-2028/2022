@@ -82,6 +82,11 @@ public class DriveSubsystem extends SubsystemBase {
     driverControl.arcadeDrive(-stickX, stickY);
   }
 
+  /** stop the motors */
+  public void stop(){
+    driveMe(0.,0.);
+  }
+
   public void switchGears() {
     shifter.toggle();
   }
