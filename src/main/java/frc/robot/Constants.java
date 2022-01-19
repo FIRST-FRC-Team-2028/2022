@@ -86,11 +86,14 @@ public final class Constants {
 
     // motor speed constants
     public static final int PNEUMATICS_CONTROL_MODULE = 0;
-    public static final double ROLLER_MOTOR_SPEED = .4;
+    public static final double PICKUP_ROLLER_MOTOR_SPEED = .4;
     public static final double SHIFTER_THRESHOLD = 10.6;
+    public static final double DRIVE_AIMER_SPEED_LIMIT = 0.4;
     public static final double SHOOTER_SPEED = 0;
 
     // Camera constants
     public static final int TURRET_PIXY_ANALOG = 0;
     public static final int CENTER_OF_CAMERA = 316/2; //hardwired for Pixy2 resolution
+    public static final double PIXY_TARGET_AR = 2.;
+    public static final int PIXY_MINIMUM_SIZE = 10;
 }

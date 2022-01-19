@@ -19,6 +19,7 @@ public class StopMotor extends CommandBase {
   @Override
   public void initialize() {
     drive.stop();
+    System.out.println("Stop Motor!");
   }
 
   // Called every time the scheduler runs while the command is scheduled.

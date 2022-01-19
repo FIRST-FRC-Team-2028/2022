@@ -43,7 +43,7 @@ public class Pickup extends SubsystemBase {
   }
 
   public void runRollers(){
-    rollers.set(Constants.ROLLER_MOTOR_SPEED);
+    rollers.set(Constants.PICKUP_ROLLER_MOTOR_SPEED);
   }
 
   public void stopRollers() {

@@ -23,7 +23,7 @@ public class DriveTowardBall extends CommandBase {
   Joystick joystick;
   Pixy2 camera;
   PIDController aimer;
-  double  kp=.1;
+  double  kp=.15;
   double kd=0.;
   double ki=0.;
   int numTargets=0;
@@ -55,23 +55,34 @@ public class DriveTowardBall extends CommandBase {
    */
   public void execute() {
     Block biggest = null;
-    int size = 0;
+    int size = Constants.PIXY_MINIMUM_SIZE;
     double error=0.;
     numTargets = camera.getCCC().getBlocks(false, Pixy2CCC.CCC_SIG_ALL,25);
     System.out.println("driveCamera sees "+numTargets);
+    if (numTargets >1){
+    String arString="";
     for (Block block : camera.getCCC().getBlockCache()) {
       if (block.getWidth() > size) {
-        biggest=block;
-        size=block.getWidth();
+        arString+=String.format("%4.2f ", (double)block.getHeight()/(double)block.getWidth());
+        if(block.getHeight() < Constants.PIXY_TARGET_AR*block.getWidth() &&
+           block.getHeight() > (int)((double)block.getWidth()/Constants.PIXY_TARGET_AR)) {
+            biggest=block;
+            size=block.getWidth();
+        }
       }
     }
-    if (biggest != null && biggest.getHeight() > 10) {
+    SmartDashboard.putString("PixyResults", arString);
+    if (biggest != null) {
       error = (double)(Constants.CENTER_OF_CAMERA - biggest.getX());
     }
     double stickX = aimer.calculate(error) / (double)Constants.CENTER_OF_CAMERA*5.;  // 
     SmartDashboard.putNumber("steerError", error);
     SmartDashboard.putNumber("steerPower", stickX);
+    // limit turn power by forward power
+    stickX = Math.max(stickX, -1.*Constants.DRIVE_AIMER_SPEED_LIMIT);
+    stickX = Math.min(stickX, Constants.DRIVE_AIMER_SPEED_LIMIT);
     drive.driveMe(stickX, joystick.getY());
+  }
   }
 
   // Called once the command ends or is interrupted.
@@ -81,6 +92,7 @@ public class DriveTowardBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (numTargets<1);
+    //return (numTargets<1);
+    return false;
   }
 }
