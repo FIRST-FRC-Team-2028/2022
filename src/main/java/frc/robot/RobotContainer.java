@@ -14,6 +14,12 @@ import frc.robot.commands.PickupTargets;
 import frc.robot.commands.StopMotor;
 import frc.robot.commands.TurnoffPickup;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.commands.DeployClimber;
+import frc.robot.commands.Shoot;
+import frc.robot.commands.ShootStop;
+import frc.robot.commands.TurnoffPickup;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Turret;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,8 +40,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_driveSubsystem;
   private final Pickup pickup;
- // private final Turret turret;
+  private final Turret turret;
   private final Pixy2 driveCamera;
+  private final Magazine magazine;
+  private double distance;
 
   private final DefaultDriveCommand m_defaultDriveCommand;
 
@@ -53,11 +61,12 @@ public class RobotContainer {
     //}
 
     //if (Constants.TURRET_AVAILABLE) {
-    //  turret = new Turret();
+      turret = new Turret();
     //}
 
+    magazine = new Magazine();
     driveCamera = Pixy2.createInstance(new I2CLink());
-    int initError = driveCamera.init(1);
+    int initError = driveCamera.init(Constants.PIXY_USE_MXP);
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -73,12 +82,18 @@ public class RobotContainer {
 
     JoystickButton pickupDeployer = new JoystickButton(m_joystick, Constants.DEPLOY_PICKUP_BUTTON);
     JoystickButton pickupUnDeployer = new JoystickButton(m_joystick, Constants.RETRACT_PICKUP_BUTTON);
-    pickupDeployer.whenPressed(new PickupTargets(pickup));
-    pickupUnDeployer.whenPressed(new TurnoffPickup(pickup));
     
     JoystickButton driveToBall = new JoystickButton(m_joystick, Constants.DRIVE_TO_BALL_BUTTON);
     driveToBall.whenPressed(new DriveTowardBall(m_driveSubsystem, driveCamera, m_joystick));
     driveToBall.whenReleased(new StopMotor(m_driveSubsystem));
+    pickupDeployer.whenPressed(new PickupTargets(pickup,magazine));
+    pickupUnDeployer.whenPressed(new TurnoffPickup(pickup,magazine));
+
+    JoystickButton shooter = new JoystickButton(m_joystick,Constants.SHOOT_BUTTON);
+    shooter.whenPressed(new Shoot(magazine, turret, distance));
+    shooter.whenReleased(new ShootStop(magazine, turret));
+
+    
   }
 
   /**

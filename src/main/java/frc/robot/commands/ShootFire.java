@@ -6,32 +6,29 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Magazine;
-import frc.robot.subsystems.Pickup;
 
-public class PickupTargets extends CommandBase {
-  /** Creates a new GetTargets. 
-   * use the Pickup subsystem to get a ball
-  */
 
-  Pickup subsystem;
+public class ShootFire extends CommandBase {
+ 
   Magazine magazine;
-  public PickupTargets(Pickup pickup,Magazine magazine) {
-    this.subsystem = subsystem;
-    addRequirements(subsystem);
-    this.magazine = magazine;
+  /** Creates a new ShootFire. */
+  public ShootFire(Magazine magazine) {
+    
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(magazine);
+    
+    this.magazine = magazine;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    subsystem.deploy();
-    subsystem.runRollers();
-    magazine.horizontalon();
+    magazine.verticalon();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
+  /**move ball from magazine to turret */
   public void execute() {}
 
   // Called once the command ends or is interrupted.
@@ -41,6 +38,7 @@ public class PickupTargets extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    
+    return false;
   }
 }

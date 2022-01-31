@@ -40,7 +40,9 @@ public final class Constants {
         PICKUP_ROLLERS       (40, true),
         TURRET_ELEVATION     (00, false),
         TURRET_AZIMUTH       (00, false),
-        TURRET_SHOOTER       (00, false);
+        TURRET_SHOOTER       (00, false),
+        MAGIZINE_HORIZONTAL (00, false), 
+        MAGIZINE_VERTICAL   (00, false);
 
         private final int canid;
         private final boolean inverted;
@@ -105,5 +107,12 @@ public final class Constants {
     
     public static final double UP_SHIFT = 0;
     public static final double DOWN_SHIFT = 0;
+    public static final double CLIMBER_TIME_TO_CLIMB = 0;
+    public static final double MAGAZINE_VERTICAL_MOTOR_SPEED = 0;
+    public static final double MAGAZINE_HORIZONTAL_MOTOR_SPEED = 0;
+    public static final double SHOOTER_SLOW_SPEED = 0;
+    public static final int ELEVATOR_MOTOR_ENCODER_RATIO = 0;
+    public static final int SHOOT_BUTTON = 0;
+    public static final int PIXY_USE_MXP = 0;
 
 }
