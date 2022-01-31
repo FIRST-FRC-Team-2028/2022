@@ -40,7 +40,9 @@ public final class Constants {
         PICKUP_ROLLERS       (40, true),
         TURRET_ELEVATION     (00, false),
         TURRET_AZIMUTH       (00, false),
-        TURRET_SHOOTER       (00, false);
+        TURRET_SHOOTER       (00, false),
+        MAGIZINE_HORIZONTAL (00, false), 
+        MAGIZINE_VERTICAL   (00, false);
 
         private final int canid;
         private final boolean inverted;
@@ -77,16 +79,45 @@ public final class Constants {
         }
     }
 
-    public static final int JOYSTICK = 0;
+    
     public static final int PNEUMATICS_CONTROL_MODULE = 0;
+   
+    public static final int PIXY_USE_MXP = 1;  // Use MXP I2C port for Pixy2 camera
+    public static final double CENTER_OF_CAMERA = 316/2; //Hardwired pixy2 resolution
+
+    /** these constants are related to drivesubststem */
+    public static final double SHIFTER_THRESHOLD = 0.6;
+
+    /**these constants are related to pickup */
     public static final double ROLLER_MOTOR_SPEED = .4;
+
+    /**these constants are related to buttons */
+    public static final int JOYSTICK = 0;
+    public static final int RETRACT_PICKUP_BUTTON = 7;
     public static final int DEPLOY_PICKUP_BUTTON = 6;
     public static final int SHIFTER_BUTTON = 2;
-    public static final int RETRACT_PICKUP_BUTTON = 7;
-    public static final double SHIFTER_THRESHOLD = 0.6;
-    public static final int TURRET_PIXY_ANALOG = 0;
-    public static final double SHOOTER_SPEED = 0;
-    public static final double CENTER_OF_CAMERA = 316/2; //Hardwired pixy2 resolution
+    public static final int SHOOT_BUTTON = 0;
+    public static final int DEPLOY_CLIMBER_BUTTON = 0;
+
+    /** these constants are related to magazine */
+    public static final double MAGIZINE_HORIZONTAL_MOTOR_SPEED = 0;
+    public static final double MAGIZINE_VERTICAL_MOTOR_SPEED = 0;
+    
+
+    /**These constans are related to the turret */
+  
     public static final double SHOOTER_SLOW_SPEED = 0.2;
-    public static final int PIXY_USE_MXP = 1;  // Use MXP I2C port for Pixy2 camera
+    public static final double SHOOTER_SPEED = 0;
+    public static final int ELEVATOR_MOTOR_ENCODER_RATIO = 0;
+    public static final int TURRET_PIXY_ANALOG = 0;
+    
+    /**these constants are related to the climber */
+    public static final double CLIMBER_TIME_TO_CLIMB = 0;
+
+    /** Field geometry constants */
+
+    public static final double DISTANCE_FROM_HUB_TO_LAUNCH_PAD_1 =0.;
+    public static final double DISTANCE_FROM_HUB_TO_LAUNCH_PAD_2 = 0.;
+    public static final double DISTANCE_FROM_HUB_TO_TARMAC = 0.;
+
 }

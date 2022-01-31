@@ -5,29 +5,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Magazine;
-import frc.robot.subsystems.Pickup;
+import frc.robot.subsystems.Climber;
 
-public class PickupTargets extends CommandBase {
-  /** Creates a new GetTargets. 
-   * use the Pickup subsystem to get a ball
-  */
-
-  Pickup subsystem;
-  Magazine magazine;
-  public PickupTargets(Pickup pickup,Magazine magazine) {
-    this.subsystem = subsystem;
-    addRequirements(subsystem);
-    this.magazine = magazine;
-    addRequirements(magazine);
+public class DeployClimber extends CommandBase {
+  Climber climber;
+  /** Creates a new DeployClimber. */
+  public DeployClimber(Climber climber) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(climber);
+    this.climber = climber;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    subsystem.deploy();
-    subsystem.runRollers();
-    magazine.horizontalon();
+    climber.deployclimber();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,6 +33,6 @@ public class PickupTargets extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return (climber.amidone());
   }
 }
