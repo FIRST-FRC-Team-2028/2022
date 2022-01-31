@@ -79,9 +79,16 @@ public class DriveTowardBall extends CommandBase {
     SmartDashboard.putNumber("steerError", error);
     SmartDashboard.putNumber("steerPower", stickX);
     // limit turn power by forward power
-    stickX = Math.max(stickX, -1.*Constants.DRIVE_AIMER_SPEED_LIMIT);
-    stickX = Math.min(stickX, Constants.DRIVE_AIMER_SPEED_LIMIT);
-    drive.driveMe(stickX, joystick.getY());
+    double forwardPower = joystick.getY();
+    double sFP = Math.abs(forwardPower);
+    if (sFP > Constants.DRIVE_TO_BALL_BUTTON){
+      stickX = Math.max(stickX, -1.*sFP);
+      stickX = Math.min(stickX, sFP);
+    }else {
+      stickX = Math.max(stickX, -1.*Constants.DRIVE_AIMER_SPEED_LIMIT);
+      stickX = Math.min(stickX, Constants.DRIVE_AIMER_SPEED_LIMIT);
+    }
+    drive.driveMe(stickX, forwardPower);
   }
   }
 

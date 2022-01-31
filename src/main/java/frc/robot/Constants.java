@@ -96,4 +96,14 @@ public final class Constants {
     public static final int CENTER_OF_CAMERA = 316/2; //hardwired for Pixy2 resolution
     public static final double PIXY_TARGET_AR = 2.;
     public static final int PIXY_MINIMUM_SIZE = 10;
+
+    // Shooter constants
+    public static final double SHOOTER_FCN_ACOEF = 0;
+    public static final double SHOOTER_FCN_BCOEF = 0;
+    public static final double SHOOTER_FCN_CCOEF = 0;
+
+    
+    public static final double UP_SHIFT = 0;
+    public static final double DOWN_SHIFT = 0;
+
 }

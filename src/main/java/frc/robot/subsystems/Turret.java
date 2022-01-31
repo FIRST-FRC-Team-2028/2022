@@ -37,9 +37,16 @@ public class Turret extends SubsystemBase {
   public void shooterOn() {
     shooter.set(Constants.SHOOTER_SPEED);
   }
+  public void shooterSpeed(double distance) {
+    //shooter.setReference(mapRPM(distance), CANSparkMax.ControlType.kVelocity,)
+  }
 
   public void shooterOff() {
     shooter.set(0.);
+  }
+
+  double mapRPM(double distance) {
+    return (Constants.SHOOTER_FCN_ACOEF*distance*distance + Constants.SHOOTER_FCN_BCOEF)*distance+Constants.SHOOTER_FCN_CCOEF;
   }
 
   public double aimMe() {

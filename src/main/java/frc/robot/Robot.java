@@ -28,6 +28,23 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    /* test quadraticFitter */
+    QuadraticFitter fitter = new QuadraticFitter();
+    double [][] testers = {
+                          //{0, 1,    4,    9},
+                          //{.5,1.7, 17.3, 83.3}    // a,b,c = 1, .2, .5
+                          {5, 1,    4,    9},
+                          {10.,23.6,14.6,-16.4}     // a,b,c =-.4, -1., 25.
+                          };
+    fitter.add(testers[0][0], testers[1][0]);
+    fitter.add(testers[0][1], testers[1][1]);
+    fitter.add(testers[0][2], testers[1][2]);
+    fitter.add(testers[0][3], testers[1][3]);
+    fitter.fitit();
+    double [] tests = {0.,1.,2.,3.,4.,5.,6.,7.,8.,9};
+    for (double each : tests)
+      System.out.println(each+" , "+fitter.yout(each));
   }
 
   /**
