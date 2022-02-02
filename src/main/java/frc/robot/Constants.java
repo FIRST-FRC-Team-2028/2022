@@ -123,6 +123,8 @@ public final class Constants {
     // climber constants
     public static final double CLIMBER_TIME_TO_CLIMB = 0;
     public static final double ELEVATOR_MOTOR_ZEROING_SPEED = 0;
+    public static final double SPARKMAX_RPM = 0;
+    public static final int PNEUMATICS_CONTROL_MODULE = 0;
     
 
 }
