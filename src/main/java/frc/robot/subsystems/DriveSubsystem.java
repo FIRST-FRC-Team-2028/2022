@@ -8,7 +8,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 //import javax.print.CancelablePrintJob;
 import com.revrobotics.CANSparkMax;
+<<<<<<< HEAD
 import com.revrobotics.SparkMaxPIDController;
+=======
+>>>>>>> 112d6a919634d128fe00089f6d8441f6d494b081
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -123,7 +126,7 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
+   // numTargets = camera.getCCC().getBlocks(false, Pixy2CCC.CCC_SIG_ALL,25);
   }
 
   @Override

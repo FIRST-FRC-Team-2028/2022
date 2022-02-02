@@ -5,20 +5,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Climber;
+import frc.robot.Constants;
+import frc.robot.subsystems.Turret;
 
-public class DeployClimber extends CommandBase {
-  Climber climber;
-  /** Creates a new DeployClimber. */
-  public DeployClimber(Climber climber) {
-    addRequirements(climber);
-    this.climber = climber;
+public class SetTarmacDistance extends CommandBase {
+  Turret turret;
+  /** Creates a new SetTarmacDistance. */
+  public SetTarmacDistance(Turret turret) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(turret);
+    this.turret = turret;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climber.deployclimber();
+    turret.setdistance(Constants.TARMAC_DISTANCE);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -32,6 +34,6 @@ public class DeployClimber extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (climber.amidone());
+    return true;
   }
 }

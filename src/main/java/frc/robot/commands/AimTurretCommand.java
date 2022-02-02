@@ -11,6 +11,7 @@ public class AimTurretCommand extends CommandBase {
   Turret turret;
   double turretError;
   private static final double tolerance = .004;
+  
   /** Creates a new AimTurretCommand. */
   public AimTurretCommand(Turret m_turret) {
     turret = m_turret;

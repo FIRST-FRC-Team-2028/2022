@@ -14,37 +14,20 @@ import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Climber extends SubsystemBase {
-  CANSparkMax leftMotor;
-  CANSparkMax leftFollower;
-  CANSparkMax rightMotor;
-  CANSparkMax rightFollower;
+  CANSparkMax climbMotor;
   //PneumaticHub pcm;
   PneumaticsControlModule pcm;
   DoubleSolenoid shifter;
   double starttime;
   /** Creates a new Climber. */
   public Climber() {
-    leftMotor = new CANSparkMax(Constants.CANIDs.DRIVE_LEFT_LEADER.getid(), MotorType.kBrushless);
-    leftFollower = new CANSparkMax(Constants.CANIDs.DRIVE_LEFT_FOLLOWER.getid(), MotorType.kBrushless);
-    rightMotor = new CANSparkMax(Constants.CANIDs.DRIVE_RIGHT_LEADER.getid(), MotorType.kBrushless);
-    rightFollower = new CANSparkMax(Constants.CANIDs.DRIVE_RIGHT_FOLLOWER.getid(), MotorType.kBrushless);
+    climbMotor = new CANSparkMax(Constants.CANIDs.DRIVE_LEFT_LEADER.getid(), MotorType.kBrushless);
   }
 
    void resetmotors() {
    
-    leftMotor.restoreFactoryDefaults();
-    leftFollower.restoreFactoryDefaults();
-    rightMotor.restoreFactoryDefaults();
-    rightFollower.restoreFactoryDefaults();
-
-    leftMotor.setInverted(Constants.CANIDs.DRIVE_LEFT_LEADER.isInverted());
-    leftFollower.setInverted(Constants.CANIDs.DRIVE_LEFT_FOLLOWER.isInverted());
-
-    rightMotor.setInverted(Constants.CANIDs.DRIVE_RIGHT_LEADER.isInverted());
-    rightFollower.setInverted(Constants.CANIDs.DRIVE_RIGHT_FOLLOWER.isInverted());
-
-    leftFollower.follow(leftMotor);
-    rightFollower.follow(rightMotor);
+    climbMotor.restoreFactoryDefaults();
+    climbMotor.setInverted(Constants.CANIDs.DRIVE_LEFT_LEADER.isInverted());
   }
   /** deploys climber  */
   public void deployclimber() {

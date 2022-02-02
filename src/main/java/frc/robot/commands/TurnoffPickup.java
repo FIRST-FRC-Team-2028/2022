@@ -9,21 +9,21 @@ import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Pickup;
 
 public class TurnoffPickup extends CommandBase {
-  Pickup subsystem;
+  Pickup pickup;
   Magazine magazine;
-  /** Creates a new TurnoffPickup. */
+
+  /** turn off the pickup rollers */
   public TurnoffPickup(Pickup subsystem,Magazine magazine) {
-    this.subsystem = subsystem;
-    addRequirements(subsystem);
+    this.pickup = subsystem;
     this.magazine = magazine;
-    addRequirements(magazine);
+    addRequirements(magazine, pickup);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    subsystem.stopRollers();
-    subsystem.retract();
+    pickup.stopRollers();
+    pickup.retract();
     magazine.horizontaloff();
   }
 

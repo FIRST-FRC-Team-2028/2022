@@ -5,20 +5,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.DriveSubsystem;
 
-public class DeployClimber extends CommandBase {
-  Climber climber;
-  /** Creates a new DeployClimber. */
-  public DeployClimber(Climber climber) {
-    addRequirements(climber);
-    this.climber = climber;
+public class StopDrive extends CommandBase {
+  DriveSubsystem drive;
+
+  /** Stop the drive motors */
+  public StopDrive(DriveSubsystem drive) {
+    this.drive = drive;
+    addRequirements(drive);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climber.deployclimber();
+    drive.stop();
+    System.out.println("Stop Motor!");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -32,6 +34,6 @@ public class DeployClimber extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (climber.amidone());
+    return true;
   }
 }

@@ -14,12 +14,10 @@ import frc.robot.subsystems.Turret;
 public class Shoot extends SequentialCommandGroup {
   
   /** Creates a new Shoot. */
-  public Shoot(Magazine magazine, Turret turret, double distance) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+  public Shoot(Magazine magazine, Turret turret) {
     addCommands(
       /**sets motor speed and elevation */
-      new ShootInit(turret, distance),
+      new ShootInit(turret),
       /** moves ball from magazine to turret*/
       new ShootFire(magazine)
     );

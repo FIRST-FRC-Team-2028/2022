@@ -57,39 +57,40 @@ public class DriveTowardBall extends CommandBase {
     Block biggest = null;
     int size = Constants.PIXY_MINIMUM_SIZE;
     double error=0.;
+   //move code into drive subsystem.
     numTargets = camera.getCCC().getBlocks(false, Pixy2CCC.CCC_SIG_ALL,25);
     System.out.println("driveCamera sees "+numTargets);
     if (numTargets >1){
-    String arString="";
-    for (Block block : camera.getCCC().getBlockCache()) {
-      if (block.getWidth() > size) {
-        arString+=String.format("%4.2f ", (double)block.getHeight()/(double)block.getWidth());
-        if(block.getHeight() < Constants.PIXY_TARGET_AR*block.getWidth() &&
-           block.getHeight() > (int)((double)block.getWidth()/Constants.PIXY_TARGET_AR)) {
-            biggest=block;
-            size=block.getWidth();
+      String arString="";
+      for (Block block : camera.getCCC().getBlockCache())  {
+        if (block.getWidth() > size) {
+          arString+=String.format("%4.2f ", (double)block.getHeight()/(double)block.getWidth());
+          if(block.getHeight() < Constants.PIXY_TARGET_AR*block.getWidth() &&
+            block.getHeight() > (int)((double)block.getWidth()/Constants.PIXY_TARGET_AR)) {
+              biggest=block;
+              size=block.getWidth();
+          }
         }
       }
+      SmartDashboard.putString("PixyResults", arString);
+      if (biggest != null) {
+        error = (double)(Constants.CENTER_OF_CAMERA - biggest.getX());
+      }
+      double stickX = aimer.calculate(error) / (double)Constants.CENTER_OF_CAMERA*5.;  // 
+      SmartDashboard.putNumber("steerError", error);
+      SmartDashboard.putNumber("steerPower", stickX);
+      // limit turn power by forward power
+      double forwardPower = joystick.getY();
+      double sFP = Math.abs(forwardPower);
+      if (sFP > Constants.DRIVE_TO_BALL_BUTTON){
+        stickX = Math.max(stickX, -1.*sFP);
+        stickX = Math.min(stickX, sFP);
+      }else {
+        stickX = Math.max(stickX, -1.*Constants.DRIVE_AIMER_SPEED_LIMIT);
+        stickX = Math.min(stickX, Constants.DRIVE_AIMER_SPEED_LIMIT);
+      }
+      drive.driveMe(stickX, forwardPower);
     }
-    SmartDashboard.putString("PixyResults", arString);
-    if (biggest != null) {
-      error = (double)(Constants.CENTER_OF_CAMERA - biggest.getX());
-    }
-    double stickX = aimer.calculate(error) / (double)Constants.CENTER_OF_CAMERA*5.;  // 
-    SmartDashboard.putNumber("steerError", error);
-    SmartDashboard.putNumber("steerPower", stickX);
-    // limit turn power by forward power
-    double forwardPower = joystick.getY();
-    double sFP = Math.abs(forwardPower);
-    if (sFP > Constants.DRIVE_TO_BALL_BUTTON){
-      stickX = Math.max(stickX, -1.*sFP);
-      stickX = Math.min(stickX, sFP);
-    }else {
-      stickX = Math.max(stickX, -1.*Constants.DRIVE_AIMER_SPEED_LIMIT);
-      stickX = Math.min(stickX, Constants.DRIVE_AIMER_SPEED_LIMIT);
-    }
-    drive.driveMe(stickX, forwardPower);
-  }
   }
 
   // Called once the command ends or is interrupted.

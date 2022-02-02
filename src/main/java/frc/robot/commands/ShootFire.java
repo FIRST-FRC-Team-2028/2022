@@ -13,10 +13,7 @@ public class ShootFire extends CommandBase {
   Magazine magazine;
   /** Creates a new ShootFire. */
   public ShootFire(Magazine magazine) {
-    
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(magazine);
-    
     this.magazine = magazine;
   }
 

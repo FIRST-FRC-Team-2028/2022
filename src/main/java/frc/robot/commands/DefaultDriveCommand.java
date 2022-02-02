@@ -18,8 +18,6 @@ public class DefaultDriveCommand extends CommandBase {
     m_drive = drive;
     m_joystick = joystick;
     addRequirements(m_drive);
-
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.

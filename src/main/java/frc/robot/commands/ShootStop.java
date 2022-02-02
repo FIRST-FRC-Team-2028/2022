@@ -13,7 +13,6 @@ public class ShootStop extends CommandBase {
   Turret turret;
   /** Creates a new ShootStop. */
   public ShootStop(Magazine magazine, Turret turret) {
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(magazine,turret);
     this.turret = turret;
     this.magazine = magazine;

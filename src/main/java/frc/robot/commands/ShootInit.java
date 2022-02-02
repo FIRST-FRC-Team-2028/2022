@@ -10,21 +10,20 @@ import frc.robot.subsystems.Turret;
 /**  sets a motors speed amd elavation angle based off of distance from the target  */
 public class ShootInit extends CommandBase {
 Turret shooter;
-double distance;
   /** Creates a new Shoot. */
-  public ShootInit(Turret shooter,double distance) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public ShootInit(Turret shooter) {
     addRequirements(shooter);
     this.shooter = shooter;
-    this.distance = distance;
   }
 
   // Called when the command is initially scheduled.
   @Override
   /** sets motor speed and elavation angle */
   public void initialize() {
-    shooter.setelevation(distance);
-    shooter.shooterdistance(distance);
+    // gotta get distance from hub to robot
+    //distance = robot.getDistance_from_hub();
+    shooter.setelevation();
+    shooter.shooterdistance();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,6 +40,6 @@ double distance;
   @Override
   /** when the shhoter is positioned and up to speed */
   public boolean isFinished() {
-    return shooter.iselevatordistance(distance) && shooter.isatSpeed(distance);
+    return shooter.iselevatordistance() && shooter.isatSpeed();
   }
 }
