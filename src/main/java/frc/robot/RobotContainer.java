@@ -40,32 +40,34 @@ public class RobotContainer {
   Joystick m_joystick = new Joystick(Constants.JOYSTICK);
   
   // The robot's subsystems and commands are defined here...
-  private final DriveSubsystem m_driveSubsystem;
-  private final Pickup pickup;
-  private final Turret turret;
-  private final Pixy2 driveCamera;
-  private final Magazine magazine;
+  private DriveSubsystem m_driveSubsystem;
+  private Pickup pickup;
+  private Turret turret;
+  private Pixy2 driveCamera;
+  private Magazine magazine;
 
   private final DefaultDriveCommand m_defaultDriveCommand;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     //Configure default commands
-    //if (Constants.DRIVE_AVAILABLE) {
+    if (Constants.DRIVE_AVAILABLE) {
       m_driveSubsystem = new DriveSubsystem();
       m_defaultDriveCommand = new DefaultDriveCommand(m_driveSubsystem, m_joystick);
       m_driveSubsystem.setDefaultCommand(m_defaultDriveCommand);
-    //}
+    }
 
-    //if (Constants.PICKUP_AVAILABLE) {
+    if (Constants.PICKUP_AVAILABLE) {
       pickup = new Pickup();
-    //}
+    }
 
-    //if (Constants.TURRET_AVAILABLE) {
+    if (Constants.TURRET_AVAILABLE) {
       turret = new Turret();
-    //}
+    }
 
-    magazine = new Magazine();
+    if (Constants.MAGAZINE_AVAILABLE) {
+      magazine = new Magazine();
+    }
     driveCamera = Pixy2.createInstance(new I2CLink());
     int initError = driveCamera.init(Constants.PIXY_USE_MXP);
     // Configure the button bindings

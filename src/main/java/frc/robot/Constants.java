@@ -24,7 +24,7 @@ public final class Constants {
     public static final boolean AIM_AVAILABLE           = false;
     public static final boolean TURRET_AVAILABLE        = false;
     public static final boolean MAGAZINE_AVAILABLE      = false;
-    public static final boolean PICKUP_AVAILABLE        = true;
+    public static final boolean PICKUP_AVAILABLE        = false;
     public static final boolean KICKER_AVAILABLE        = false;
     public static final boolean CLIMBER_AVAILABLE       = false;
     public static final boolean CONTROLPANEL_AVAILABLE  = false;
