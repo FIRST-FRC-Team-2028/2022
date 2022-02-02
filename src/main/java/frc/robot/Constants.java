@@ -78,6 +78,7 @@ public final class Constants {
             return channel;
         }
     }
+    public static final int PNEUMATICS_CONTROL_MODULE = 0;
 
     // joystick and button numbers
     public static final int JOYSTICK = 0;
@@ -85,34 +86,44 @@ public final class Constants {
     public static final int DRIVE_TO_BALL_BUTTON = 3;
     public static final int DEPLOY_PICKUP_BUTTON = 6;
     public static final int RETRACT_PICKUP_BUTTON = 7;
+    public static final int SHOOT_BUTTON = 0;
+    public static final int TARMAC_DISTANCE_BUTTON = 0;
+    public static final int PAD_TWO_DISTANCE_BUTTON = 0;
+    public static final int PAD_ONE_DISTANCE_BUTTON = 0;
 
     // motor speed constants
-    public static final int PNEUMATICS_CONTROL_MODULE = 0;
     public static final double PICKUP_ROLLER_MOTOR_SPEED = .4;
     public static final double SHIFTER_THRESHOLD = 10.6;
     public static final double DRIVE_AIMER_SPEED_LIMIT = 0.4;
+    public static final double MAGAZINE_VERTICAL_MOTOR_SPEED = 0;
+    public static final double MAGAZINE_HORIZONTAL_MOTOR_SPEED = 0;
     public static final double SHOOTER_SPEED = 0;
+    public static final double SHOOTER_SLOW_SPEED = 0;
 
     // Camera constants
     public static final int TURRET_PIXY_ANALOG = 0;
+    public static final int PIXY_USE_MXP = 0;
     public static final int CENTER_OF_CAMERA = 316/2; //hardwired for Pixy2 resolution
     public static final double PIXY_TARGET_AR = 2.;
     public static final int PIXY_MINIMUM_SIZE = 10;
 
-    // Shooter constants
+    // Turret constants
     public static final double SHOOTER_FCN_ACOEF = 0;
     public static final double SHOOTER_FCN_BCOEF = 0;
     public static final double SHOOTER_FCN_CCOEF = 0;
+    public static final int ELEVATOR_MOTOR_ENCODER_RATIO = 0;
+    public static final double TARMAC_DISTANCE = 0;
+    public static final double PAD_ONE_DISTANCE =0;
+    public static final double PAD_TWO_DISTANCE =0;
 
-    
+
+    // drive constants
     public static final double UP_SHIFT = 0;
     public static final double DOWN_SHIFT = 0;
+    
+    // climber constants
     public static final double CLIMBER_TIME_TO_CLIMB = 0;
-    public static final double MAGAZINE_VERTICAL_MOTOR_SPEED = 0;
-    public static final double MAGAZINE_HORIZONTAL_MOTOR_SPEED = 0;
-    public static final double SHOOTER_SLOW_SPEED = 0;
-    public static final int ELEVATOR_MOTOR_ENCODER_RATIO = 0;
-    public static final int SHOOT_BUTTON = 0;
-    public static final int PIXY_USE_MXP = 0;
+    public static final double ELEVATOR_MOTOR_ZEROING_SPEED = 0;
+    
 
 }

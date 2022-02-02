@@ -11,7 +11,10 @@ import frc.robot.Pixy2API.links.I2CLink;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveTowardBall;
 import frc.robot.commands.PickupTargets;
-import frc.robot.commands.StopMotor;
+import frc.robot.commands.SetPadOneDistance;
+import frc.robot.commands.SetPadTwoDistance;
+import frc.robot.commands.SetTarmacDistance;
+import frc.robot.commands.StopDrive;
 import frc.robot.commands.TurnoffPickup;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.commands.DeployClimber;
@@ -36,14 +39,12 @@ import edu.wpi.first.wpilibj.Joystick;
 public class RobotContainer {
   Joystick m_joystick = new Joystick(Constants.JOYSTICK);
   
-
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_driveSubsystem;
   private final Pickup pickup;
   private final Turret turret;
   private final Pixy2 driveCamera;
   private final Magazine magazine;
-  private double distance;
 
   private final DefaultDriveCommand m_defaultDriveCommand;
 
@@ -82,18 +83,24 @@ public class RobotContainer {
 
     JoystickButton pickupDeployer = new JoystickButton(m_joystick, Constants.DEPLOY_PICKUP_BUTTON);
     JoystickButton pickupUnDeployer = new JoystickButton(m_joystick, Constants.RETRACT_PICKUP_BUTTON);
+    pickupDeployer.whenPressed(new PickupTargets(pickup,magazine));
+    pickupUnDeployer.whenPressed(new TurnoffPickup(pickup,magazine));
     
     JoystickButton driveToBall = new JoystickButton(m_joystick, Constants.DRIVE_TO_BALL_BUTTON);
     driveToBall.whenPressed(new DriveTowardBall(m_driveSubsystem, driveCamera, m_joystick));
-    driveToBall.whenReleased(new StopMotor(m_driveSubsystem));
-    pickupDeployer.whenPressed(new PickupTargets(pickup,magazine));
-    pickupUnDeployer.whenPressed(new TurnoffPickup(pickup,magazine));
+    driveToBall.whenReleased(new StopDrive(m_driveSubsystem));
 
     JoystickButton shooter = new JoystickButton(m_joystick,Constants.SHOOT_BUTTON);
-    shooter.whenPressed(new Shoot(magazine, turret, distance));
+    JoystickButton tarmacdistance = new JoystickButton(m_joystick,Constants.TARMAC_DISTANCE_BUTTON);
+    JoystickButton padonedistance = new JoystickButton(m_joystick,Constants.PAD_ONE_DISTANCE_BUTTON);
+    JoystickButton padtwodistance = new JoystickButton(m_joystick,Constants.PAD_TWO_DISTANCE_BUTTON);
+    shooter.whenPressed(new Shoot(magazine, turret));
     shooter.whenReleased(new ShootStop(magazine, turret));
+    tarmacdistance.whenPressed(new SetTarmacDistance(turret));
+    padonedistance.whenPressed(new SetPadOneDistance(turret));
+    padtwodistance.whenPressed(new SetPadTwoDistance(turret));
 
-    
+
   }
 
   /**

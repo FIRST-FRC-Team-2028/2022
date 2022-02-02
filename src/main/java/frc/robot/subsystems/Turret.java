@@ -7,6 +7,9 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxLimitSwitch;
+import com.revrobotics.SparkMaxPIDController;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,27 +24,51 @@ public class Turret extends SubsystemBase {
   CANSparkMax turretMotor;
   CANSparkMax elevationMotor;
   RelativeEncoder elevatorencoder;
+  boolean elevator_zeroed = false;
+  double elevator_zero_position;
+  SparkMaxLimitSwitch limitswitch;
+  SparkMaxPIDController elevator_controller;
+  double elevator_kp=.1;
+  double elevator_ki=0.;
+  double elevator_kd=0.;
+  double elevator_tolerance=2.;
+
+
   CANSparkMax shooter;
+  SparkMaxPIDController shooter_controller;
   RelativeEncoder shooterSpeed;
+  double shooter_kp=0.1;
+  double shooter_ki=0.;
+  double shooter_kd=0.;
+  double shooter_tolerance=2.;
+  double distance;
+
   AnalogInput pixyCam;
   PIDController aimer;
   double kp=.3;
   double ki=0.;
   double kd=0.;
-  boolean amicallibrated = false;
   final QuadraticFitter fittere;
   final QuadraticFitter fitterm;
+
   public Turret() {
     shooter = new CANSparkMax(Constants.CANIDs.TURRET_SHOOTER.getid(), MotorType.kBrushless);
-    shooter.something(CANSparkMax.ControlType.kVelocity);
+    shooter_controller = shooter.getPIDController();
+    shooter_controller.setP(shooter_kp);
+    shooter_controller.setI(shooter_ki);
+    shooter_controller.setD(shooter_kd);
     turretMotor = new CANSparkMax(Constants.CANIDs.TURRET_AZIMUTH.getid(), MotorType.kBrushless);
     elevationMotor = new CANSparkMax(Constants.CANIDs.TURRET_ELEVATION.getid(), MotorType.kBrushless);
-    elevatorencoder =  elevationMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, Constants.ELEVATOR_MOTOR_ENCODER_RATIO);
+    limitswitch = elevationMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    elevator_controller = elevationMotor.getPIDController();
+    elevator_controller.setP(elevator_kp);
+    elevator_controller.setI(elevator_ki);
+    elevator_controller.setD(elevator_kd);
+    elevatorencoder =  elevationMotor.getEncoder();
     pixyCam = new AnalogInput(Constants.TURRET_PIXY_ANALOG);
     aimer = new PIDController(kp, ki, kd);
     aimer.setSetpoint(0.);
     aimer.setIntegratorRange(-1., 1.);
-
     /** 2d arrays describe elavation and motor speed as functions of distance */
     double[][] motorspeed = {{3.,4.,8.,16.}, {.4,.5,.8,1.}};
     double[][] elavation = {{3.,4.,8.,16.}, {100,200,400,500}};
@@ -54,6 +81,8 @@ public class Turret extends SubsystemBase {
       fittere.add(elavation[0][i], elavation[1][i]);
       fitterm.add(motorspeed[0][i], motorspeed[1][i]);
     }
+
+    limitswitch.enableLimitSwitch(false);
   
   }
 
@@ -68,24 +97,28 @@ public class Turret extends SubsystemBase {
     shooter.set(0.);
   }
 
+  /** Use quadratic curve fit for rpm(distance)  = a x^2 +b x + c */
   double mapRPM(double distance) {
     return (Constants.SHOOTER_FCN_ACOEF*distance*distance + Constants.SHOOTER_FCN_BCOEF)*distance+Constants.SHOOTER_FCN_CCOEF;
   }
   
-  public boolean isatSpeed(double distance) {
-    return (shooter.get() == fitterm.yout(distance));
+  public boolean isatSpeed() {
+    return Math.abs(shooter.get() - fitterm.yout(distance)) < shooter_tolerance;
   }
 
 /**given distance run motor at set speed */
-  public void shooterdistance(double distance) {
-  shooter.set(fitterm.yout(distance));
+  public void shooterdistance() {
+    shooter_controller.setReference(fitterm.yout(distance), CANSparkMax.ControlType.kVelocity);
   }
   
-  public void setelevation(double distance) {
-    elevatorencoder.setPosition(fittere.yout(distance));
+  public void setelevation() {
+    elevator_controller.setReference(fittere.yout(distance) + elevator_zero_position, CANSparkMax.ControlType.kPosition);
   }
-  public boolean iselevatordistance(double distance) {
-    return ( elevatorencoder.getPosition() ==  fittere.yout(distance));
+  public boolean iselevatordistance() {
+    return Math.abs( elevatorencoder.getPosition() - fittere.yout(distance) + elevator_zero_position) < elevator_tolerance;
+  }
+  public void setdistance(double distance) {
+    this.distance = distance;
   }
 
 
@@ -112,5 +145,14 @@ public class Turret extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    // Move elevator motor down till it finds zero
+    if( !elevator_zeroed ) {
+      elevationMotor.set(Constants.ELEVATOR_MOTOR_ZEROING_SPEED);
+      if(limitswitch.isPressed()){
+        elevationMotor.set(0.); 
+        elevator_zero_position =elevatorencoder.getPosition();
+        elevator_zeroed=true;
+      }
+    }
   }
 }

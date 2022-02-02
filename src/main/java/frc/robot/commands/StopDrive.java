@@ -7,10 +7,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class StopMotor extends CommandBase {
+public class StopDrive extends CommandBase {
   DriveSubsystem drive;
-  /** Creates a new StopMotor. */
-  public StopMotor(DriveSubsystem drive) {
+
+  /** Stop the drive motors */
+  public StopDrive(DriveSubsystem drive) {
     this.drive = drive;
     addRequirements(drive);
   }

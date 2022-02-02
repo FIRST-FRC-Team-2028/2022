@@ -11,22 +11,22 @@ import frc.robot.subsystems.Pickup;
 public class PickupTargets extends CommandBase {
   /** Creates a new GetTargets. 
    * use the Pickup subsystem to get a ball
+   * and the magazine subsystem draw it into the magazine
   */
 
-  Pickup subsystem;
+  Pickup pickup;
   Magazine magazine;
-  public PickupTargets(Pickup pickup,Magazine magazine) {
-    this.subsystem = subsystem;
-    addRequirements(subsystem);
+  public PickupTargets(Pickup pickup, Magazine magazine) {
+    this.pickup = pickup;
     this.magazine = magazine;
-    addRequirements(magazine);
+    addRequirements(magazine, pickup);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    subsystem.deploy();
-    subsystem.runRollers();
+    pickup.deploy();
+    pickup.runRollers();
     magazine.horizontalon();
   }
 
