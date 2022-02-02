@@ -23,7 +23,9 @@ public class Turret extends SubsystemBase {
   RelativeEncoder elevatorencoder;
   CANSparkMax shooter;
   RelativeEncoder shooterSpeed;
-  AnalogInput pixyCam;
+  AnalogIn
+  
+  put pixyCam;
   PIDController aimer;
   double kp=.3;
   double ki=0.;
@@ -33,10 +35,11 @@ public class Turret extends SubsystemBase {
   final QuadraticFitter fitterm;
   public Turret() {
     shooter = new CANSparkMax(Constants.CANIDs.TURRET_SHOOTER.getid(), MotorType.kBrushless);
-    shooter.something(CANSparkMax.ControlType.kVelocity);
+  //  shooter.something(CANSparkMax.ControlType.kVelocity);
     turretMotor = new CANSparkMax(Constants.CANIDs.TURRET_AZIMUTH.getid(), MotorType.kBrushless);
     elevationMotor = new CANSparkMax(Constants.CANIDs.TURRET_ELEVATION.getid(), MotorType.kBrushless);
-    elevatorencoder =  elevationMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, Constants.ELEVATOR_MOTOR_ENCODER_RATIO);
+//    elevatorEncoder = elevationMotor.getEncoder(SparkMaxRelativeEncoder.)
+//    elevatorencoder =  elevationMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, Constants.ELEVATOR_MOTOR_ENCODER_RATIO);
     pixyCam = new AnalogInput(Constants.TURRET_PIXY_ANALOG);
     aimer = new PIDController(kp, ki, kd);
     aimer.setSetpoint(0.);
