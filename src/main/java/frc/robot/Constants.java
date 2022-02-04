@@ -6,6 +6,8 @@ package frc.robot;
 
 import javax.swing.plaf.TreeUI;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -117,8 +119,10 @@ public final class Constants {
 
 
     // drive constants
-    public static final double UP_SHIFT = 0;
-    public static final double DOWN_SHIFT = 0;
+    public static final DoubleSolenoid.Value DRIVE_LOW_GEAR =  DoubleSolenoid.Value.kForward ;
+    public static final DoubleSolenoid.Value DRIVE_HIGH_GEAR =  DoubleSolenoid.Value.kReverse ;
+    public static final double DRIVE_HIGH_GEAR_RATIO = 1.;  // 
+    public static final double DRIVE_LOW_GEAR_RATIO = 1.;
     
     // climber constants
     public static final double CLIMBER_TIME_TO_CLIMB = 0;

@@ -77,8 +77,9 @@ public class DriveSubsystem extends SubsystemBase {
     //pcm = new PneumaticsControlModule(Constants.PNEUMATICS_CONTROL_MODULE);
     //pcm.enableCompressorDigital();
 
+    // makeDoubleSolenoid (forward , reverse)
     //shifter = pcm.makeDoubleSolenoid(Constants.PneumaticChannel.DRIVE_LOW_GEAR.getChannel(), Constants.PneumaticChannel.DRIVE_HIGH_GEAR.getChannel());
-    //shifter.set(DoubleSolenoid.Value.kForward);
+    //shifter.set(Constants.DRIVE_LOW_GEAR);
   }
 
   public void drive(double left, double right) {
@@ -92,20 +93,24 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void driveMe (double stickX, double stickY) {
     double gearRatio = 1.;
-    /*
+    /* */
     if (stickX*stickX+stickY*stickY > Constants.SHIFTER_THRESHOLD 
-       && shifter.get() == DoubleSolenoid.Value.kForward) {
-      shifter.set(DoubleSolenoid.Value.kReverse);
+       //&& shifter.get() == DoubleSolenoid.Value.kForward) {
+      //shifter.set(DoubleSolenoid.Value.kReverse);
+       && shifter.get() == Constants.DRIVE_LOW_GEAR) {
+      shifter.set(Constants.DRIVE_HIGH_GEAR);
+      gearRatio = Constants.DRIVE_HIGH_GEAR_RATIO;
     }
     else if (stickX*stickX+stickY*stickY < Constants.SHIFTER_THRESHOLD*.95 
-       && shifter.get() == DoubleSolenoid.Value.kReverse) {
-      shifter.set(DoubleSolenoid.Value.kForward);
+       && shifter.get() == Constants.DRIVE_HIGH_GEAR) {
+      shifter.set(Constants.DRIVE_LOW_GEAR);
+      gearRatio = Constants.DRIVE_LOW_GEAR_RATIO;
     }
-    */
+    /* */
     driverControl.arcadeDrive(-stickX, stickY);
     /*
-    double leftMotorSpeed = stickX/gearRatio;
-    double rightMotorSpeed = stickY/gearRatio;
+    double leftMotorSpeed = stickX*gearRatio;
+    double rightMotorSpeed = stickY*gearRatio;
     driverControl.arcadeDrive(leftMotorSpeed, rightMotorSpeed);
     */
   }
