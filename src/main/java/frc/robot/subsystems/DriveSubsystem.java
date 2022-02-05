@@ -96,12 +96,6 @@ public class DriveSubsystem extends SubsystemBase {
       int initError = driveCamera.init(Constants.PIXY_USE_MXP);
     }
 
-<<<<<<< HEAD
-    // makeDoubleSolenoid (forward , reverse)
-    //shifter = pcm.makeDoubleSolenoid(Constants.PneumaticChannel.DRIVE_LOW_GEAR.getChannel(), Constants.PneumaticChannel.DRIVE_HIGH_GEAR.getChannel());
-    //shifter.set(Constants.DRIVE_LOW_GEAR);
-=======
->>>>>>> f8237d6ba3e906c63b9e83f86fdefc0ed5fb2e81
   }
 
   public void drive(double left, double right) {
@@ -115,23 +109,6 @@ public class DriveSubsystem extends SubsystemBase {
    * -1 < stickX and stickY < 1.
   */
   public void driveMe (double stickX, double stickY) {
-<<<<<<< HEAD
-    double gearRatio = 1.;
-    /* */
-    if (stickX*stickX+stickY*stickY > Constants.SHIFTER_THRESHOLD 
-       //&& shifter.get() == DoubleSolenoid.Value.kForward) {
-      //shifter.set(DoubleSolenoid.Value.kReverse);
-       && shifter.get() == Constants.DRIVE_LOW_GEAR) {
-      shifter.set(Constants.DRIVE_HIGH_GEAR);
-      gearRatio = Constants.DRIVE_HIGH_GEAR_RATIO;
-    }
-    else if (stickX*stickX+stickY*stickY < Constants.SHIFTER_THRESHOLD*.95 
-       && shifter.get() == Constants.DRIVE_HIGH_GEAR) {
-      shifter.set(Constants.DRIVE_LOW_GEAR);
-      gearRatio = Constants.DRIVE_LOW_GEAR_RATIO;
-    }
-    /* */
-=======
     if (Constants.AUTOSHIFT_AVAILABLE) {
       if (stickX*stickX+stickY*stickY > Constants.SHIFTER_THRESHOLD  ){
         switchGears(Constants.DRIVE_HIGH_GEAR);
@@ -139,7 +116,6 @@ public class DriveSubsystem extends SubsystemBase {
         switchGears ( Constants.DRIVE_LOW_GEAR);
       }
     }
->>>>>>> f8237d6ba3e906c63b9e83f86fdefc0ed5fb2e81
     driverControl.arcadeDrive(-stickX, stickY);
     /*
     double leftMotorSpeed = stickX*gearRatio;

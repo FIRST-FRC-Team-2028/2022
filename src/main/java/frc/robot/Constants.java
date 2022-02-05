@@ -123,12 +123,6 @@ public final class Constants {
 
 
     // drive constants
-<<<<<<< HEAD
-    public static final DoubleSolenoid.Value DRIVE_LOW_GEAR =  DoubleSolenoid.Value.kForward ;
-    public static final DoubleSolenoid.Value DRIVE_HIGH_GEAR =  DoubleSolenoid.Value.kReverse ;
-    public static final double DRIVE_HIGH_GEAR_RATIO = 1.;  // 
-    public static final double DRIVE_LOW_GEAR_RATIO = 1.;
-=======
     /* Max RPM = 5700 rpm
         high gear ratio = 2.667
         wheel radius = 6"
@@ -139,7 +133,6 @@ public final class Constants {
     public static final DoubleSolenoid.Value DRIVE_LOW_GEAR = DoubleSolenoid.Value.kForward;
     public static final DoubleSolenoid.Value DRIVE_HIGH_GEAR = DoubleSolenoid.Value.kReverse;
     public static final double SHIFTER_THRESHOLD = 0.6;
->>>>>>> f8237d6ba3e906c63b9e83f86fdefc0ed5fb2e81
     
     // climber constants
     public static final double CLIMBER_TIME_TO_CLIMB = 0;
