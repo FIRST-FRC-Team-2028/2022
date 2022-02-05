@@ -6,9 +6,11 @@ package frc.robot.subsystems;
 
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 /** Add your docs here. */
@@ -17,13 +19,20 @@ public class MyDifferentialDrive extends DifferentialDrive {
     private final MotorController m_rightMotor;
     private final SparkMaxPIDController m_leftController;
     private final SparkMaxPIDController m_rightController;
+    private final RelativeEncoder m_rightEncoder;
+    private final RelativeEncoder m_leftEncoder;
     
-    public MyDifferentialDrive(MotorController leftMotor, MotorController rightMotor, SparkMaxPIDController leftController, SparkMaxPIDController righController) {
+    public MyDifferentialDrive(MotorController leftMotor, MotorController rightMotor
+    , SparkMaxPIDController leftController, SparkMaxPIDController righController
+    , RelativeEncoder leftEncoder, RelativeEncoder rightEncoder
+    ) {
         super(leftMotor, rightMotor);
         m_leftMotor = leftMotor;
         m_rightMotor= rightMotor;
         m_leftController = leftController;
         m_rightController = righController;
+        m_rightEncoder = rightEncoder;
+        m_leftEncoder = leftEncoder;
     }
     
     
@@ -62,15 +71,20 @@ public class MyDifferentialDrive extends DifferentialDrive {
 
     var speeds = arcadeDriveIK(xSpeed, zRotation, squareInputs);
 
-    /* replace direct drive 
-    m_leftMotor.set(speeds.left * m_maxOutput);
-    m_rightMotor.set(speeds.right * m_maxOutput);
-    */
-    /* with closed loop control */
-
-    m_leftController.setReference(speeds.left * Constants.SPARKMAX_RPM, CANSparkMax.ControlType.kVelocity);
-    m_rightController.setReference(speeds.right * Constants.SPARKMAX_RPM, CANSparkMax.ControlType.kVelocity);
-
-    //feed();
+    if (Constants.DRIVE_VELOCITY_CONTROLLED) {
+      /* with closed loop control */
+      SmartDashboard.putNumber("myArcade left", speeds.left);
+      SmartDashboard.putNumber("myArcade right", speeds.right);
+      m_leftController.setReference(speeds.left * Constants.SPARKMAX_RPM, CANSparkMax.ControlType.kVelocity);
+      m_rightController.setReference(speeds.right * Constants.SPARKMAX_RPM, CANSparkMax.ControlType.kVelocity);
+    } else {
+      /* replace direct drive */
+      m_leftMotor.set(speeds.left * m_maxOutput);
+      m_rightMotor.set(speeds.right * m_maxOutput);
+    }
+    
+    SmartDashboard.putNumber("leftRPM",m_leftEncoder.getVelocity());
+    SmartDashboard.putNumber("rightRPM",m_rightEncoder.getVelocity());
+    feed();
   }
 }

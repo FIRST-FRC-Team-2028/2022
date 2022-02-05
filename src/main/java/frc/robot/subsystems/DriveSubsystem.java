@@ -13,6 +13,7 @@ import frc.robot.Pixy2API.links.I2CLink;
 
 //import javax.print.CancelablePrintJob;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -35,16 +36,22 @@ public class DriveSubsystem extends SubsystemBase {
   CANSparkMax rightFollower;
   SparkMaxPIDController leftController;
   SparkMaxPIDController rightController;
+  RelativeEncoder leftEncoder;
+  RelativeEncoder rightEncoder;
   double motor_ki=0.;
-  double motor_kp=.2;
+  double motor_kp=10.e-5;
   double motor_kd=0.;
   Joystick joystick;
   PneumaticHub pcm;
   //PneumaticsControlModule pcm;
   DoubleSolenoid shifter;
-  DifferentialDrive driverControl;
-  double gearRatio;
-  //MyDifferentialDrive driverControl;
+  //DifferentialDrive driverControl;
+  MyDifferentialDrive driverControl;
+  double gearRatio = 1.;
+  double[] smoothX = new double[Constants.DRIVE_SMOOTHER_SAMPLES];
+  double[] smoothY = new double[Constants.DRIVE_SMOOTHER_SAMPLES];
+  int smoothIt = 0;
+
   Pixy2 driveCamera;
   double[] toNT = new double[10*5+2];  // at most 10 blocks of (sig, x, y, H, W)
     
@@ -77,19 +84,25 @@ public class DriveSubsystem extends SubsystemBase {
     rightController.setP(motor_kp);
     rightController.setI(motor_ki);
     rightController.setD(motor_kd);
+    leftController.setOutputRange(-1, 1);
+    rightController.setOutputRange(-1, 1);
 
-    driverControl = new DifferentialDrive(leftMotor, rightMotor);
+    leftEncoder = leftMotor.getEncoder();
+    rightEncoder = rightMotor.getEncoder();
+
+    //driverControl = new DifferentialDrive(leftMotor, rightMotor);
     //pid controller ver.
-    /* 
-    driverControl = new MyDifferentialDrive(leftMotor,rightMotor, leftController, rightController);
-     */
+    driverControl = new MyDifferentialDrive(leftMotor,rightMotor
+    , leftController, rightController
+    , leftEncoder, rightEncoder);
+    
 
     if (Constants.COMPRESSOR_AVAILABLE ){
       pcm = new PneumaticHub(Constants.PNEUMATICS_CONTROL_MODULE);
       //pcm = new PneumaticsControlModule(Constants.PNEUMATICS_CONTROL_MODULE);
 
       shifter = pcm.makeDoubleSolenoid(Constants.PneumaticChannel.DRIVE_LOW_GEAR.getChannel(), Constants.PneumaticChannel.DRIVE_HIGH_GEAR.getChannel());
-      shifter.set(Constants.DRIVE_LOW_GEAR);
+      switchGears(Constants.DRIVE_LOW_GEAR);
     }
 
     if (Constants.CAMERA_AVAILABLE) {
@@ -97,6 +110,11 @@ public class DriveSubsystem extends SubsystemBase {
       int initError = driveCamera.init(Constants.PIXY_USE_MXP);
     }
 
+    for (int i=0;i<Constants.DRIVE_SMOOTHER_SAMPLES;i++) {
+      smoothX[i]=0.;
+      smoothY[i]=0.;
+    }
+    smoothIt=0;
   }
 
   public void drive(double left, double right) {
@@ -110,6 +128,7 @@ public class DriveSubsystem extends SubsystemBase {
    * -1 < stickX and stickY < 1.
   */
   public void driveMe (double stickX, double stickY) {
+    stickX=0.; stickY=2.6;
     if (Constants.AUTOSHIFT_AVAILABLE) {
       if (stickX*stickX+stickY*stickY > Constants.SHIFTER_THRESHOLD  ){
         switchGears(Constants.DRIVE_HIGH_GEAR);
@@ -117,12 +136,24 @@ public class DriveSubsystem extends SubsystemBase {
         switchGears ( Constants.DRIVE_LOW_GEAR);
       }
     }
-    driverControl.arcadeDrive(-stickX, stickY);
-    /*
-    double leftMotorSpeed = stickX*gearRatio;
+    smoothX[smoothIt]=stickX/Constants.DRIVE_SMOOTHER_SAMPLES;
+    smoothY[smoothIt]=stickY/Constants.DRIVE_SMOOTHER_SAMPLES;
+    smoothIt = (smoothIt+1)%Constants.DRIVE_SMOOTHER_SAMPLES;
+    stickX = 0.;
+    stickY = 0.;
+    for (int i=0;i<Constants.DRIVE_SMOOTHER_SAMPLES;i++) {
+      stickX+=smoothX[i];
+      stickY+=smoothY[i];
+    }
+
+    //driverControl.arcadeDrive(-stickX, stickY);
+    
+    double leftMotorSpeed = -stickX*gearRatio;
     double rightMotorSpeed = stickY*gearRatio;
+    SmartDashboard.putNumber("to arcade: leftMotorSpeed" , leftMotorSpeed);
+    SmartDashboard.putNumber("to arcade: rightMotorSpeed" , rightMotorSpeed);
+    SmartDashboard.putNumber("to arcade: gearRatio ", gearRatio);
     driverControl.arcadeDrive(leftMotorSpeed, rightMotorSpeed);
-    */
   }
   
 
@@ -136,26 +167,38 @@ public class DriveSubsystem extends SubsystemBase {
     System.out.println("Switch gears");
     if (Constants.COMPRESSOR_AVAILABLE){
       if (shifter.get() == Constants.DRIVE_LOW_GEAR) {
-        gearRatio = Constants.DRIVE_HIGH_GEAR_RATIO;
+        if (Constants.DRIVE_VELOCITY_CONTROLLED) {
+          gearRatio = Constants.DRIVE_HIGH_GEAR_RATIO;
+          //gearRatio = Constants.DRIVE_LOW_GEAR_RATIO;
+        }
         shifter.set(Constants.DRIVE_HIGH_GEAR);
       } else {
-        gearRatio = Constants.DRIVE_LOW_GEAR_RATIO;
+        if (Constants.DRIVE_VELOCITY_CONTROLLED){
+          gearRatio = Constants.DRIVE_LOW_GEAR_RATIO;
+          //gearRatio = Constants.DRIVE_HIGH_GEAR_RATIO;
+        }
         shifter.set(Constants.DRIVE_LOW_GEAR);
       }
     }
   }
 
   public void switchGears(DoubleSolenoid.Value newGear) {
-    System.out.println("Switch gears "+newGear);
+    System.out.println("Switch gears "+newGear+" from "+shifter.get());
     if (newGear == Constants.DRIVE_HIGH_GEAR 
-        && shifter.get() ==  Constants.DRIVE_LOW_GEAR ) {
-          System.out.println(" from "+shifter.get());
-      gearRatio = Constants.DRIVE_HIGH_GEAR_RATIO;
+        //&& shifter.get() ==  Constants.DRIVE_LOW_GEAR
+         ) {
+      if (Constants.DRIVE_VELOCITY_CONTROLLED){
+        gearRatio = Constants.DRIVE_HIGH_GEAR_RATIO;
+        //gearRatio = Constants.DRIVE_LOW_GEAR_RATIO;
+      }
       shifter.set(Constants.DRIVE_HIGH_GEAR);
     } else if (newGear == Constants.DRIVE_LOW_GEAR 
-       && shifter.get() == Constants.DRIVE_HIGH_GEAR) {
-        System.out.println(" from "+shifter.get());
-      gearRatio = Constants.DRIVE_LOW_GEAR_RATIO;
+       //&& shifter.get() == Constants.DRIVE_HIGH_GEAR
+       ) {
+      if (Constants.DRIVE_VELOCITY_CONTROLLED) {
+        gearRatio = Constants.DRIVE_LOW_GEAR_RATIO;
+        //gearRatio = Constants.DRIVE_HIGH_GEAR_RATIO;
+      }
       shifter.set(Constants.DRIVE_LOW_GEAR);
     }
   }
@@ -193,7 +236,13 @@ public class DriveSubsystem extends SubsystemBase {
       toNT[offset]=biggest;
       SmartDashboard.putNumberArray("DriveCamera", toNT);
     }
-    pcm.enableCompressorDigital();
+
+    if (Constants.COMPRESSOR_AVAILABLE ){
+      //pcm.enableCompressorDigital();
+      pcm.enableCompressorAnalog(110.,120.);
+      double pressure= pcm.getPressure(Constants.COMPRESSOR_ANALOG_CHANNEL);
+      SmartDashboard.putNumber("Pressure", pressure);
+    }
   }
 
   public int seeCargo() {

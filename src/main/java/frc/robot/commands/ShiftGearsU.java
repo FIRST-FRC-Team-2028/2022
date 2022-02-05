@@ -18,14 +18,15 @@ public class ShiftGearsU extends CommandBase {
     this.drive = drive;
     addRequirements(drive);
     gear = newGear;
-    timeTilRepeat = new Timer();
+    //timeTilRepeat = new Timer();
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     drive.switchGears(gear);
-    timeTilRepeat.start();
+    System.out.println("SiftGearsU "+gear);
+    //timeTilRepeat.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,6 +40,7 @@ public class ShiftGearsU extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timeTilRepeat.hasElapsed(1.);
+    //return timeTilRepeat.hasElapsed(1.);
+    return true;
   }
 }
