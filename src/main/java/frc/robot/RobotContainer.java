@@ -6,8 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.Pixy2API.Pixy2;
-import frc.robot.Pixy2API.links.I2CLink;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveTowardBall;
 import frc.robot.commands.PickupTargets;
@@ -24,7 +22,6 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Turret;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -50,9 +47,7 @@ public class RobotContainer {
   */
   private Pickup pickup;
   private Turret turret;
-  private Pixy2 driveCamera;
   private Magazine magazine;
-  private double distance;
 
   private final DefaultDriveCommand m_defaultDriveCommand;
 
