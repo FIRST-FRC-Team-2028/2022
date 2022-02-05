@@ -116,7 +116,6 @@ public final class Constants {
     public static final double SHOOTER_FCN_CCOEF = 0;
     public static final int ELEVATOR_MOTOR_ENCODER_RATIO = 0;
     public static final double ELEVATOR_MOTOR_ZEROING_SPEED = 0;
-    public static final double SPARKMAX_RPM = 0;
     public static final double TARMAC_DISTANCE = 0;
     public static final double PAD_ONE_DISTANCE =0;
     public static final double PAD_TWO_DISTANCE =0;
@@ -128,7 +127,8 @@ public final class Constants {
         wheel radius = 6"
         Max speed = 5700 /2.667 *6*PI /12/5280 *60 = 37.5 mph
      */
-    public static final double DRIVE_HIGH_GEAR_RATIO = 3000;   //  Highest desired Motor RPM
+    public static final double SPARKMAX_RPM = 5700;
+    public static final double DRIVE_HIGH_GEAR_RATIO = 0.6;   //  Highest desired Motor RPM
     public static final double DRIVE_LOW_GEAR_RATIO = 2.2727*DRIVE_HIGH_GEAR_RATIO;  // high:low ratio of gear box
     public static final DoubleSolenoid.Value DRIVE_LOW_GEAR = DoubleSolenoid.Value.kForward;
     public static final DoubleSolenoid.Value DRIVE_HIGH_GEAR = DoubleSolenoid.Value.kReverse;
