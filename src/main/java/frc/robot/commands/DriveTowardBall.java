@@ -21,17 +21,15 @@ import frc.robot.subsystems.DriveSubsystem;
 public class DriveTowardBall extends CommandBase {
   DriveSubsystem drive;
   Joystick joystick;
-  Pixy2 camera;
   PIDController aimer;
   double  kp=.15;
   double kd=0.;
   double ki=0.;
   int numTargets=0;
   /** Creates a new DriveTowardBall. */
-  public DriveTowardBall(DriveSubsystem drive, Pixy2 pixy, Joystick joystick) {
+  public DriveTowardBall(DriveSubsystem drive, Joystick joystick) {
     this.drive = drive;
     this.joystick=joystick;
-    this.camera=pixy;
     addRequirements(drive);
     aimer = new PIDController(kp, ki, kd);
     aimer.setSetpoint(0.);
@@ -54,28 +52,11 @@ public class DriveTowardBall extends CommandBase {
    * PIDcontroller returns value in response to error;
    */
   public void execute() {
-    Block biggest = null;
-    int size = Constants.PIXY_MINIMUM_SIZE;
-    double error=0.;
-   //move code into drive subsystem.
-    numTargets = camera.getCCC().getBlocks(false, Pixy2CCC.CCC_SIG_ALL,25);
-    System.out.println("driveCamera sees "+numTargets);
-    if (numTargets >1){
-      String arString="";
-      for (Block block : camera.getCCC().getBlockCache())  {
-        if (block.getWidth() > size) {
-          arString+=String.format("%4.2f ", (double)block.getHeight()/(double)block.getWidth());
-          if(block.getHeight() < Constants.PIXY_TARGET_AR*block.getWidth() &&
-            block.getHeight() > (int)((double)block.getWidth()/Constants.PIXY_TARGET_AR)) {
-              biggest=block;
-              size=block.getWidth();
-          }
-        }
-      }
-      SmartDashboard.putString("PixyResults", arString);
-      if (biggest != null) {
-        error = (double)(Constants.CENTER_OF_CAMERA - biggest.getX());
-      }
+    double error;
+    int biggest=drive.seeCargo();
+    if (biggest > 0) {
+      error = (double)(Constants.CENTER_OF_CAMERA - drive.cargoX());
+      
       double stickX = aimer.calculate(error) / (double)Constants.CENTER_OF_CAMERA*5.;  // 
       SmartDashboard.putNumber("steerError", error);
       SmartDashboard.putNumber("steerPower", stickX);
