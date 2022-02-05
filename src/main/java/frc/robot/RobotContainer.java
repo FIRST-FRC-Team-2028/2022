@@ -6,8 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.Pixy2API.Pixy2;
-import frc.robot.Pixy2API.links.I2CLink;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveTowardBall;
 import frc.robot.commands.PickupTargets;
@@ -50,9 +48,7 @@ public class RobotContainer {
   */
   private Pickup pickup;
   private Turret turret;
-  private Pixy2 driveCamera;
   private Magazine magazine;
-  private double distance;
 
   private final DefaultDriveCommand m_defaultDriveCommand;
 
@@ -105,7 +101,7 @@ public class RobotContainer {
       pickupUnDeployer.whenPressed(new TurnoffPickup(pickup,magazine));
     }
 
-    if (Constants.DRIVE_AVAILABLE && Constants.CAMERA_AVAILABLE){
+    if (Constants.DRIVE_AVAILABLE && Constants.CAMERA_AVAILABLE) {
       JoystickButton driveToBall = new JoystickButton(m_joystick, Constants.DRIVE_TO_BALL_BUTTON);
       driveToBall.whenPressed(new DriveTowardBall(m_driveSubsystem, m_joystick));
       driveToBall.whenReleased(new StopMotor(m_driveSubsystem));
