@@ -22,7 +22,6 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Turret;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.Joystick;
 

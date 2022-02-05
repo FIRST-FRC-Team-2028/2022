@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /** DriveSubsystem
  *  two motors on each side
  *  two-speed gear-box
+ *  Pixy camera via I2C
  */
 public class DriveSubsystem extends SubsystemBase {
   CANSparkMax leftMotor;
