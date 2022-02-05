@@ -9,9 +9,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.Pixy2API.Pixy2;
-import frc.robot.Pixy2API.Pixy2CCC;
-import frc.robot.Pixy2API.Pixy2CCC.Block;
 import frc.robot.subsystems.DriveSubsystem;
 
 /** Assist the acquisition of balls by
