@@ -17,10 +17,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.QuadraticFitter;
 
+/** Turret points toward the hub and shoot balls into it.
+ */
 public class Turret extends SubsystemBase {
-  private static final String SparkMaxRelativeEncoder = null;
-  /** Creates a new Turret
-   *   to point toward the hub and shoot balls into it. */
   CANSparkMax turretMotor;
   CANSparkMax elevationMotor;
   RelativeEncoder elevatorencoder;
@@ -31,7 +30,7 @@ public class Turret extends SubsystemBase {
   double elevator_kp=.1;
   double elevator_ki=0.;
   double elevator_kd=0.;
-  double elevator_tolerance=2.;
+  double elevator_tolerance=2.;  // encoder counts
 
 
   CANSparkMax shooter;
@@ -40,7 +39,7 @@ public class Turret extends SubsystemBase {
   double shooter_kp=0.1;
   double shooter_ki=0.;
   double shooter_kd=0.;
-  double shooter_tolerance=2.;
+  double shooter_tolerance=20.;  // RPM
   double distance;
 
   AnalogInput pixyCam;
@@ -65,7 +64,11 @@ public class Turret extends SubsystemBase {
     elevator_controller.setI(elevator_ki);
     elevator_controller.setD(elevator_kd);
     elevatorencoder =  elevationMotor.getEncoder();
-    pixyCam = new AnalogInput(Constants.TURRET_PIXY_ANALOG);
+    /* pixy on I2C or analog?
+       Analog is simpler; train for one signature; report x location of largest
+       I2C can return more info, ie width, Y  which indicate distance
+     */
+    pixyCam = new AnalogInput(Constants.TURRET_PIXY_ANALOG);  // to detect hub
     aimer = new PIDController(kp, ki, kd);
     aimer.setSetpoint(0.);
     aimer.setIntegratorRange(-1., 1.);
@@ -82,15 +85,17 @@ public class Turret extends SubsystemBase {
       fitterm.add(motorspeed[0][i], motorspeed[1][i]);
     }
 
-    limitswitch.enableLimitSwitch(false);
+    limitswitch.enableLimitSwitch(false);  // do not shut down elevator
   
   }
 
+  /** for testing set some arbitrary -1 < value <1 */
   public void shooterOn() {
     shooter.set(Constants.SHOOTER_SPEED);
   }
-  public void shooterSpeed(double distance) {
-    //shooter.setReference(mapRPM(distance), CANSparkMax.ControlType.kVelocity,)
+  /** for closed loop testing set a value -4000 < speed < 4000 (max rpm is 5700) */
+  public void shooterSpeed(double speed) {
+    shooter_controller.setReference(speed, CANSparkMax.ControlType.kVelocity);
   }
 
   public void shooterOff() {
@@ -106,7 +111,7 @@ public class Turret extends SubsystemBase {
     return Math.abs(shooter.get() - fitterm.yout(distance)) < shooter_tolerance;
   }
 
-/**given distance run motor at set speed */
+/**given distance, run motor at set speed */
   public void shooterdistance() {
     shooter_controller.setReference(fitterm.yout(distance), CANSparkMax.ControlType.kVelocity);
   }
@@ -117,6 +122,7 @@ public class Turret extends SubsystemBase {
   public boolean iselevatordistance() {
     return Math.abs( elevatorencoder.getPosition() - fittere.yout(distance) + elevator_zero_position) < elevator_tolerance;
   }
+
   public void setdistance(double distance) {
     this.distance = distance;
   }
@@ -128,13 +134,16 @@ public class Turret extends SubsystemBase {
     shooter.set(Constants.SHOOTER_SLOW_SPEED);
   }
 
+  /** Use PID controller to aim turret based on pixy camera data.
+   * @return error in pixels relative to image width of 315
+   */
   public double aimMe() {
-    /** connenct the camera as a driver for the motors to find the hub */
+    /* connect the camera as a driver for the motors to find the hub */
     double error = pixyCam.getValue();
-    double pidVal = aimer.calculate(error, 0.);
+    double pidVal = aimer.calculate(error, Constants.CENTER_OF_CAMERA)/ Constants.CENTER_OF_CAMERA;  // pixels/pixels = O(1)
     turretMotor.set(pidVal);
-    SmartDashboard.putNumber("Turret Aim Error", error);
-    return error;
+    SmartDashboard.putNumber("Turret Aim Error", Constants.CENTER_OF_CAMERA-error);
+    return Constants.CENTER_OF_CAMERA - error;
   }
 
   public void stopAimer()

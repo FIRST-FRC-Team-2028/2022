@@ -10,12 +10,12 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-/** Transfers ammo from pickup to shooter */
+/** Transfers cargo from pickup to shooter */
 public class Magazine extends SubsystemBase {
   private CANSparkMax horizontalmotor;
   private CANSparkMax verticalmotor;
-  /** Creates a new Magazine.
-   * Uses two seperate motors to transport ammo horizontally and vertically
+  
+  /** Uses two separate motors to transport cargo horizontally and vertically
    */
   public Magazine() {
     horizontalmotor= new CANSparkMax(Constants.CANIDs.MAGIZINE_HORIZONTAL.getid(), MotorType.kBrushless);

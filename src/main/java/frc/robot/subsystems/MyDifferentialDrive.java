@@ -13,7 +13,11 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
-/** Add your docs here. */
+/** MyDifferentialDrive provides an alternative arcadeDrive method
+ *  that implements closed loop velocity control to drive the robot.
+ *  It extends DifferentialDrive to use all the other functionality,
+ *  ie deadband, normalize
+ */
 public class MyDifferentialDrive extends DifferentialDrive {
     private final MotorController m_leftMotor;
     private final MotorController m_rightMotor;

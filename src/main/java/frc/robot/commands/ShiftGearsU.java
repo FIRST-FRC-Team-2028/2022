@@ -40,7 +40,7 @@ public class ShiftGearsU extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //return timeTilRepeat.hasElapsed(1.);
+    //return timeTilRepeat.hasElapsed(0.5);
     return true;
   }
 }

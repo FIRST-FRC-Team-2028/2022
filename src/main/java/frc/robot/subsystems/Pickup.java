@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -19,15 +20,18 @@ public class Pickup extends SubsystemBase {
    * motors to direct the ball.
   */
   CANSparkMax rollers;
-  //PneumaticHub pcm;
-  PneumaticsControlModule pcm;
+  PneumaticHub pcm;
+  //PneumaticsControlModule pcm;
   DoubleSolenoid arms;
 
   public Pickup() {
     rollers = new CANSparkMax(Constants.CANIDs.PICKUP_ROLLERS.getid(), MotorType.kBrushless);
+    /* There is only one PCM on on the robot; it should be instantiated there for use by all 
+     * the subsystems that need it.
     //pcm = new PneumaticHub();
     pcm = new PneumaticsControlModule(Constants.PNEUMATICS_CONTROL_MODULE);
     pcm.enableCompressorDigital();
+    */
     arms = pcm.makeDoubleSolenoid(Constants.PneumaticChannel.PICKUP_EXTEND.getChannel(), Constants.PneumaticChannel.PICKUP_RETRACT.getChannel());
   }
 

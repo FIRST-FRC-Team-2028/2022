@@ -21,17 +21,16 @@ public class Climber extends SubsystemBase {
   double starttime;
   /** Creates a new Climber. */
   public Climber() {
-    climbMotor = new CANSparkMax(Constants.CANIDs.DRIVE_LEFT_LEADER.getid(), MotorType.kBrushless);
+    climbMotor = new CANSparkMax(Constants.CANIDs.CLIMB_MOTOR.getid(), MotorType.kBrushless);
   }
 
    void resetmotors() {
-   
     climbMotor.restoreFactoryDefaults();
-    climbMotor.setInverted(Constants.CANIDs.DRIVE_LEFT_LEADER.isInverted());
+    climbMotor.setInverted(Constants.CANIDs.CLIMB_MOTOR.isInverted());
   }
   /** deploys climber  */
   public void deployclimber() {
-
+    double I_DO_NOTHING;
   }
 
 //** pulls robot up to the bar */

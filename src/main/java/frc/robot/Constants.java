@@ -46,7 +46,8 @@ public final class Constants {
         TURRET_AZIMUTH       (00, false),
         TURRET_SHOOTER       (00, false),
         MAGIZINE_HORIZONTAL  (00, false), 
-        MAGIZINE_VERTICAL    (00, false);
+        MAGIZINE_VERTICAL    (00, false), 
+        CLIMB_MOTOR          (00, false);
 
         private final int canid;
         private final boolean inverted;

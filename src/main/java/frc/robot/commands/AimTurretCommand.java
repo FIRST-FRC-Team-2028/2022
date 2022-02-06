@@ -10,7 +10,7 @@ import frc.robot.subsystems.Turret;
 public class AimTurretCommand extends CommandBase {
   Turret turret;
   double turretError;
-  private static final double tolerance = .004;
+  private static final double tolerance = 2.;  // pixels, presumably
   
   /** Creates a new AimTurretCommand. */
   public AimTurretCommand(Turret m_turret) {

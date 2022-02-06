@@ -28,6 +28,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *  two motors on each side
  *  two-speed gear-box
  *  Pixy camera via I2C
+ * 
+ *  Prefered mode is closed loop velocity control,
+ * (See Constants.DRIVE_VELOCITY_CONTROLLED),
+ *  but 'Vbus' mode is also available.
+ * 
+ *  Control inputs are smoothed to reduce jerkiness.
  */
 public class DriveSubsystem extends SubsystemBase {
   CANSparkMax leftMotor;
@@ -47,15 +53,20 @@ public class DriveSubsystem extends SubsystemBase {
   DoubleSolenoid shifter;
   //DifferentialDrive driverControl;
   MyDifferentialDrive driverControl;
-  double gearRatio = 1.;
+  double gearRatio = 1.;  // initialized as if there is no speed control
   double[] smoothX = new double[Constants.DRIVE_SMOOTHER_SAMPLES];
   double[] smoothY = new double[Constants.DRIVE_SMOOTHER_SAMPLES];
+  double xStSm;
+  double yStSm;
   int smoothIt = 0;
 
   Pixy2 driveCamera;
-  double[] toNT = new double[10*5+2];  // at most 10 blocks of (sig, x, y, H, W)
+  double[] toNT = new double[10*5+2];  // at most 10 blocks of (sig, x, y, H, W) to be sent to NetworkTables
     
-  /** Creates a new ExampleSubsystem. */
+  /** Instantiate drive motor controllers and associated PID controller and encoder;
+   *  pneumatic system,
+   *  camera to use for displaying objects of interest and aiding the pickup of cargo
+   */
   public DriveSubsystem() {
     leftMotor = new CANSparkMax(Constants.CANIDs.DRIVE_LEFT_LEADER.getid(), MotorType.kBrushless);
     leftFollower = new CANSparkMax(Constants.CANIDs.DRIVE_LEFT_FOLLOWER.getid(), MotorType.kBrushless);
@@ -98,6 +109,9 @@ public class DriveSubsystem extends SubsystemBase {
     
 
     if (Constants.COMPRESSOR_AVAILABLE ){
+      /* There is only one pcm on the robot for every subsystem to use.
+       It ought to be instantiated in Robot rather than here. */
+       double I_AM_A_PROBLEM_WAITING_TO_HAPPEN;
       pcm = new PneumaticHub(Constants.PNEUMATICS_CONTROL_MODULE);
       //pcm = new PneumaticsControlModule(Constants.PNEUMATICS_CONTROL_MODULE);
 
@@ -115,36 +129,54 @@ public class DriveSubsystem extends SubsystemBase {
       smoothY[i]=0.;
     }
     smoothIt=0;
+    xStSm = 0.;
+    yStSm = 0.;
   }
 
   public void drive(double left, double right) {
     leftMotor.set(right);
-    //leftFollower.setVoltage(left);
     rightMotor.set(right);
-    //rightFollower.setVoltage(right);
   }
 
-  /** DriveMe(forward+, right+) 
+  /** DriveMe(right+, forward+) 
    * -1 < stickX and stickY < 1.
   */
   public void driveMe (double stickX, double stickY) {
-    stickX=0.; stickY=2.6;
     if (Constants.AUTOSHIFT_AVAILABLE) {
+      /* Alternative shifting strategies:
+        A) Since the stick represents the robot speed,
+          pick a robot speed to switch gears.
+        B) Pick a motor speed at which to shift.
+          Get the motor speeds from the encoder.
+        C) In addition to either A or B, add information regarding
+          how hard the motors are working to maintain speed,
+          ie current draw or voltage.
+      */
       if (stickX*stickX+stickY*stickY > Constants.SHIFTER_THRESHOLD  ){
         switchGears(Constants.DRIVE_HIGH_GEAR);
       } else if (stickX*stickX+stickY*stickY < Constants.SHIFTER_THRESHOLD*.95) {
         switchGears ( Constants.DRIVE_LOW_GEAR);
       }
     }
+    // smooth the control inputs
+    xStSm += stickX/Constants.DRIVE_SMOOTHER_SAMPLES - smoothX[smoothIt];
+    yStSm += stickY/Constants.DRIVE_SMOOTHER_SAMPLES - smoothY[smoothIt];
     smoothX[smoothIt]=stickX/Constants.DRIVE_SMOOTHER_SAMPLES;
     smoothY[smoothIt]=stickY/Constants.DRIVE_SMOOTHER_SAMPLES;
     smoothIt = (smoothIt+1)%Constants.DRIVE_SMOOTHER_SAMPLES;
-    stickX = 0.;
-    stickY = 0.;
-    for (int i=0;i<Constants.DRIVE_SMOOTHER_SAMPLES;i++) {
-      stickX+=smoothX[i];
-      stickY+=smoothY[i];
-    }
+    stickX = xStSm; stickY = yStSm;
+
+    double IM_NOT_DONE_YET;
+    stickX=0.; stickY=2.6;  // hardwire for testing
+    /* Saturday, end of day, getting unexplained behavior:
+      shift from low to high on the stand, ie without load,
+      seems to nearly maintain wheel speed - for a couple seconds.
+      After that brief period, the wheel speed abruptly increases.
+      Shifting down slows back down again. The behavior repeats
+      whenever you shift. When the robot was on the floor, presumable under load,
+      the time to switch speed after gear change was undetectable,
+      so it appeared the high gear ratio was wrong.
+    */
 
     //driverControl.arcadeDrive(-stickX, stickY);
     
