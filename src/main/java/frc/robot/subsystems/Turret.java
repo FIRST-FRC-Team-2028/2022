@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.QuadraticFitter;
+import frc.robot.Pixy2API.Pixy2;
+import frc.robot.Pixy2API.links.I2CLink;
 
 /** Turret points toward the hub and shoot balls into it.
  */
@@ -43,6 +45,7 @@ public class Turret extends SubsystemBase {
   double distance;
 
   AnalogInput pixyCam;
+  Pixy2 pixyCamI2C;
   PIDController aimer;
   double kp=.3;
   double ki=0.;
@@ -69,6 +72,8 @@ public class Turret extends SubsystemBase {
        I2C can return more info, ie width, Y  which indicate distance
      */
     pixyCam = new AnalogInput(Constants.TURRET_PIXY_ANALOG);  // to detect hub
+    pixyCamI2C = Pixy2.createInstance(new I2CLink());
+    int initError = pixyCamI2C.init(Constants.PIXY_USE_MXP);
     aimer = new PIDController(kp, ki, kd);
     aimer.setSetpoint(0.);
     aimer.setIntegratorRange(-1., 1.);
@@ -97,7 +102,7 @@ public class Turret extends SubsystemBase {
   public void shooterSpeed(double speed) {
     shooter_controller.setReference(speed, CANSparkMax.ControlType.kVelocity);
   }
-
+  
   public void shooterOff() {
     shooter.set(0.);
   }
@@ -106,22 +111,34 @@ public class Turret extends SubsystemBase {
   double mapRPM(double distance) {
     return (Constants.SHOOTER_FCN_ACOEF*distance*distance + Constants.SHOOTER_FCN_BCOEF)*distance+Constants.SHOOTER_FCN_CCOEF;
   }
+  /** Use quadratic curve fit for rpm(distance)  = a x^2 +b x + c */
+  double mapElevation(double distance) {
+    return (Constants.ELEVATOR_FCN_ACOEF*distance*distance + Constants.ELEVATOR_FCN_BCOEF)*distance+Constants.ELEVATOR_FCN_CCOEF;
+  }
   
   public boolean isatSpeed() {
-    return Math.abs(shooter.get() - fitterm.yout(distance)) < shooter_tolerance;
+    //return Math.abs(shooter.get() - fitterm.yout(distance)) < shooter_tolerance;
+    return Math.abs(shooter.get() - mapRPM(distance)) < shooter_tolerance;
   }
 
 /**given distance, run motor at set speed */
   public void shooterdistance() {
-    shooter_controller.setReference(fitterm.yout(distance), CANSparkMax.ControlType.kVelocity);
+    //shooter_controller.setReference(fitterm.yout(distance), CANSparkMax.ControlType.kVelocity);
+    shooter_controller.setReference(mapRPM(distance), CANSparkMax.ControlType.kVelocity);
   }
   
   public void setelevation() {
-    elevator_controller.setReference(fittere.yout(distance) + elevator_zero_position, CANSparkMax.ControlType.kPosition);
+    //elevator_controller.setReference(fittere.yout(distance) + elevator_zero_position, CANSparkMax.ControlType.kPosition);
+    elevator_controller.setReference(mapElevation(distance) + elevator_zero_position, CANSparkMax.ControlType.kPosition);
   }
   public boolean iselevatordistance() {
-    return Math.abs( elevatorencoder.getPosition() - fittere.yout(distance) + elevator_zero_position) < elevator_tolerance;
+    //return Math.abs( elevatorencoder.getPosition() - fittere.yout(distance) + elevator_zero_position) < elevator_tolerance;
+    return Math.abs( elevatorencoder.getPosition() - mapElevation(distance) + elevator_zero_position) < elevator_tolerance;
   }
+  public void setelevation(double angle) {
+    elevator_controller.setReference(angle*Constants.ELEVATOR_ENCODER_RATIO + elevator_zero_position, CANSparkMax.ControlType.kPosition);
+  }
+
 
   public void setdistance(double distance) {
     this.distance = distance;
@@ -140,6 +157,7 @@ public class Turret extends SubsystemBase {
   public double aimMe() {
     /* connect the camera as a driver for the motors to find the hub */
     double error = pixyCam.getValue();
+    //width height i2c LOOK IN DRIVESUBSYSTEM TO GET BIGGEST X AND Y in periodic
     double pidVal = aimer.calculate(error, Constants.CENTER_OF_CAMERA)/ Constants.CENTER_OF_CAMERA;  // pixels/pixels = O(1)
     turretMotor.set(pidVal);
     SmartDashboard.putNumber("Turret Aim Error", Constants.CENTER_OF_CAMERA-error);

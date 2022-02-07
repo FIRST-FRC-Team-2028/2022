@@ -4,9 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.subsystems.Turret;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -18,7 +23,9 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-
+  private PneumaticHub pcm;
+  private Turret turret;
+  private Joystick joystick;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -28,7 +35,10 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-
+    pcm = m_robotContainer.getPcm();
+    turret = m_robotContainer.getTurret();
+    joystick  = new Joystick(Constants.JOYSTICK);
+    
     /* test quadraticFitter */
     QuadraticFitter fitter = new QuadraticFitter();
     double [][] testers = {
@@ -61,6 +71,13 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    if (Constants.COMPRESSOR_AVAILABLE ){
+      //pcm.enableCompressorDigital();
+      pcm.enableCompressorAnalog(110.,120.);
+      double pressure= pcm.getPressure(Constants.COMPRESSOR_ANALOG_CHANNEL);
+      SmartDashboard.putNumber("Pressure", pressure);
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -104,9 +121,28 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    joystick  = new Joystick(Constants.JOYSTICK);
+    elevationAngle = 45.;
+    elevationUp = new JoystickButton(joystick,Constants.ELEVATOR_UP_BUTTON);
+    elevationDown = new JoystickButton(joystick,Constants.ELEVATOR_DOWN_BUTTON);
   }
+
+  private double elevationAngle;
+  private JoystickButton elevationUp;
+  private JoystickButton elevationDown;
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    turret.shooterSpeed(joystick.getZ()*4000.);
+    if (elevationUp.get()) {
+      elevationAngle+=5.;
+    }
+    if (elevationDown.get()) {
+      elevationAngle-=5.;
+    }
+    turret.setelevation(elevationAngle);
+    SmartDashboard.putNumber("elevationAngle", elevationAngle);
+    SmartDashboard.putNumber("shooterSpeed", joystick.getZ()*4000.);
+  }
 }

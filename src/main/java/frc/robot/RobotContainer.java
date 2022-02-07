@@ -24,6 +24,7 @@ import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Turret;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticHub;
 
 
 /**
@@ -48,20 +49,26 @@ public class RobotContainer {
   private Pickup pickup;
   private Turret turret;
   private Magazine magazine;
+  
+  private PneumaticHub pcm;
 
   private final DefaultDriveCommand m_defaultDriveCommand;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     //Configure default commands
+    if (Constants.COMPRESSOR_AVAILABLE ){
+      pcm = new PneumaticHub(Constants.PNEUMATICS_CONTROL_MODULE);
+    }
+
     if (Constants.DRIVE_AVAILABLE) {
-      m_driveSubsystem = new DriveSubsystem();
+      m_driveSubsystem = new DriveSubsystem(pcm);
       m_defaultDriveCommand = new DefaultDriveCommand(m_driveSubsystem, m_joystick);
       m_driveSubsystem.setDefaultCommand(m_defaultDriveCommand);
     }
 
     if (Constants.PICKUP_AVAILABLE) {
-      pickup = new Pickup();
+      pickup = new Pickup(pcm);
     }
 
     if (Constants.TURRET_AVAILABLE) {
@@ -76,7 +83,12 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
   }
-
+  public PneumaticHub getPcm() {
+    return pcm;
+  }
+  public Turret getTurret() {
+    return turret;
+  }
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -112,6 +124,7 @@ public class RobotContainer {
       shooter.whenPressed(new Shoot(magazine, turret));
       shooter.whenReleased(new ShootStop(magazine, turret));
     }
+    
     
   }
 

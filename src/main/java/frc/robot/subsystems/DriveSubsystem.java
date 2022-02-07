@@ -67,11 +67,12 @@ public class DriveSubsystem extends SubsystemBase {
    *  pneumatic system,
    *  camera to use for displaying objects of interest and aiding the pickup of cargo
    */
-  public DriveSubsystem() {
+  public DriveSubsystem(PneumaticHub pcm) {
     leftMotor = new CANSparkMax(Constants.CANIDs.DRIVE_LEFT_LEADER.getid(), MotorType.kBrushless);
     leftFollower = new CANSparkMax(Constants.CANIDs.DRIVE_LEFT_FOLLOWER.getid(), MotorType.kBrushless);
     rightMotor = new CANSparkMax(Constants.CANIDs.DRIVE_RIGHT_LEADER.getid(), MotorType.kBrushless);
     rightFollower = new CANSparkMax(Constants.CANIDs.DRIVE_RIGHT_FOLLOWER.getid(), MotorType.kBrushless);
+
    
     leftMotor.restoreFactoryDefaults();
     leftFollower.restoreFactoryDefaults();
@@ -109,12 +110,7 @@ public class DriveSubsystem extends SubsystemBase {
     
 
     if (Constants.COMPRESSOR_AVAILABLE ){
-      /* There is only one pcm on the robot for every subsystem to use.
-       It ought to be instantiated in Robot rather than here. */
-       double I_AM_A_PROBLEM_WAITING_TO_HAPPEN;
-      pcm = new PneumaticHub(Constants.PNEUMATICS_CONTROL_MODULE);
-      //pcm = new PneumaticsControlModule(Constants.PNEUMATICS_CONTROL_MODULE);
-
+      this.pcm = pcm;
       shifter = pcm.makeDoubleSolenoid(Constants.PneumaticChannel.DRIVE_LOW_GEAR.getChannel(), Constants.PneumaticChannel.DRIVE_HIGH_GEAR.getChannel());
       switchGears(Constants.DRIVE_LOW_GEAR);
     }
@@ -247,8 +243,8 @@ public class DriveSubsystem extends SubsystemBase {
     // and send to NetWorkTables for display on dashboard
     if (Constants.CAMERA_AVAILABLE){
       numTargets = driveCamera.getCCC().getBlocks(false, Pixy2CCC.CCC_SIG_ALL,10);
-      toNT[0]=(double)numTargets;
-      if (numTargets >1){
+      toNT[0] = (double)numTargets;
+      if (numTargets > 1){
         for (Block block : driveCamera.getCCC().getBlockCache())  {
           if (block.getWidth() > size) {
                 toNT[offset+0]=block.getSignature();
@@ -269,12 +265,7 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putNumberArray("DriveCamera", toNT);
     }
 
-    if (Constants.COMPRESSOR_AVAILABLE ){
-      //pcm.enableCompressorDigital();
-      pcm.enableCompressorAnalog(110.,120.);
-      double pressure= pcm.getPressure(Constants.COMPRESSOR_ANALOG_CHANNEL);
-      SmartDashboard.putNumber("Pressure", pressure);
-    }
+   
   }
 
   public int seeCargo() {
