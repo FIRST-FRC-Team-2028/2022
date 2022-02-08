@@ -50,8 +50,10 @@ public class Turret extends SubsystemBase {
   double kp=.3;
   double ki=0.;
   double kd=0.;
+  /*
   final QuadraticFitter fittere;
   final QuadraticFitter fitterm;
+  */
 
   public Turret() {
     shooter = new CANSparkMax(Constants.CANIDs.TURRET_SHOOTER.getid(), MotorType.kBrushless);
@@ -67,6 +69,8 @@ public class Turret extends SubsystemBase {
     elevator_controller.setI(elevator_ki);
     elevator_controller.setD(elevator_kd);
     elevatorencoder =  elevationMotor.getEncoder();
+    limitswitch.enableLimitSwitch(false);  // do not shut down elevator
+  
     /* pixy on I2C or analog?
        Analog is simpler; train for one signature; report x location of largest
        I2C can return more info, ie width, Y  which indicate distance
@@ -77,21 +81,21 @@ public class Turret extends SubsystemBase {
     aimer = new PIDController(kp, ki, kd);
     aimer.setSetpoint(0.);
     aimer.setIntegratorRange(-1., 1.);
+
     /** 2d arrays describe elavation and motor speed as functions of distance */
+    /*
     double[][] motorspeed = {{3.,4.,8.,16.}, {.4,.5,.8,1.}};
     double[][] elavation = {{3.,4.,8.,16.}, {100,200,400,500}};
 
     fittere =new QuadraticFitter();
     fitterm =new  QuadraticFitter();
  
-   
     for(int i=0; i < 4; i++) {
       fittere.add(elavation[0][i], elavation[1][i]);
       fitterm.add(motorspeed[0][i], motorspeed[1][i]);
     }
+    */
 
-    limitswitch.enableLimitSwitch(false);  // do not shut down elevator
-  
   }
 
   /** for testing set some arbitrary -1 < value <1 */

@@ -131,18 +131,22 @@ public final class Constants {
 
     // drive constants
     /* Max RPM = 5700 rpm
-        high gear ratio = 2.667
+        high gear ratio = 3.667
         wheel radius = 6"
-        Max speed = 5700 /2.667 *6*PI /12/5280 *60 = 37.5 mph
+        Max speed = 5700 /3.667 *6*PI /12/5280 *60 = 27.7 mph
+
+        low gear ratio = 8.333
+        max speed in low = 12.2 mph
      */
     public static final double SPARKMAX_RPM = 5700;
-    public static final double DRIVE_HIGH_GEAR_RATIO = 0.6;   //  Highest desired Motor RPM
+    public static final double DRIVE_SPEED_LIMIT = 0.6;
+    public static final double DRIVE_HIGH_GEAR_RATIO = 1.;   //  Highest desired Motor RPM
     public static final double DRIVE_LOW_GEAR_RATIO = 2.2727*DRIVE_HIGH_GEAR_RATIO;  // high:low ratio of gear box
     public static final DoubleSolenoid.Value DRIVE_LOW_GEAR = DoubleSolenoid.Value.kForward;
     public static final DoubleSolenoid.Value DRIVE_HIGH_GEAR = DoubleSolenoid.Value.kReverse;
-    public static final double SHIFTER_THRESHOLD = 0.6;
-    public static final int DRIVE_SMOOTHER_SAMPLES = 0;
-    public static final boolean DRIVE_VELOCITY_CONTROLLED = false;
+    public static final double SHIFTER_THRESHOLD = 12.2/27.7;
+    public static final int DRIVE_SMOOTHER_SAMPLES = 10;
+    public static final boolean DRIVE_VELOCITY_CONTROLLED = true;
     
     // climber constants
     public static final double CLIMBER_TIME_TO_CLIMB = 0;

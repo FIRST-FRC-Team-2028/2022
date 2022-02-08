@@ -56,8 +56,8 @@ public class DriveSubsystem extends SubsystemBase {
   double gearRatio = 1.;  // initialized as if there is no speed control
   double[] smoothX = new double[Constants.DRIVE_SMOOTHER_SAMPLES];
   double[] smoothY = new double[Constants.DRIVE_SMOOTHER_SAMPLES];
-  double xStSm;
-  double yStSm;
+  double xDriveStick;
+  double yDriveStick;
   int smoothIt = 0;
 
   Pixy2 driveCamera;
@@ -125,8 +125,8 @@ public class DriveSubsystem extends SubsystemBase {
       smoothY[i]=0.;
     }
     smoothIt=0;
-    xStSm = 0.;
-    yStSm = 0.;
+    xDriveStick = 0.;
+    yDriveStick = 0.;
   }
 
   public void drive(double left, double right) {
@@ -138,6 +138,12 @@ public class DriveSubsystem extends SubsystemBase {
    * -1 < stickX and stickY < 1.
   */
   public void driveMe (double stickX, double stickY) {
+    /* Speed limit enforced */
+    double speed = stickX*stickX + stickY*stickY;
+    if (speed > Constants.DRIVE_SPEED_LIMIT) {
+      stickX *= Constants.DRIVE_SPEED_LIMIT/Math.sqrt(speed);
+      stickY *= Constants.DRIVE_SPEED_LIMIT/Math.sqrt(speed);
+    }
     if (Constants.AUTOSHIFT_AVAILABLE) {
       /* Alternative shifting strategies:
         A) Since the stick represents the robot speed,
@@ -148,22 +154,22 @@ public class DriveSubsystem extends SubsystemBase {
           how hard the motors are working to maintain speed,
           ie current draw or voltage.
       */
-      if (stickX*stickX+stickY*stickY > Constants.SHIFTER_THRESHOLD  ){
+      if (speed > Constants.SHIFTER_THRESHOLD  ){
         switchGears(Constants.DRIVE_HIGH_GEAR);
-      } else if (stickX*stickX+stickY*stickY < Constants.SHIFTER_THRESHOLD*.95) {
+      } else if (speed < Constants.SHIFTER_THRESHOLD*.95) {
         switchGears ( Constants.DRIVE_LOW_GEAR);
       }
     }
+
     // smooth the control inputs
-    xStSm += stickX/Constants.DRIVE_SMOOTHER_SAMPLES - smoothX[smoothIt];
-    yStSm += stickY/Constants.DRIVE_SMOOTHER_SAMPLES - smoothY[smoothIt];
+    xDriveStick += stickX/Constants.DRIVE_SMOOTHER_SAMPLES - smoothX[smoothIt];
+    yDriveStick += stickY/Constants.DRIVE_SMOOTHER_SAMPLES - smoothY[smoothIt];
     smoothX[smoothIt]=stickX/Constants.DRIVE_SMOOTHER_SAMPLES;
     smoothY[smoothIt]=stickY/Constants.DRIVE_SMOOTHER_SAMPLES;
     smoothIt = (smoothIt+1)%Constants.DRIVE_SMOOTHER_SAMPLES;
-    stickX = xStSm; stickY = yStSm;
 
     double IM_NOT_DONE_YET;
-    stickX=0.; stickY=2.6;  // hardwire for testing
+    xDriveStick=0.; yDriveStick=.44;  // hardwire for testing
     /* Saturday, end of day, getting unexplained behavior:
       shift from low to high on the stand, ie without load,
       seems to nearly maintain wheel speed - for a couple seconds.
@@ -176,12 +182,12 @@ public class DriveSubsystem extends SubsystemBase {
 
     //driverControl.arcadeDrive(-stickX, stickY);
     
-    double leftMotorSpeed = -stickX*gearRatio;
-    double rightMotorSpeed = stickY*gearRatio;
-    SmartDashboard.putNumber("to arcade: leftMotorSpeed" , leftMotorSpeed);
-    SmartDashboard.putNumber("to arcade: rightMotorSpeed" , rightMotorSpeed);
+    double xGearedStick = -xDriveStick*gearRatio;
+    double yGearedStick = yDriveStick*gearRatio;
+    SmartDashboard.putNumber("to arcade: xGearedStick" , xGearedStick);
+    SmartDashboard.putNumber("to arcade: yGearedStick" , yGearedStick);
     SmartDashboard.putNumber("to arcade: gearRatio ", gearRatio);
-    driverControl.arcadeDrive(leftMotorSpeed, rightMotorSpeed);
+    driverControl.arcadeDrive(xGearedStick, yGearedStick);
   }
   
 
@@ -195,7 +201,9 @@ public class DriveSubsystem extends SubsystemBase {
     System.out.println("Switch gears");
     if (Constants.COMPRESSOR_AVAILABLE){
       if (shifter.get() == Constants.DRIVE_LOW_GEAR) {
-        if (Constants.DRIVE_VELOCITY_CONTROLLED) {
+        if (Constants.DRIVE_VELOCITY_CONTROLLED
+            && ! overRedLine()
+            ) {
           gearRatio = Constants.DRIVE_HIGH_GEAR_RATIO;
           //gearRatio = Constants.DRIVE_LOW_GEAR_RATIO;
         }
@@ -204,8 +212,10 @@ public class DriveSubsystem extends SubsystemBase {
         if (Constants.DRIVE_VELOCITY_CONTROLLED){
           gearRatio = Constants.DRIVE_LOW_GEAR_RATIO;
           //gearRatio = Constants.DRIVE_HIGH_GEAR_RATIO;
+          shifter.set(Constants.DRIVE_LOW_GEAR);
+        } else {
+          shifter.set(Constants.DRIVE_LOW_GEAR);
         }
-        shifter.set(Constants.DRIVE_LOW_GEAR);
       }
     }
   }
@@ -223,14 +233,25 @@ public class DriveSubsystem extends SubsystemBase {
     } else if (newGear == Constants.DRIVE_LOW_GEAR 
        //&& shifter.get() == Constants.DRIVE_HIGH_GEAR
        ) {
-      if (Constants.DRIVE_VELOCITY_CONTROLLED) {
+      if (Constants.DRIVE_VELOCITY_CONTROLLED
+           && ! overRedLine()) {
         gearRatio = Constants.DRIVE_LOW_GEAR_RATIO;
         //gearRatio = Constants.DRIVE_HIGH_GEAR_RATIO;
+        shifter.set(Constants.DRIVE_LOW_GEAR);
+        //SmartDashboard.putString("Gear",shifter.get())
+      }else {
+        shifter.set(Constants.DRIVE_LOW_GEAR);
       }
-      shifter.set(Constants.DRIVE_LOW_GEAR);
     }
   }
   
+
+  private boolean overRedLine() {
+    return 
+       Math.abs(xDriveStick) > Constants.SHIFTER_THRESHOLD
+       ||  
+       Math.abs(yDriveStick) > Constants.SHIFTER_THRESHOLD;
+  }
 
   @Override
   public void periodic() {

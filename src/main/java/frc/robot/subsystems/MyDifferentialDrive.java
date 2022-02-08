@@ -70,9 +70,13 @@ public class MyDifferentialDrive extends DifferentialDrive {
       m_reported = true;
     } */
 
+    SmartDashboard.putNumber("before deadband Speed:",xSpeed);
+    SmartDashboard.putNumber("before deadband Rotation:",zRotation);
     xSpeed = MathUtil.applyDeadband(xSpeed, m_deadband);
     zRotation = MathUtil.applyDeadband(zRotation, m_deadband);
-
+    SmartDashboard.putNumber("after deadband Speed:",xSpeed);
+    SmartDashboard.putNumber("after deadband Rotation:",zRotation);
+    
     var speeds = arcadeDriveIK(xSpeed, zRotation, squareInputs);
 
     if (Constants.DRIVE_VELOCITY_CONTROLLED) {
@@ -90,5 +94,61 @@ public class MyDifferentialDrive extends DifferentialDrive {
     SmartDashboard.putNumber("leftRPM",m_leftEncoder.getVelocity());
     SmartDashboard.putNumber("rightRPM",m_rightEncoder.getVelocity());
     feed();
+  }
+
+    /**
+   * Arcade drive inverse kinematics for differential drive platform.
+   *
+   * @param xSpeed The robot's speed along the X axis [-1.0..1.0]. Forward is positive.
+   * @param zRotation The robot's rotation rate around the Z axis [-1.0..1.0]. Clockwise is
+   *     positive.
+   * @param squareInputs If set, decreases the input sensitivity at low speeds.
+   * @return Wheel speeds.
+   */
+  @SuppressWarnings("ParameterName")
+  public static WheelSpeeds arcadeDriveIK(double xSpeed, double zRotation, boolean squareInputs) {
+    xSpeed = MathUtil.clamp(xSpeed, -1.0, 1.0);
+    zRotation = MathUtil.clamp(zRotation, -1.0, 1.0);
+
+    // Square the inputs (while preserving the sign) to increase fine control
+    // while permitting full power.
+    if (squareInputs) {
+      xSpeed = Math.copySign(xSpeed * xSpeed, xSpeed);
+      zRotation = Math.copySign(zRotation * zRotation, zRotation);
+    }
+
+    double leftSpeed;
+    double rightSpeed;
+
+    double maxInput = Math.copySign(Math.max(Math.abs(xSpeed), Math.abs(zRotation)), xSpeed);
+
+    if (xSpeed >= 0.0) {
+      // First quadrant, else second quadrant
+      if (zRotation >= 0.0) {
+        leftSpeed = maxInput;
+        rightSpeed = xSpeed - zRotation;
+      } else {
+        leftSpeed = xSpeed + zRotation;
+        rightSpeed = maxInput;
+      }
+    } else {
+      // Third quadrant, else fourth quadrant
+      if (zRotation >= 0.0) {
+        leftSpeed = xSpeed + zRotation;
+        rightSpeed = maxInput;
+      } else {
+        leftSpeed = maxInput;
+        rightSpeed = xSpeed - zRotation;
+      }
+    }
+    
+    // Normalize the wheel speeds
+    double maxMagnitude = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
+    if (maxMagnitude > 1.0) {
+      leftSpeed /= maxMagnitude;
+      rightSpeed /= maxMagnitude;
+    }
+
+    return new WheelSpeeds(leftSpeed, rightSpeed);
   }
 }
