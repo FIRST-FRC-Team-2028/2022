@@ -182,6 +182,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     //driverControl.arcadeDrive(-stickX, stickY);
     
+    SmartDashboard.putString("Gear: ",shifter.get()==Constants.DRIVE_HIGH_GEAR ?"High":"Low");
     double xGearedStick = -xDriveStick*gearRatio;
     double yGearedStick = yDriveStick*gearRatio;
     SmartDashboard.putNumber("to arcade: xGearedStick" , xGearedStick);
@@ -199,53 +200,35 @@ public class DriveSubsystem extends SubsystemBase {
   /** toggle between two gears */
   public void switchGears() {
     System.out.println("Switch gears");
-    if (Constants.COMPRESSOR_AVAILABLE){
-      if (shifter.get() == Constants.DRIVE_LOW_GEAR) {
-        if (Constants.DRIVE_VELOCITY_CONTROLLED
-            && ! overRedLine()
-            ) {
-          gearRatio = Constants.DRIVE_HIGH_GEAR_RATIO;
-          //gearRatio = Constants.DRIVE_LOW_GEAR_RATIO;
-        }
-        shifter.set(Constants.DRIVE_HIGH_GEAR);
-      } else {
-        if (Constants.DRIVE_VELOCITY_CONTROLLED){
-          gearRatio = Constants.DRIVE_LOW_GEAR_RATIO;
-          //gearRatio = Constants.DRIVE_HIGH_GEAR_RATIO;
-          shifter.set(Constants.DRIVE_LOW_GEAR);
-        } else {
-          shifter.set(Constants.DRIVE_LOW_GEAR);
-        }
-      }
-    }
+    switchGears((shifter.get() == Constants.DRIVE_HIGH_GEAR)?Constants.DRIVE_LOW_GEAR:Constants.DRIVE_HIGH_GEAR);
   }
 
   public void switchGears(DoubleSolenoid.Value newGear) {
     System.out.println("Switch gears "+newGear+" from "+shifter.get());
-    if (newGear == Constants.DRIVE_HIGH_GEAR 
-        //&& shifter.get() ==  Constants.DRIVE_LOW_GEAR
-         ) {
+    if (Constants.COMPRESSOR_AVAILABLE){
       if (Constants.DRIVE_VELOCITY_CONTROLLED){
-        gearRatio = Constants.DRIVE_HIGH_GEAR_RATIO;
-        //gearRatio = Constants.DRIVE_LOW_GEAR_RATIO;
-      }
-      shifter.set(Constants.DRIVE_HIGH_GEAR);
-    } else if (newGear == Constants.DRIVE_LOW_GEAR 
-       //&& shifter.get() == Constants.DRIVE_HIGH_GEAR
-       ) {
-      if (Constants.DRIVE_VELOCITY_CONTROLLED
-           && ! overRedLine()) {
-        gearRatio = Constants.DRIVE_LOW_GEAR_RATIO;
-        //gearRatio = Constants.DRIVE_HIGH_GEAR_RATIO;
-        shifter.set(Constants.DRIVE_LOW_GEAR);
-        //SmartDashboard.putString("Gear",shifter.get())
-      }else {
-        shifter.set(Constants.DRIVE_LOW_GEAR);
+        if (newGear == Constants.DRIVE_HIGH_GEAR) {
+          gearRatio = Constants.DRIVE_HIGH_GEAR_RATIO;
+          shifter.set(Constants.DRIVE_HIGH_GEAR);
+        } else if (newGear == Constants.DRIVE_LOW_GEAR
+            && ! overRedLine()
+          ) {
+          gearRatio = Constants.DRIVE_LOW_GEAR_RATIO;
+          shifter.set(Constants.DRIVE_LOW_GEAR);
+        }
+      } else {
+        if (newGear == Constants.DRIVE_HIGH_GEAR) {
+          shifter.set(Constants.DRIVE_HIGH_GEAR);
+        } else if (newGear == Constants.DRIVE_LOW_GEAR) {
+          shifter.set(Constants.DRIVE_LOW_GEAR);
+        }
       }
     }
   }
   
-
+  /** check whether speed is low enough to shift down
+   *   without exceeding motor max RPM
+   */
   private boolean overRedLine() {
     return 
        Math.abs(xDriveStick) > Constants.SHIFTER_THRESHOLD

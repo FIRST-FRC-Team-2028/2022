@@ -141,7 +141,7 @@ public final class Constants {
     public static final double SPARKMAX_RPM = 5700;
     public static final double DRIVE_SPEED_LIMIT = 0.6;
     public static final double DRIVE_HIGH_GEAR_RATIO = 1.;   //  Highest desired Motor RPM
-    public static final double DRIVE_LOW_GEAR_RATIO = 2.2727*DRIVE_HIGH_GEAR_RATIO;  // high:low ratio of gear box
+    public static final double DRIVE_LOW_GEAR_RATIO = 8.333/3.667*DRIVE_HIGH_GEAR_RATIO;  // high:low ratio of gear box
     public static final DoubleSolenoid.Value DRIVE_LOW_GEAR = DoubleSolenoid.Value.kForward;
     public static final DoubleSolenoid.Value DRIVE_HIGH_GEAR = DoubleSolenoid.Value.kReverse;
     public static final double SHIFTER_THRESHOLD = 12.2/27.7;

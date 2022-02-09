@@ -71,7 +71,7 @@ public class QuadraticFitter {
         
         eqCoefs[2][0] = 2.*sumx2;
         eqCoefs[2][1] = 2.*sumx;
-        eqCoefs[2][2] = 2.;*/
+        eqCoefs[2][2] = 2.*nsamples;*/
 
         eqCoefs[0][0] = 2.*sumx4;
         eqCoefs[1][0] = 2.*sumx3;
@@ -83,7 +83,7 @@ public class QuadraticFitter {
         
         eqCoefs[0][2] = 2.*sumx2;
         eqCoefs[1][2] = 2.*sumx;
-        eqCoefs[2][2] = 2.;
+        eqCoefs[2][2] = 2.*nsamples;
 
         rhs[0]        = 2.*sumx2y;
         rhs[1]        = 2.*sumxy;
