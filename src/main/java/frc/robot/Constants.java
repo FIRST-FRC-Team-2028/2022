@@ -127,6 +127,7 @@ public final class Constants {
     public static final double ELEVATOR_FCN_BCOEF = 0.;
     public static final double ELEVATOR_FCN_CCOEF = 0.;
     public static final double ELEVATOR_ENCODER_RATIO = 0.;
+    public static final int TURRET_PIXY_ADDRESS = 0x54;
 
 
     // drive constants
@@ -150,6 +151,7 @@ public final class Constants {
     
     // climber constants
     public static final double CLIMBER_TIME_TO_CLIMB = 0;
+    public static final double TURRET_AIMER_FILTER_SIZE = 0;
     
 
 }

@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.QuadraticFitter;
 import frc.robot.Pixy2API.Pixy2;
+import frc.robot.Pixy2API.Pixy2CCC;
+import frc.robot.Pixy2API.Pixy2CCC.Block;
 import frc.robot.Pixy2API.links.I2CLink;
 
 /** Turret points toward the hub and shoot balls into it.
@@ -77,7 +79,7 @@ public class Turret extends SubsystemBase {
      */
     pixyCam = new AnalogInput(Constants.TURRET_PIXY_ANALOG);  // to detect hub
     pixyCamI2C = Pixy2.createInstance(new I2CLink());
-    int initError = pixyCamI2C.init(Constants.PIXY_USE_MXP);
+    int initError = pixyCamI2C.init(Constants.PIXY_USE_MXP, Constants.TURRET_PIXY_ADDRESS);
     aimer = new PIDController(kp, ki, kd);
     aimer.setSetpoint(0.);
     aimer.setIntegratorRange(-1., 1.);
@@ -160,12 +162,35 @@ public class Turret extends SubsystemBase {
    */
   public double aimMe() {
     /* connect the camera as a driver for the motors to find the hub */
-    double error = pixyCam.getValue();
+    //double error = pixyCam.getValue();
+    int numTargets = pixyCamI2C.getCCC().getBlocks(false, Pixy2CCC.CCC_SIG_ALL,10);
+    if(numTargets == 0) return 0.;    
+    Block biggest=null;
+    double size=0.;
+    double filterSize= Constants.TURRET_AIMER_FILTER_SIZE;
+    for (Block block : pixyCamI2C.getCCC().getBlockCache())  {
+       if (block.getWidth() < filterSize) {
+         block.getSignature();
+         block.getWidth();
+         block.getHeight();
+         
+         double tsize = block.getWidth()*block.getHeight();
+         if (tsize > size) {
+           size = tsize;
+           biggest = block;
+         }
+       }
+     }
     //width height i2c LOOK IN DRIVESUBSYSTEM TO GET BIGGEST X AND Y in periodic
+    double error = biggest.getX();
     double pidVal = aimer.calculate(error, Constants.CENTER_OF_CAMERA)/ Constants.CENTER_OF_CAMERA;  // pixels/pixels = O(1)
     turretMotor.set(pidVal);
     SmartDashboard.putNumber("Turret Aim Error", Constants.CENTER_OF_CAMERA-error);
     return Constants.CENTER_OF_CAMERA - error;
+        
+
+    
+    
   }
 
   public void stopAimer()

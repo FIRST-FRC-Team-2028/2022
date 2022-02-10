@@ -71,6 +71,9 @@ public class UARTLink implements Link {
 		serial = new SerialPort(PIXY_UART_BAUDRATE, port);
 		return 0;
 	}
+	public int open(int arg, int dummy) {
+		return open(arg);
+	}
 
 	/**
 	 * Closes UART/Serial port
