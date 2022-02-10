@@ -109,8 +109,11 @@ public final class Constants {
 
     // Camera constants
     public static final int TURRET_PIXY_ANALOG = 0;
+    public static final int TURRET_PIXY_ADDRESS = 0x54;
     public static final int PIXY_USE_MXP = 0;
-    public static final int CENTER_OF_CAMERA = 316/2; //hardwired for Pixy2 resolution
+    public static final int CENTER_OF_CAMERA = 316/2; //hardwired for Pixy2 x-resolution
+    public static final int PIXY_VERT_CENTER =200/2;
+    public static final int PIXY_FOV_VERT = 40;  // degrees 
     public static final double PIXY_TARGET_AR = 2.;
     public static final int PIXY_MINIMUM_SIZE = 10;
 
@@ -127,7 +130,7 @@ public final class Constants {
     public static final double ELEVATOR_FCN_BCOEF = 0.;
     public static final double ELEVATOR_FCN_CCOEF = 0.;
     public static final double ELEVATOR_ENCODER_RATIO = 0.;
-    public static final int TURRET_PIXY_ADDRESS = 0x54;
+    public static final double TURRET_CAMERA_HEIGHT = 36.; //inches
 
 
     // drive constants
@@ -145,6 +148,8 @@ public final class Constants {
     public static final double DRIVE_LOW_GEAR_RATIO = 8.333/3.667*DRIVE_HIGH_GEAR_RATIO;  // high:low ratio of gear box
     public static final DoubleSolenoid.Value DRIVE_LOW_GEAR = DoubleSolenoid.Value.kForward;
     public static final DoubleSolenoid.Value DRIVE_HIGH_GEAR = DoubleSolenoid.Value.kReverse;
+    public static final double DRIVE_LEAVE_TARMAC_SPEED = 0.;
+    public static final double DRIVE_TIME_TO_LEAVE_TARMAC = 0.;
     public static final double SHIFTER_THRESHOLD = 12.2/27.7;
     public static final int DRIVE_SMOOTHER_SAMPLES = 10;
     public static final boolean DRIVE_VELOCITY_CONTROLLED = true;
@@ -152,6 +157,8 @@ public final class Constants {
     // climber constants
     public static final double CLIMBER_TIME_TO_CLIMB = 0;
     public static final double TURRET_AIMER_FILTER_SIZE = 0;
-    
+
+    // field measurements
+    public static final double HUB_HEIGHT = 0.; //inches
 
 }

@@ -181,16 +181,15 @@ public class Turret extends SubsystemBase {
          }
        }
      }
+
     //width height i2c LOOK IN DRIVESUBSYSTEM TO GET BIGGEST X AND Y in periodic
+
+    // use PIDcontroller to aim turret
     double error = biggest.getX();
     double pidVal = aimer.calculate(error, Constants.CENTER_OF_CAMERA)/ Constants.CENTER_OF_CAMERA;  // pixels/pixels = O(1)
     turretMotor.set(pidVal);
     SmartDashboard.putNumber("Turret Aim Error", Constants.CENTER_OF_CAMERA-error);
     return Constants.CENTER_OF_CAMERA - error;
-        
-
-    
-    
   }
 
   public void stopAimer()
