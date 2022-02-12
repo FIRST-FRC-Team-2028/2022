@@ -41,7 +41,8 @@ public class MyDifferentialDrive extends DifferentialDrive {
     
     
     /**
-   * Arcade drive method for differential drive platform. The calculated values will be squared to
+   * Arcade drive method for differential drive platform. 
+   * Use the alternate call to square the inputs as a means to
    * decrease sensitivity at low speeds.
    *
    * @param xSpeed The robot's speed along the X axis [-1.0..1.0]. Forward is positive.
@@ -50,7 +51,7 @@ public class MyDifferentialDrive extends DifferentialDrive {
    */
   @SuppressWarnings("ParameterName")
   public void arcadeDrive(double xSpeed, double zRotation) {
-    arcadeDrive(xSpeed, zRotation, true);
+    arcadeDrive(xSpeed, zRotation, false);
   }
 
   /**
@@ -70,8 +71,8 @@ public class MyDifferentialDrive extends DifferentialDrive {
       m_reported = true;
     } */
 
-    SmartDashboard.putNumber("before deadband Speed:",xSpeed);
-    SmartDashboard.putNumber("before deadband Rotation:",zRotation);
+    //SmartDashboard.putNumber("before deadband Speed:",xSpeed);
+    //SmartDashboard.putNumber("before deadband Rotation:",zRotation);
     xSpeed = MathUtil.applyDeadband(xSpeed, m_deadband);
     zRotation = MathUtil.applyDeadband(zRotation, m_deadband);
     SmartDashboard.putNumber("after deadband Speed:",xSpeed);
@@ -83,6 +84,7 @@ public class MyDifferentialDrive extends DifferentialDrive {
       /* with closed loop control */
       SmartDashboard.putNumber("myArcade left", speeds.left);
       SmartDashboard.putNumber("myArcade right", speeds.right);
+      SmartDashboard.putNumber("myArcade m_maxOutput", m_maxOutput);
       m_leftController.setReference(speeds.left * Constants.SPARKMAX_RPM, CANSparkMax.ControlType.kVelocity);
       m_rightController.setReference(speeds.right * Constants.SPARKMAX_RPM, CANSparkMax.ControlType.kVelocity);
     } else {
@@ -90,7 +92,6 @@ public class MyDifferentialDrive extends DifferentialDrive {
       m_leftMotor.set(speeds.left * m_maxOutput);
       m_rightMotor.set(speeds.right * m_maxOutput);
     }
-    
     SmartDashboard.putNumber("leftRPM",m_leftEncoder.getVelocity());
     SmartDashboard.putNumber("rightRPM",m_rightEncoder.getVelocity());
     feed();
@@ -121,6 +122,7 @@ public class MyDifferentialDrive extends DifferentialDrive {
     double rightSpeed;
 
     double maxInput = Math.copySign(Math.max(Math.abs(xSpeed), Math.abs(zRotation)), xSpeed);
+    SmartDashboard.putNumber("IK maxInput", maxInput);
 
     if (xSpeed >= 0.0) {
       // First quadrant, else second quadrant
@@ -144,11 +146,13 @@ public class MyDifferentialDrive extends DifferentialDrive {
     
     // Normalize the wheel speeds
     double maxMagnitude = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
+    SmartDashboard.putNumber("IK ", maxMagnitude);
     if (maxMagnitude > 1.0) {
       leftSpeed /= maxMagnitude;
       rightSpeed /= maxMagnitude;
     }
 
     return new WheelSpeeds(leftSpeed, rightSpeed);
+    //return new WheelSpeeds(0.,0.);
   }
 }
