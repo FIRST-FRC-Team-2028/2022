@@ -11,19 +11,20 @@ import frc.robot.subsystems.Turret;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Shoot extends SequentialCommandGroup {
-  
-  /** Shoot a Cargo into the Hub 
-   *    assuming the turret is aimed,
-   *    set up the range
-   *    fire the cargo
-  */
-  public Shoot(Magazine magazine, Turret turret) {
+
+public class AutoShoot extends SequentialCommandGroup {
+  /**  Shoot the starting cargo when the robot is on the tarmac
+   *    Presuming the turret is facing the hub, (so there is no need to aim)
+   *    set tarmac distance
+   *    shoot
+   */
+  public AutoShoot(Turret turret, Magazine magazine) {
+    // Add your commands in the addCommands() call, e.g.
+    // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      /**sets motor speed and elevation */
-      new ShootInit(turret),
-      /** moves ball from magazine to turret*/
-      new ShootFire(magazine)
+      new SetTarmacDistance(turret),
+      new Shoot(magazine, turret)
+
     );
   }
 }

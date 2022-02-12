@@ -135,17 +135,24 @@ public final class Constants {
 
     // drive constants
     /* Max RPM = 5700 rpm
+       wheel diameter = 6" 
+
         high gear ratio = 3.667
-        wheel radius = 6"
-        Max speed = 5700 /3.667 *6*PI /12/5280 *60 = 27.7 mph
+        Max speed = 5700 /3.667 *3*PI /12/5280 *60 = 13.8 mph
+        drive distance per motor revolution  Rd = 3 * 2PI / 3.667 = 5.14 in
 
         low gear ratio = 8.333
-        max speed in low = 12.2 mph
+        max speed in low = 6.1 mph
+        drive distance per motor revolution  Rd = 3 * 2PI / 8.333 = 2.26 in
+
+        NEO encoder:rotations = 
      */
     public static final double SPARKMAX_RPM = 5700;
     public static final double DRIVE_SPEED_LIMIT = 0.6;
     public static final double DRIVE_HIGH_GEAR_RATIO = 1.;   //  Highest desired Motor RPM
     public static final double DRIVE_LOW_GEAR_RATIO = 8.333/3.667*DRIVE_HIGH_GEAR_RATIO;  // high:low ratio of gear box
+    public static final double DRIVE_REV_TO_DISTANCE_LOW = .4419;  // per inch
+    public static final double DRIVE_REV_TO_DISTANCE_HIGH = .1945;  // per inch
     public static final DoubleSolenoid.Value DRIVE_LOW_GEAR = DoubleSolenoid.Value.kForward;
     public static final DoubleSolenoid.Value DRIVE_HIGH_GEAR = DoubleSolenoid.Value.kReverse;
     public static final double DRIVE_LEAVE_TARMAC_SPEED = 0.;

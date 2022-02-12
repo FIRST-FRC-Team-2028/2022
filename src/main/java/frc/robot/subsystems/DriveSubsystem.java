@@ -180,7 +180,7 @@ public class DriveSubsystem extends SubsystemBase {
       so it appeared the high gear ratio was wrong.
     */
 
-    //driverControl.arcadeDrive(-stickX, stickY);
+    //driverControl.arcadeDrive(-xDriveStick, yDriveStick);
     
     SmartDashboard.putString("Gear: ",shifter.get()==Constants.DRIVE_HIGH_GEAR ?"High":"Low");
     double xGearedStick = -xDriveStick*gearRatio;

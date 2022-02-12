@@ -5,25 +5,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Turret;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Shoot extends SequentialCommandGroup {
-  
-  /** Shoot a Cargo into the Hub 
-   *    assuming the turret is aimed,
-   *    set up the range
-   *    fire the cargo
-  */
-  public Shoot(Magazine magazine, Turret turret) {
+
+public class AutoShootAndLeaveTarmac extends SequentialCommandGroup {
+  /** Shoot the starting cargo and 
+   *  leave the tarmac using the AutoLeaveTarmac and Autoshoot commands
+   */
+  public AutoShootAndLeaveTarmac(Turret turret, Magazine magazine, DriveSubsystem drive) {
     addCommands(
-      /**sets motor speed and elevation */
-      new ShootInit(turret),
-      /** moves ball from magazine to turret*/
-      new ShootFire(magazine)
+      new AutoShoot(turret, magazine),
+      new AutoLeaveTarmacTimed(drive)
     );
   }
 }

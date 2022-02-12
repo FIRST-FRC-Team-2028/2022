@@ -10,16 +10,20 @@ import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 
 
-public class LeaveTarmac extends CommandBase {
+public class AutoLeaveTarmacTimed extends CommandBase {
   DriveSubsystem drive;
   Timer timer;
 
 
-  /** This autonomous command has the robot quickly drive forward ~7 feet
-   *  so that all of its bumpers have completely left the tarmac.*/
-  public LeaveTarmac(DriveSubsystem drive) {
+  /** Autonomously drive forward ~7 feet
+   *  so that all of its bumpers have completely left the tarmac.
+   *  TODO:
+   *     Test to determine drive speed
+   *     Test to reliably get time to drive 7 feet 
+   *     Define Constants
+   */
+  public AutoLeaveTarmacTimed(DriveSubsystem drive) {
     this.drive = drive;
-    Timer timer = new Timer();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drive);
   }
@@ -35,7 +39,6 @@ public class LeaveTarmac extends CommandBase {
   @Override
   public void execute() {
     drive.drive(Constants.DRIVE_LEAVE_TARMAC_SPEED, Constants.DRIVE_LEAVE_TARMAC_SPEED);
-
   }
 
   // Called once the command ends or is interrupted.
