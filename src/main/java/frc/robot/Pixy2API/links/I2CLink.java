@@ -42,6 +42,8 @@ public class I2CLink implements Link {
 
 	private I2C i2c = null;
 
+	public static int getI2cDefaultAddress() {return PIXY_I2C_DEFAULT_ADDR;}
+
 	/**
 	 * Opens I2C port
 	 *
@@ -49,7 +51,7 @@ public class I2CLink implements Link {
 	 * 
 	 * @return Returns 0
 	 */
-	public int open(int arg) {
+	public int open(int arg, int address) {
 		I2C.Port port;
 		switch (arg) {
 		case 1:
@@ -59,8 +61,13 @@ public class I2CLink implements Link {
 		default:
 			port = I2C.Port.kOnboard;
 		}
-		i2c = new I2C(port, PIXY_I2C_DEFAULT_ADDR);
+		//i2c = new I2C(port, PIXY_I2C_DEFAULT_ADDR);
+		i2c = new I2C(port, address);
 		return 0;
+	}
+
+	public int open(int arg) {
+		return open(arg, PIXY_I2C_DEFAULT_ADDR);
 	}
 
 	/**

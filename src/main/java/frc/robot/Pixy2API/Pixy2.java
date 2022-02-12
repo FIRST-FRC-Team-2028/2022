@@ -120,9 +120,9 @@ public class Pixy2 {
 	 * 
 	 * @return Pixy2 error code
 	 */
-	public int init(int argument) {
+	public int init(int argument, int address) {
 		// Opens link
-		int ret = link.open(argument);
+		int ret = link.open(argument, address);
 		if (ret >= 0) {
 			// Tries to connect, times out if unable to communicate after 5 seconds
 			for (long t = System.currentTimeMillis(); System.currentTimeMillis() - t < 5000;) {
@@ -148,7 +148,10 @@ public class Pixy2 {
 	 * @return Pixy2 error code
 	 */
 	public int init() {
-		return init(PIXY_DEFAULT_ARGVAL);
+		return init(PIXY_DEFAULT_ARGVAL, PIXY_DEFAULT_ARGVAL);
+	}
+	public int init(int argument){
+		return init(argument, I2CLink.getI2cDefaultAddress());
 	}
 
 	/**

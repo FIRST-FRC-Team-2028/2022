@@ -22,6 +22,7 @@ public interface Link {
 	 * @return Returns state
 	 */
 	public int open(int arg);
+	public int open(int arg, int address);
 
 	/**
 	 * Closes link

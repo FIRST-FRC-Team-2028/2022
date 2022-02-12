@@ -254,11 +254,11 @@ public class DriveSubsystem extends SubsystemBase {
       if (numTargets > 1){
         for (Block block : driveCamera.getCCC().getBlockCache())  {
           if (block.getWidth() > size) {
-                toNT[offset+0]=block.getSignature();
-                toNT[offset+1]=block.getX();
-                toNT[offset+2]=block.getY();
-                toNT[offset+3]=block.getWidth();
-                toNT[offset+4]=block.getHeight();
+                toNT[offset+0] = block.getSignature();
+                toNT[offset+1] = block.getX();
+                toNT[offset+2] = block.getY();
+                toNT[offset+3] = block.getWidth();
+                toNT[offset+4] = block.getHeight();
                 double tsize=block.getWidth()*block.getHeight();
                 if (tsize>size) {
                   size=tsize;

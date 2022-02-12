@@ -70,6 +70,9 @@ public class SPILink implements Link {
 		spi.setChipSelectActiveLow();
 		return 0;
 	}
+	public int open(int arg, int dummy) {
+		return open(arg);
+	}
 
 	/**
 	 * Closes SPI port
