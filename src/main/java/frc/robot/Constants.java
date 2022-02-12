@@ -39,8 +39,8 @@ public final class Constants {
     public enum CANIDs {
         DRIVE_LEFT_LEADER    (20, true), 
         DRIVE_LEFT_FOLLOWER  (21, true),
-        DRIVE_RIGHT_LEADER   (10, true), 
-        DRIVE_RIGHT_FOLLOWER (11, true),
+        DRIVE_RIGHT_LEADER   (10, false), 
+        DRIVE_RIGHT_FOLLOWER (11, false),
         PICKUP_ROLLERS       (40, true),
         TURRET_ELEVATION     (00, false),
         TURRET_AZIMUTH       (00, false),
@@ -150,14 +150,15 @@ public final class Constants {
     public static final double SPARKMAX_RPM = 5700;
     public static final double DRIVE_SPEED_LIMIT = 0.6;
     public static final double DRIVE_HIGH_GEAR_RATIO = 1.;   //  Highest desired Motor RPM
-    public static final double DRIVE_LOW_GEAR_RATIO = 8.333/3.667*DRIVE_HIGH_GEAR_RATIO;  // high:low ratio of gear box
-    public static final double DRIVE_REV_TO_DISTANCE_LOW = .4419;  // per inch
-    public static final double DRIVE_REV_TO_DISTANCE_HIGH = .1945;  // per inch
-    public static final DoubleSolenoid.Value DRIVE_LOW_GEAR = DoubleSolenoid.Value.kForward;
-    public static final DoubleSolenoid.Value DRIVE_HIGH_GEAR = DoubleSolenoid.Value.kReverse;
-    public static final double DRIVE_LEAVE_TARMAC_SPEED = 0.;
+    //public static final double DRIVE_LOW_GEAR_RATIO = 8.333/3.667*DRIVE_HIGH_GEAR_RATIO;  // high:low ratio of gear box
+    //public static final double SHIFTER_THRESHOLD = 12.2/27.7;
+    //  So much for theory; what really happens in practice the ratio is 2.1
+    public static final double DRIVE_LOW_GEAR_RATIO = 2.1*DRIVE_HIGH_GEAR_RATIO;  // high:low ratio of gear box
+    public static final double SHIFTER_THRESHOLD = 0.476;
+    public static final DoubleSolenoid.Value DRIVE_HIGH_GEAR = DoubleSolenoid.Value.kForward;
+    public static final DoubleSolenoid.Value DRIVE_LOW_GEAR = DoubleSolenoid.Value.kReverse;
+     public static final double DRIVE_LEAVE_TARMAC_SPEED = 0.;
     public static final double DRIVE_TIME_TO_LEAVE_TARMAC = 0.;
-    public static final double SHIFTER_THRESHOLD = 12.2/27.7;
     public static final int DRIVE_SMOOTHER_SAMPLES = 10;
     public static final boolean DRIVE_VELOCITY_CONTROLLED = true;
     

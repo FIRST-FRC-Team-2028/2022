@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
 //import edu.wpi.first.wpilibj.PneumaticsControlModule;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+//import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** DriveSubsystem
@@ -47,6 +47,7 @@ public class DriveSubsystem extends SubsystemBase {
   double motor_ki=0.;
   double motor_kp=10.e-5;
   double motor_kd=0.;
+  double motor_FF=.000015;
   Joystick joystick;
   PneumaticHub pcm;
   //PneumaticsControlModule pcm;
@@ -54,10 +55,10 @@ public class DriveSubsystem extends SubsystemBase {
   //DifferentialDrive driverControl;
   MyDifferentialDrive driverControl;
   double gearRatio = 1.;  // initialized as if there is no speed control
-  double[] smoothX = new double[Constants.DRIVE_SMOOTHER_SAMPLES];
-  double[] smoothY = new double[Constants.DRIVE_SMOOTHER_SAMPLES];
-  double xDriveStick;
-  double yDriveStick;
+  double[] smoothTurn = new double[Constants.DRIVE_SMOOTHER_SAMPLES];
+  double[] smoothStrait = new double[Constants.DRIVE_SMOOTHER_SAMPLES];
+  double turnDriveStick;
+  double straitDriveStick;
   int smoothIt = 0;
 
   Pixy2 driveCamera;
@@ -93,9 +94,11 @@ public class DriveSubsystem extends SubsystemBase {
     leftController.setP(motor_kp);
     leftController.setI(motor_ki);
     leftController.setD(motor_kd);
+    leftController.setFF(motor_FF);
     rightController.setP(motor_kp);
     rightController.setI(motor_ki);
     rightController.setD(motor_kd);
+    rightController.setFF(motor_FF);
     leftController.setOutputRange(-1, 1);
     rightController.setOutputRange(-1, 1);
 
@@ -121,12 +124,12 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     for (int i=0;i<Constants.DRIVE_SMOOTHER_SAMPLES;i++) {
-      smoothX[i]=0.;
-      smoothY[i]=0.;
+      smoothTurn[i]=0.;
+      smoothStrait[i]=0.;
     }
     smoothIt=0;
-    xDriveStick = 0.;
-    yDriveStick = 0.;
+    turnDriveStick = 0.;
+    straitDriveStick = 0.;
   }
 
   public void drive(double left, double right) {
@@ -135,14 +138,14 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /** DriveMe(right+, forward+) 
-   * -1 < stickX and stickY < 1.
+   * -1 < turnStick and straitStick < 1.
   */
-  public void driveMe (double stickX, double stickY) {
+  public void driveMe (double turnStick, double straitStick) {
     /* Speed limit enforced */
-    double speed = stickX*stickX + stickY*stickY;
+    double speed = turnStick*turnStick + straitStick*straitStick;
     if (speed > Constants.DRIVE_SPEED_LIMIT) {
-      stickX *= Constants.DRIVE_SPEED_LIMIT/Math.sqrt(speed);
-      stickY *= Constants.DRIVE_SPEED_LIMIT/Math.sqrt(speed);
+      turnStick *= Constants.DRIVE_SPEED_LIMIT/Math.sqrt(speed);
+      straitStick *= Constants.DRIVE_SPEED_LIMIT/Math.sqrt(speed);
     }
     if (Constants.AUTOSHIFT_AVAILABLE) {
       /* Alternative shifting strategies:
@@ -162,14 +165,14 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     // smooth the control inputs
-    xDriveStick += stickX/Constants.DRIVE_SMOOTHER_SAMPLES - smoothX[smoothIt];
-    yDriveStick += stickY/Constants.DRIVE_SMOOTHER_SAMPLES - smoothY[smoothIt];
-    smoothX[smoothIt]=stickX/Constants.DRIVE_SMOOTHER_SAMPLES;
-    smoothY[smoothIt]=stickY/Constants.DRIVE_SMOOTHER_SAMPLES;
+    turnDriveStick += turnStick/Constants.DRIVE_SMOOTHER_SAMPLES - smoothTurn[smoothIt];
+    straitDriveStick += straitStick/Constants.DRIVE_SMOOTHER_SAMPLES - smoothStrait[smoothIt];
+    smoothTurn[smoothIt]=turnStick/Constants.DRIVE_SMOOTHER_SAMPLES;
+    smoothStrait[smoothIt]=straitStick/Constants.DRIVE_SMOOTHER_SAMPLES;
     smoothIt = (smoothIt+1)%Constants.DRIVE_SMOOTHER_SAMPLES;
 
     double IM_NOT_DONE_YET;
-    xDriveStick=0.; yDriveStick=.44;  // hardwire for testing
+    //turnDriveStick=0.; straitDriveStick=.44;  // hardwire for testing
     /* Saturday, end of day, getting unexplained behavior:
       shift from low to high on the stand, ie without load,
       seems to nearly maintain wheel speed - for a couple seconds.
@@ -180,15 +183,15 @@ public class DriveSubsystem extends SubsystemBase {
       so it appeared the high gear ratio was wrong.
     */
 
-    //driverControl.arcadeDrive(-xDriveStick, yDriveStick);
+    //driverControl.arcadeDrive(-turnStick, straitStick);
     
     SmartDashboard.putString("Gear: ",shifter.get()==Constants.DRIVE_HIGH_GEAR ?"High":"Low");
-    double xGearedStick = -xDriveStick*gearRatio;
-    double yGearedStick = yDriveStick*gearRatio;
-    SmartDashboard.putNumber("to arcade: xGearedStick" , xGearedStick);
-    SmartDashboard.putNumber("to arcade: yGearedStick" , yGearedStick);
+    double gearedTurn = -turnDriveStick*gearRatio;
+    double gearedStrait = straitDriveStick*gearRatio;
+    SmartDashboard.putNumber("to arcade: gearedStrait" , gearedStrait);
+    SmartDashboard.putNumber("to arcade: gearedTurn" , gearedTurn);
     SmartDashboard.putNumber("to arcade: gearRatio ", gearRatio);
-    driverControl.arcadeDrive(xGearedStick, yGearedStick);
+    driverControl.arcadeDrive(gearedStrait, gearedTurn);
   }
   
 
@@ -231,9 +234,9 @@ public class DriveSubsystem extends SubsystemBase {
    */
   private boolean overRedLine() {
     return 
-       Math.abs(xDriveStick) > Constants.SHIFTER_THRESHOLD
+       Math.abs(turnDriveStick) > Constants.SHIFTER_THRESHOLD
        ||  
-       Math.abs(yDriveStick) > Constants.SHIFTER_THRESHOLD;
+       Math.abs(straitDriveStick) > Constants.SHIFTER_THRESHOLD;
   }
 
   @Override
