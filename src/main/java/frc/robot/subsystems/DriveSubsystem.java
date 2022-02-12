@@ -17,6 +17,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
@@ -171,17 +172,8 @@ public class DriveSubsystem extends SubsystemBase {
     smoothStrait[smoothIt]=straitStick/Constants.DRIVE_SMOOTHER_SAMPLES;
     smoothIt = (smoothIt+1)%Constants.DRIVE_SMOOTHER_SAMPLES;
 
-    double IM_NOT_DONE_YET;
+    //double IM_NOT_DONE_YET;
     //turnDriveStick=0.; straitDriveStick=.44;  // hardwire for testing
-    /* Saturday, end of day, getting unexplained behavior:
-      shift from low to high on the stand, ie without load,
-      seems to nearly maintain wheel speed - for a couple seconds.
-      After that brief period, the wheel speed abruptly increases.
-      Shifting down slows back down again. The behavior repeats
-      whenever you shift. When the robot was on the floor, presumable under load,
-      the time to switch speed after gear change was undetectable,
-      so it appeared the high gear ratio was wrong.
-    */
 
     //driverControl.arcadeDrive(-turnStick, straitStick);
     
@@ -239,6 +231,15 @@ public class DriveSubsystem extends SubsystemBase {
        Math.abs(straitDriveStick) > Constants.SHIFTER_THRESHOLD;
   }
 
+  /** get the encoder position (and, relatively, the robot position)
+   * 
+   * @return position in inches
+   */
+  public double getPosition() {
+    return rightEncoder.getPosition() * (rightMotor.getInverted()?1.:-1.) /
+     ((shifter.get() == Constants.DRIVE_LOW_GEAR)?Constants.DRIVE_DISTANCE_ENCODER_RATIO_LOW:Constants.DRIVE_DISTANCE_ENCODER_RATIO_HIGH);
+  }
+
   @Override
   public void periodic() {
     int offset=1;
@@ -291,4 +292,6 @@ public class DriveSubsystem extends SubsystemBase {
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
+
+
 }

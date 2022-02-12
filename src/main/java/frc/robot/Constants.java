@@ -34,13 +34,14 @@ public final class Constants {
     public static final boolean COMPRESSOR_AVAILABLE    = true;
     public static final boolean GYRO_AVAILABLE          = false;
     public static final boolean BUTTONBOX_AVAILABLE     = false;
+    public static final boolean USBCAMERA_AVAILABLE     = false;
 
     // CAN connections
     public enum CANIDs {
-        DRIVE_LEFT_LEADER    (20, true), 
-        DRIVE_LEFT_FOLLOWER  (21, true),
-        DRIVE_RIGHT_LEADER   (10, false), 
-        DRIVE_RIGHT_FOLLOWER (11, false),
+        DRIVE_LEFT_LEADER    (20, false), 
+        DRIVE_LEFT_FOLLOWER  (21, false),
+        DRIVE_RIGHT_LEADER   (10, true), 
+        DRIVE_RIGHT_FOLLOWER (11, true),
         PICKUP_ROLLERS       (40, true),
         TURRET_ELEVATION     (00, false),
         TURRET_AZIMUTH       (00, false),
@@ -108,24 +109,32 @@ public final class Constants {
     public static final double SHOOTER_SLOW_SPEED = 0.;
 
     // Camera constants
-    public static final int TURRET_PIXY_ANALOG = 0;
-    public static final int TURRET_PIXY_ADDRESS = 0x54;
-    public static final int PIXY_USE_MXP = 0;
     public static final int CENTER_OF_CAMERA = 316/2; //hardwired for Pixy2 x-resolution
     public static final int PIXY_VERT_CENTER =200/2;
     public static final int PIXY_FOV_VERT = 40;  // degrees 
+    public static final int TURRET_PIXY_ANALOG = 0;
+    public static final int TURRET_PIXY_ADDRESS = 0x54;
+    public static final int DRIVE_PIXY_ADDRESS = 0x54;
+    public static final int PIXY_USE_MXP = 0;
     public static final double PIXY_TARGET_AR = 2.;
     public static final int PIXY_MINIMUM_SIZE = 10;
+    public static final double TURRET_AIMER_FILTER_SIZE = 0;
 
     // Turret constants
+    /* NEO 550 for turret and elevator
+     *    11000 max RPM
+     *    42 encoder counts/revolution
+     *    gear ratio for elevation = 100
+     *    gear ratio for azimuth = 100
+     * 
+     * NEO 1650 for shooter
+     *    5700 max RPM
+     */
     public static final double SHOOTER_FCN_ACOEF = 0.;
     public static final double SHOOTER_FCN_BCOEF = 0.;
     public static final double SHOOTER_FCN_CCOEF = 0.;
     public static final int ELEVATOR_MOTOR_ENCODER_RATIO = 0;
     public static final double ELEVATOR_MOTOR_ZEROING_SPEED = 0.;
-    public static final double TARMAC_DISTANCE = 0.;
-    public static final double PAD_ONE_DISTANCE =0.;
-    public static final double PAD_TWO_DISTANCE =0.;
     public static final double ELEVATOR_FCN_ACOEF = 0.;
     public static final double ELEVATOR_FCN_BCOEF = 0.;
     public static final double ELEVATOR_FCN_CCOEF = 0.;
@@ -138,14 +147,14 @@ public final class Constants {
        wheel diameter = 6" 
 
         high gear ratio = 3.667
-        Max speed = 5700 /3.667 *3*PI /12/5280 *60 = 13.8 mph
+        Max speed = 5700 /3.667 *3*PI /12/5280 *60 = 13.8 mph = 20.2 ft/sec
         drive distance per motor revolution  Rd = 3 * 2PI / 3.667 = 5.14 in
 
         low gear ratio = 8.333
-        max speed in low = 6.1 mph
+        max speed in low = 6.1 mph = 8.95 ft/sec
         drive distance per motor revolution  Rd = 3 * 2PI / 8.333 = 2.26 in
 
-        NEO encoder:rotations = 
+        NEO 1650 encoder:rotations = 42
      */
     public static final double SPARKMAX_RPM = 5700;
     public static final double DRIVE_SPEED_LIMIT = 0.6;
@@ -157,16 +166,27 @@ public final class Constants {
     public static final double SHIFTER_THRESHOLD = 0.476;
     public static final DoubleSolenoid.Value DRIVE_HIGH_GEAR = DoubleSolenoid.Value.kForward;
     public static final DoubleSolenoid.Value DRIVE_LOW_GEAR = DoubleSolenoid.Value.kReverse;
-     public static final double DRIVE_LEAVE_TARMAC_SPEED = 0.;
+    public static final double DRIVE_LEAVE_TARMAC_SPEED = 0.2;
+    public static final double DRIVE_LEAVE_TARMAC_DISTANCE = 0.;    // inches
     public static final double DRIVE_TIME_TO_LEAVE_TARMAC = 0.;
     public static final int DRIVE_SMOOTHER_SAMPLES = 10;
     public static final boolean DRIVE_VELOCITY_CONTROLLED = true;
+    //public static final double DRIVE_DISTANCE_ENCODER_RATIO_LOW = 42.0/2.26;  //  per inch
+    public static final double DRIVE_DISTANCE_ENCODER_RATIO_LOW = 1.0/2.26;  //  per inch
+    public static final double DRIVE_DISTANCE_ENCODER_RATIO_HIGH = 1./5.14;  //  per inch
     
     // climber constants
-    public static final double CLIMBER_TIME_TO_CLIMB = 0;
-    public static final double TURRET_AIMER_FILTER_SIZE = 0;
+    public static final double CLIMBER_TIME_TO_CLIMB = 0.;
 
     // field measurements
     public static final double HUB_HEIGHT = 0.; //inches
+    public static final double TARMAC_DISTANCE = 0.;  // inches from Hub
+    public static final double PAD_ONE_DISTANCE =0.;
+    public static final double PAD_TWO_DISTANCE =0.;
+
+    // Robot measurements
+    public static final double ROBOT_LENGTH = 38.;  // inches
+    public static final double ROBOT_WIDTH = 0.;  // inches
+    public static final double FIELD_TARMAC_TO_CARGO = 40.44 - 0.;   // inches
 
 }

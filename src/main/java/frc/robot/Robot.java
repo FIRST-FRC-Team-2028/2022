@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -37,7 +38,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     pcm = m_robotContainer.getPcm();
     turret = m_robotContainer.getTurret();
-    joystick  = new Joystick(Constants.JOYSTICK);
+    joystick  = m_robotContainer.getJoystick();
     
     /* test quadraticFitter */
     QuadraticFitter fitter = new QuadraticFitter();
@@ -55,6 +56,9 @@ public class Robot extends TimedRobot {
     double [] tests = {0.,1.,2.,3.,4.,5.,6.,7.,8.,9};
     for (double each : tests)
       System.out.println(each+" , "+fitter.yout(each));
+
+    if (Constants.USBCAMERA_AVAILABLE)
+        CameraServer.startAutomaticCapture();
   }
 
   /**

@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.AutoDriveToCargo;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveTowardBall;
 import frc.robot.commands.PickupTargets;
@@ -89,6 +90,10 @@ public class RobotContainer {
   public Turret getTurret() {
     return turret;
   }
+  public Joystick getJoystick() {
+    return m_joystick;
+  }
+  
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -125,7 +130,9 @@ public class RobotContainer {
       shooter.whenReleased(new ShootStop(magazine, turret));
     }
     
-    
+    // for testing purposes
+    JoystickButton autocargoButton = new JoystickButton(m_joystick, 1);
+    autocargoButton.whenPressed(new AutoDriveToCargo(m_driveSubsystem));
   }
 
   /**
