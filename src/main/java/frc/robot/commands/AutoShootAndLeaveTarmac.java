@@ -18,8 +18,10 @@ public class AutoShootAndLeaveTarmac extends SequentialCommandGroup {
    *  leave the tarmac using the AutoLeaveTarmac and Autoshoot commands
    */
   public AutoShootAndLeaveTarmac(Turret turret, Magazine magazine, DriveSubsystem drive) {
+    double I_AM_NOT_DONE_HERE;
     addCommands(
       new AutoShoot(turret, magazine),
+      // Will shoot happen instantaneously?
       new AutoLeaveTarmacTimed(drive)
     );
   }

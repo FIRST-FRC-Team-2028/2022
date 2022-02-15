@@ -35,6 +35,7 @@ public final class Constants {
     public static final boolean GYRO_AVAILABLE          = false;
     public static final boolean BUTTONBOX_AVAILABLE     = false;
     public static final boolean USBCAMERA_AVAILABLE     = false;
+    public static final boolean JOYSTICK_EXTREME3D = false;
 
     // CAN connections
     public enum CANIDs {
@@ -87,6 +88,8 @@ public final class Constants {
 
     // joystick and button numbers
     public static final int JOYSTICK = 0;
+    public static final int LEFT_BUTTON_BOX = 1;
+    public static final int RIGHT_BUTTON_BOX = 2;
     public static final int SHIFTER_BUTTON = 2;
     public static final int SHIFTERU_BUTTON = 5;
     public static final int SHIFTERD_BUTTON = 4;
@@ -97,8 +100,10 @@ public final class Constants {
     public static final int TARMAC_DISTANCE_BUTTON = 0;
     public static final int PAD_TWO_DISTANCE_BUTTON = 0;
     public static final int PAD_ONE_DISTANCE_BUTTON = 0;
-    public static final int ELEVATOR_UP_BUTTON = 11;
-    public static final int ELEVATOR_DOWN_BUTTON = 10;
+    public static final int ELEVATOR_UP_BUTTON = 0;
+    public static final int ELEVATOR_DOWN_BUTTON = 0;
+    public static final int TURRETCW_BUTTON = 0;
+    public static final int TURRETCCW_BUTTON = 0;
 
     // motor speed constants
     public static final double PICKUP_ROLLER_MOTOR_SPEED = .4;
@@ -107,18 +112,22 @@ public final class Constants {
     public static final double MAGAZINE_HORIZONTAL_MOTOR_SPEED = 0.;
     public static final double SHOOTER_SPEED = 0.;
     public static final double SHOOTER_SLOW_SPEED = 0.;
+    public static final double TURRET_MOTOR_SPEED = 0;
 
     // Camera constants
     public static final int CENTER_OF_CAMERA = 316/2; //hardwired for Pixy2 x-resolution
     public static final int PIXY_VERT_CENTER =200/2;
     public static final int PIXY_FOV_VERT = 40;  // degrees 
     public static final int TURRET_PIXY_ANALOG = 0;
-    public static final int TURRET_PIXY_ADDRESS = 0x54;
+    public static final int TURRET_PIXY_ADDRESS = 0x5c;
     public static final int DRIVE_PIXY_ADDRESS = 0x54;
     public static final int PIXY_USE_MXP = 0;
     public static final double PIXY_TARGET_AR = 2.;
     public static final int PIXY_MINIMUM_SIZE = 10;
     public static final double TURRET_AIMER_FILTER_SIZE = 0;
+    public static final int PIXY_SIG_BLUE = 1;
+    public static final int PIXY_SIG_RED = 2;
+    public static final int PIXY_SIG_HUB = 3;
 
     // Turret constants
     /* NEO 550 for turret and elevator
@@ -188,5 +197,7 @@ public final class Constants {
     public static final double ROBOT_LENGTH = 38.;  // inches
     public static final double ROBOT_WIDTH = 0.;  // inches
     public static final double FIELD_TARMAC_TO_CARGO = 40.44 - 0.;   // inches
+    public static final double FIELD_HUB_TO_PAD1 = 202.95;  // inches
+    public static final double FIELD_HUB_TO_PAD2 = 244.77;  // inches
 
 }

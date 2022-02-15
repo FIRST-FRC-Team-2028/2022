@@ -12,6 +12,9 @@ import frc.robot.commands.DriveTowardBall;
 import frc.robot.commands.PickupTargets;
 import frc.robot.commands.StopMotor;
 import frc.robot.commands.TurnoffPickup;
+import frc.robot.commands.TurretCCW;
+import frc.robot.commands.TurretCW;
+import frc.robot.commands.TurretStop;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.commands.DeployClimber;
 import frc.robot.commands.Shoot;
@@ -128,6 +131,12 @@ public class RobotContainer {
       JoystickButton shooter = new JoystickButton(m_joystick,Constants.SHOOT_BUTTON);
       shooter.whenPressed(new Shoot(magazine, turret));
       shooter.whenReleased(new ShootStop(magazine, turret));
+      JoystickButton aimerCW = new JoystickButton(m_joystick,Constants.TURRETCW_BUTTON);
+      shooter.whenPressed(new TurretCW(turret));
+      shooter.whenReleased(new TurretStop(turret));
+      JoystickButton aimerCCW = new JoystickButton(m_joystick,Constants.TURRETCCW_BUTTON);
+      shooter.whenPressed(new TurretCCW(turret));
+      shooter.whenReleased(new TurretStop(turret));
     }
     
     // for testing purposes

@@ -175,26 +175,34 @@ public class Turret extends SubsystemBase {
          block.getHeight();
          
          double tsize = block.getWidth()*block.getHeight();
-         if (tsize > size) {
+         if (tsize > size && block.getSignature() == Constants.PIXY_SIG_HUB) {
            size = tsize;
            biggest = block;
          }
        }
      }
 
-    //width height i2c LOOK IN DRIVESUBSYSTEM TO GET BIGGEST X AND Y in periodic
-
     // use PIDcontroller to aim turret
-    double error = biggest.getX();
-    double pidVal = aimer.calculate(error, Constants.CENTER_OF_CAMERA)/ Constants.CENTER_OF_CAMERA;  // pixels/pixels = O(1)
+    double measure = biggest.getX();
+    if ( measure < 0.) return 0.;
+    double pidVal = aimer.calculate(measure, Constants.CENTER_OF_CAMERA)/ Constants.CENTER_OF_CAMERA;  // pixels/pixels = O(1)
     turretMotor.set(pidVal);
-    SmartDashboard.putNumber("Turret Aim Error", Constants.CENTER_OF_CAMERA-error);
-    return Constants.CENTER_OF_CAMERA - error;
+    SmartDashboard.putNumber("Turret Aim Error", Constants.CENTER_OF_CAMERA-measure);
+    return Constants.CENTER_OF_CAMERA - measure;
   }
 
   public void stopAimer()
   {
     turretMotor.set(0.);
+  }
+
+  /** move turret
+   * @param speed positive clockwise around up
+   */
+  public void turretCW(double speed){
+    // TODO: use limits
+    double INEEDWORK;
+    turretMotor.set(speed);
   }
   
   @Override

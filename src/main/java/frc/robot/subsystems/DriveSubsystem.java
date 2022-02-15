@@ -17,10 +17,12 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
+//import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 //import edu.wpi.first.wpilibj.PneumaticsControlModule;
 //import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -242,6 +244,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    int mySig = Constants.PIXY_SIG_BLUE;
     int offset=1;
     double biggest=0.;
     double size=0.;
@@ -249,6 +252,11 @@ public class DriveSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     // get pixy camera signatures
     // and send to NetWorkTables for display on dashboard
+    if (DriverStation.getAlliance() == Alliance.valueOf("Blue")) {
+      mySig = Constants.PIXY_SIG_BLUE;
+    } else if (DriverStation.getAlliance() == Alliance.valueOf("Red")) {
+      mySig = Constants.PIXY_SIG_RED;
+    }
     if (Constants.CAMERA_AVAILABLE){
       numTargets = driveCamera.getCCC().getBlocks(false, Pixy2CCC.CCC_SIG_ALL,10);
       toNT[0] = (double)numTargets;
@@ -261,7 +269,7 @@ public class DriveSubsystem extends SubsystemBase {
                 toNT[offset+3] = block.getWidth();
                 toNT[offset+4] = block.getHeight();
                 double tsize=block.getWidth()*block.getHeight();
-                if (tsize>size) {
+                if (tsize>size && block.getSignature() == mySig) {
                   size=tsize;
                   biggest = (double)offset;
                 }
@@ -273,19 +281,24 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putNumberArray("DriveCamera", toNT);
     }
 
-   
   }
 
+  /** report whether the camera sees anything */
   public int seeCargo() {
     if (Constants.CAMERA_AVAILABLE) {
       return (int)toNT[0];
     } else return 0;
   }
 
+  /** report the x location (relative to the screen left)
+   *  of the nearest cargo (determined by size)
+   * Return -1 if none found
+   */
   public double cargoX() {
     int number = (int)toNT[0];
     int biggest = (int)toNT[1+number*5];
-    return toNT[biggest+1];
+    if (biggest > 0.) return toNT[biggest+1];
+    return -1.;
   }
 
   @Override

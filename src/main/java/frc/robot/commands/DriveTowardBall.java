@@ -52,7 +52,9 @@ public class DriveTowardBall extends CommandBase {
     double error;
     int biggest=drive.seeCargo();
     if (biggest > 0) {
-      error = (double)(Constants.CENTER_OF_CAMERA - drive.cargoX());
+      double cargoX = drive.cargoX();
+      if (cargoX <0.) error=0.;
+      else error = (double)(Constants.CENTER_OF_CAMERA - cargoX);
       
       double stickX = aimer.calculate(error) / (double)Constants.CENTER_OF_CAMERA*5.;  // 
       SmartDashboard.putNumber("steerError", error);

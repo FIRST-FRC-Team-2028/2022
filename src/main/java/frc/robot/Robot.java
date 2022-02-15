@@ -5,9 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -27,6 +29,7 @@ public class Robot extends TimedRobot {
   private PneumaticHub pcm;
   private Turret turret;
   private Joystick joystick;
+  private Alliance alliance;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -59,6 +62,12 @@ public class Robot extends TimedRobot {
 
     if (Constants.USBCAMERA_AVAILABLE)
         CameraServer.startAutomaticCapture();
+
+    alliance = DriverStation.getAlliance();
+  }
+
+  public Alliance getAlliance(){
+    return alliance;
   }
 
   /**
@@ -138,7 +147,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    turret.shooterSpeed(joystick.getZ()*4000.);
+    turret.shooterSpeed((joystick.getZ()+1.)/2.*5700.);
     if (elevationUp.get()) {
       elevationAngle+=5.;
     }

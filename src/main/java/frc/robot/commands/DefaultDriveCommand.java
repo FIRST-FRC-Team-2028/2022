@@ -32,7 +32,13 @@ public class DefaultDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-     m_drive.driveMe(m_joystick.getX(), -m_joystick.getY());
+    double turn;
+    if (Constants.JOYSTICK_EXTREME3D) {
+      turn = m_joystick.getZ();
+    } else {
+      turn = m_joystick.getX();
+    }
+     m_drive.driveMe(turn, -m_joystick.getY());
      if (m_joystick.getRawButton(Constants.SHIFTER_BUTTON)){
        m_drive.switchGears();
      }
