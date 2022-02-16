@@ -43,7 +43,7 @@ public final class Constants {
         DRIVE_LEFT_FOLLOWER  (21, false),
         DRIVE_RIGHT_LEADER   (10, true), 
         DRIVE_RIGHT_FOLLOWER (11, true),
-        PICKUP_ROLLERS       (40, true),
+        PICKUP_ROLLERS       (60, true),
         TURRET_ELEVATION     (00, false),
         TURRET_AZIMUTH       (00, false),
         TURRET_SHOOTER       (00, false),

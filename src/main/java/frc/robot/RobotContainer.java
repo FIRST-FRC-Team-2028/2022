@@ -93,6 +93,9 @@ public class RobotContainer {
   public Turret getTurret() {
     return turret;
   }
+  public Pickup getPickup() {
+    return pickup;
+  }
   public Joystick getJoystick() {
     return m_joystick;
   }
