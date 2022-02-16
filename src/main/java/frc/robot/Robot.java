@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Turret;
 
 /**
@@ -28,6 +29,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   private PneumaticHub pcm;
   private Turret turret;
+  private Pickup pickup;
   private Joystick joystick;
   private Alliance alliance;
   /**
@@ -41,6 +43,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     pcm = m_robotContainer.getPcm();
     turret = m_robotContainer.getTurret();
+    pickup = m_robotContainer.getPickup();
     joystick  = m_robotContainer.getJoystick();
     
     /* test quadraticFitter */
@@ -147,15 +150,20 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    turret.shooterSpeed((joystick.getZ()+1.)/2.*5700.);
-    if (elevationUp.get()) {
-      elevationAngle+=5.;
+    int testState = 0;
+    if(testState == 0) {   // shooter
+      turret.shooterSpeed((joystick.getZ()+1.)/2.*5700.);
+      if (elevationUp.get()) {
+        elevationAngle+=5.;
+      }
+      if (elevationDown.get()) {
+        elevationAngle-=5.;
+      }
+      turret.setelevation(elevationAngle);
+      SmartDashboard.putNumber("elevationAngle", elevationAngle);
+      SmartDashboard.putNumber("shooterSpeed", joystick.getZ()*4000.);
+    } else if (testState == 1) {  //  pickup rollers
+
     }
-    if (elevationDown.get()) {
-      elevationAngle-=5.;
-    }
-    turret.setelevation(elevationAngle);
-    SmartDashboard.putNumber("elevationAngle", elevationAngle);
-    SmartDashboard.putNumber("shooterSpeed", joystick.getZ()*4000.);
   }
 }
