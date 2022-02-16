@@ -4,21 +4,24 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Turret;
 
-public class TurretStop extends CommandBase {
-  Turret turret;
-  /** run turret Clockwise. */
-  public TurretStop(Turret turret) {
-    this.turret = turret;
-    addRequirements(turret);
+public class AutoShootWait extends CommandBase {
+  double time;
+  Timer timer;
+
+  /** Waits for a while */
+  public AutoShootWait(double time) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    this.time = time;
+    timer = new Timer();
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turret.turretCW(0.);
+    timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -32,6 +35,6 @@ public class TurretStop extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return timer.hasElapsed(time);
   }
 }

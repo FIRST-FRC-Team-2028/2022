@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Turret;
@@ -18,9 +19,10 @@ public class AutoShootAndLeaveTarmac extends SequentialCommandGroup {
    *  leave the tarmac using the AutoLeaveTarmac and Autoshoot commands
    */
   public AutoShootAndLeaveTarmac(Turret turret, Magazine magazine, DriveSubsystem drive) {
-    double I_AM_NOT_DONE_HERE;
     addCommands(
       new AutoShoot(turret, magazine),
+
+      new AutoShootWait(Constants.TURRET_TIME_TO_SHOOT),
       // Will shoot happen instantaneously?
       new AutoLeaveTarmacTimed(drive)
     );

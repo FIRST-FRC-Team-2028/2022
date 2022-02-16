@@ -43,7 +43,7 @@ public final class Constants {
         DRIVE_LEFT_FOLLOWER  (21, false),
         DRIVE_RIGHT_LEADER   (10, true), 
         DRIVE_RIGHT_FOLLOWER (11, true),
-        PICKUP_ROLLERS       (60, true),
+        PICKUP_ROLLERS       (40, true),
         TURRET_ELEVATION     (00, false),
         TURRET_AZIMUTH       (00, false),
         TURRET_SHOOTER       (00, false),
@@ -149,6 +149,7 @@ public final class Constants {
     public static final double ELEVATOR_FCN_CCOEF = 0.;
     public static final double ELEVATOR_ENCODER_RATIO = 0.;
     public static final double TURRET_CAMERA_HEIGHT = 36.; //inches
+    public static final double TURRET_TIME_TO_SHOOT = 0.;
 
 
     // drive constants
@@ -199,5 +200,6 @@ public final class Constants {
     public static final double FIELD_TARMAC_TO_CARGO = 40.44 - 0.;   // inches
     public static final double FIELD_HUB_TO_PAD1 = 202.95;  // inches
     public static final double FIELD_HUB_TO_PAD2 = 244.77;  // inches
+    public static final int TURRET_SWITCH_CHANNEL = 0;
 
 }

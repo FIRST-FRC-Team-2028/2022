@@ -15,16 +15,22 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.QuadraticFitter;
+//import frc.robot.QuadraticFitter;
 import frc.robot.Pixy2API.Pixy2;
 import frc.robot.Pixy2API.Pixy2CCC;
 import frc.robot.Pixy2API.Pixy2CCC.Block;
 import frc.robot.Pixy2API.links.I2CLink;
 
+
 /** Turret points toward the hub and shoot balls into it.
  */
 public class Turret extends SubsystemBase {
   CANSparkMax turretMotor;
+  RelativeEncoder turretencoder;
+  double turret_position;
+  double turret_position_two;
+  boolean looking_for_position_two = false;
+  boolean badposition = true;
   CANSparkMax elevationMotor;
   RelativeEncoder elevatorencoder;
   boolean elevator_zeroed = false;
@@ -35,6 +41,7 @@ public class Turret extends SubsystemBase {
   double elevator_ki=0.;
   double elevator_kd=0.;
   double elevator_tolerance=2.;  // encoder counts
+  AnalogInput turretswitch;
 
 
   CANSparkMax shooter;
@@ -64,6 +71,8 @@ public class Turret extends SubsystemBase {
     shooter_controller.setI(shooter_ki);
     shooter_controller.setD(shooter_kd);
     turretMotor = new CANSparkMax(Constants.CANIDs.TURRET_AZIMUTH.getid(), MotorType.kBrushless);
+    turretencoder =  turretMotor.getEncoder();
+    turretswitch = new AnalogInput(Constants.TURRET_SWITCH_CHANNEL);
     elevationMotor = new CANSparkMax(Constants.CANIDs.TURRET_ELEVATION.getid(), MotorType.kBrushless);
     limitswitch = elevationMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     elevator_controller = elevationMotor.getPIDController();
@@ -80,9 +89,14 @@ public class Turret extends SubsystemBase {
     pixyCam = new AnalogInput(Constants.TURRET_PIXY_ANALOG);  // to detect hub
     pixyCamI2C = Pixy2.createInstance(new I2CLink());
     int initError = pixyCamI2C.init(Constants.PIXY_USE_MXP, Constants.TURRET_PIXY_ADDRESS);
+    if(initError != 0 ){
+      System.out.println("pixy did not intitialize " + initError);
+    }
     aimer = new PIDController(kp, ki, kd);
     aimer.setSetpoint(0.);
     aimer.setIntegratorRange(-1., 1.);
+
+    SmartDashboard.putNumber("Turret Alert", 0.);  // Tells driver that turret is located in a safe region
 
     /** 2d arrays describe elavation and motor speed as functions of distance */
     /*
@@ -200,8 +214,6 @@ public class Turret extends SubsystemBase {
    * @param speed positive clockwise around up
    */
   public void turretCW(double speed){
-    // TODO: use limits
-    double INEEDWORK;
     turretMotor.set(speed);
   }
   
@@ -217,5 +229,31 @@ public class Turret extends SubsystemBase {
         elevator_zeroed=true;
       }
     }
+    if(turretswitch.getValue() > 4000 && !looking_for_position_two){
+      turret_position = turretencoder.getPosition();
+      looking_for_position_two = true;
+    }
+    
+    if( looking_for_position_two){
+      if(badposition = false) {
+        alertuser(true );
+      }  else{
+        alertuser(false);
+      }
+      looking_for_position_two = false;
+    }   
+
+    if(badposition && Math.abs(turretencoder.getPosition() -turret_position) > 20) {
+      turretMotor.set(0.);
+      SmartDashboard.putNumber("Turret Alert", 2.);
+    }
+  }
+
+  void alertuser(boolean alert) {
+    if(alert){
+     SmartDashboard.putNumber("Turret Alert", 1.);
+    } else{
+      SmartDashboard.putNumber("Turret Alert", 0.);}
+     badposition = alert;
   }
 }
