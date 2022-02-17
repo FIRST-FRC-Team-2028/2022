@@ -133,6 +133,23 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {}
 
+  enum TestModes {
+    SHOOTER(0),
+    ELEVATOR(1),
+    TURRET(2),
+    PICKUP_ROLLERS(3),
+    PICKUP_ARMS(4),
+    MAG_HORI(5),
+    MAG_VERT(6),
+    CLIMB_EXTEND(7),
+    CLIMBER(8);
+
+    int id;
+    TestModes(final int id){
+      this.id=id;
+    }
+    int getID() {return id;}
+  }
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
@@ -150,19 +167,27 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    int testState = 0;
-    if(testState == 0) {   // shooter
-      turret.shooterSpeed((joystick.getZ()+1.)/2.*5700.);
-      if (elevationUp.get()) {
-        elevationAngle+=5.;
-      }
-      if (elevationDown.get()) {
-        elevationAngle-=5.;
-      }
-      turret.setelevation(elevationAngle);
-      SmartDashboard.putNumber("elevationAngle", elevationAngle);
-      SmartDashboard.putNumber("shooterSpeed", joystick.getZ()*4000.);
-    } else if (testState == 1) {  //  pickup rollers
+    double speed = joystick.getZ();
+    int testState = TestModes.SHOOTER.getID();
+    
+    if(testState == TestModes.SHOOTER.getID()) {   // check that stooter rollers toss ball out
+      speed=(speed+1.)/2.*5700.;  // 0 < speed < 5700
+      turret.shooterSpeed(speed);
+      SmartDashboard.putNumber("shooterSpeed", speed);
+
+    } else if (testState == TestModes.ELEVATOR.getID()) {  // check that positive is elevator up/forward
+      turret.elevatorMove(speed*1000.);
+      SmartDashboard.putNumber("elevationAngle", turret.getElevation());
+
+    } else if (testState == TestModes.PICKUP_ROLLERS.getID()) {  //  pickup rollers
+      speed=(speed+1.)/2.*5700.;  // 0 < speed < 5700
+      pickup.runRollers(speed);
+      if (joystick.getRawButtonPressed(10))pickup.deploy();
+      if (joystick.getRawButtonReleased(10))pickup.retract();
+
+    } else if (testState == TestModes.MAG_HORI.getID()) {  //  magazine
+
+    } else if (testState == TestModes.MAG_VERT.getID()) {  //  magazine
 
     }
   }

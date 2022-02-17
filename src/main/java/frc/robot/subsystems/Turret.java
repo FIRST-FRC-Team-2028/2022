@@ -159,6 +159,17 @@ public class Turret extends SubsystemBase {
     elevator_controller.setReference(angle*Constants.ELEVATOR_ENCODER_RATIO + elevator_zero_position, CANSparkMax.ControlType.kPosition);
   }
 
+  /** set speed of elevation motor
+   * @param speed
+   * For testing and calibration - not for typical operation
+   */
+  public void elevatorMove(double speed) {
+    elevationMotor.set(speed);
+  }
+  public double getElevation() {
+    return elevatorencoder.getPosition();
+  }
+
 
   public void setdistance(double distance) {
     this.distance = distance;
