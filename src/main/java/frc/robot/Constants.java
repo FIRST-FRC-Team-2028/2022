@@ -9,12 +9,22 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
+ * The Constants class provides a convenient place for teams to hold robot-wide constants.
+ *  Do not put anything functional in this class.
  *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
+ * Subsystem availability
+ * CAN ids
+ * Pneumatic channels
+ * joystick and button numbers
+ * Camera
+ * turret
+ * drive
+ * pickup
+ * magazine
+ * climber
+ * field measurements
+ * robot dimensions
+ * 
  */
 public final class Constants {
 
@@ -105,15 +115,6 @@ public final class Constants {
     public static final int TURRETCW_BUTTON = 0;
     public static final int TURRETCCW_BUTTON = 0;
 
-    // motor speed constants
-    public static final double PICKUP_ROLLER_MOTOR_SPEED = .4;
-    public static final double DRIVE_AIMER_SPEED_LIMIT = 0.4;
-    public static final double MAGAZINE_VERTICAL_MOTOR_SPEED = 0.;
-    public static final double MAGAZINE_HORIZONTAL_MOTOR_SPEED = 0.;
-    public static final double SHOOTER_SPEED = 0.;
-    public static final double SHOOTER_SLOW_SPEED = 0.;
-    public static final double TURRET_MOTOR_SPEED = 0;
-
     // Camera constants
     public static final int CENTER_OF_CAMERA = 316/2; //hardwired for Pixy2 x-resolution
     public static final int PIXY_VERT_CENTER =200/2;
@@ -150,6 +151,10 @@ public final class Constants {
     public static final double ELEVATOR_ENCODER_RATIO = 0.;
     public static final double TURRET_CAMERA_HEIGHT = 36.; //inches
     public static final double TURRET_TIME_TO_SHOOT = 0.;
+    public static final int TURRET_SWITCH_CHANNEL = 0;
+    public static final double SHOOTER_SPEED = 0.;
+    public static final double SHOOTER_SLOW_SPEED = 0.;
+    public static final double TURRET_MOTOR_SPEED = 0;
 
 
     // drive constants
@@ -184,7 +189,17 @@ public final class Constants {
     //public static final double DRIVE_DISTANCE_ENCODER_RATIO_LOW = 42.0/2.26;  //  per inch
     public static final double DRIVE_DISTANCE_ENCODER_RATIO_LOW = 1.0/2.26;  //  per inch
     public static final double DRIVE_DISTANCE_ENCODER_RATIO_HIGH = 1./5.14;  //  per inch
+    public static final double DRIVE_AIMER_SPEED_LIMIT = 0.4;
     
+
+    // pickup constants
+    public static final int PICKUP_CARGO_INDICATION = 0;
+    public static final double PICKUP_ROLLER_MOTOR_SPEED = .4;
+
+    //magazine constants
+    public static final double MAGAZINE_VERTICAL_MOTOR_SPEED = 0.;
+    public static final double MAGAZINE_HORIZONTAL_MOTOR_SPEED = 0.;
+
     // climber constants
     public static final double CLIMBER_TIME_TO_CLIMB = 0.;
 
@@ -200,6 +215,5 @@ public final class Constants {
     public static final double FIELD_TARMAC_TO_CARGO = 40.44 - 0.;   // inches
     public static final double FIELD_HUB_TO_PAD1 = 202.95;  // inches
     public static final double FIELD_HUB_TO_PAD2 = 244.77;  // inches
-    public static final int TURRET_SWITCH_CHANNEL = 0;
-
+    
 }
