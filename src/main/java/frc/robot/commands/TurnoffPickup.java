@@ -23,7 +23,6 @@ public class TurnoffPickup extends CommandBase {
   @Override
   public void initialize() {
     pickup.stopRollers();
-    pickup.retract();
     magazine.horizontaloff();
   }
 
