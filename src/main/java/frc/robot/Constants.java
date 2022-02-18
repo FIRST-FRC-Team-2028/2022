@@ -37,7 +37,7 @@ public final class Constants {
     public static final boolean AIM_AVAILABLE           = false;
     public static final boolean TURRET_AVAILABLE        = false;
     public static final boolean MAGAZINE_AVAILABLE      = false;
-    public static final boolean PICKUP_AVAILABLE        = false;
+    public static final boolean PICKUP_AVAILABLE        = true;
     public static final boolean KICKER_AVAILABLE        = false;
     public static final boolean CLIMBER_AVAILABLE       = false;
     public static final boolean CONTROLPANEL_AVAILABLE  = false;
@@ -53,7 +53,7 @@ public final class Constants {
         DRIVE_LEFT_FOLLOWER  (21, false),
         DRIVE_RIGHT_LEADER   (10, true), 
         DRIVE_RIGHT_FOLLOWER (11, true),
-        PICKUP_ROLLERS       (40, true),
+        PICKUP_ROLLERS       (60, true),
         TURRET_ELEVATION     (00, false),
         TURRET_AZIMUTH       (00, false),
         TURRET_SHOOTER       (00, false),
@@ -80,10 +80,10 @@ public final class Constants {
 
     /** information about pneumatic solenoids */
     public enum PneumaticChannel {
-        DRIVE_LOW_GEAR(0),
-        DRIVE_HIGH_GEAR(1),
-        PICKUP_RETRACT(2),
-        PICKUP_EXTEND(3),
+        DRIVE_LOW_GEAR(1),
+        DRIVE_HIGH_GEAR(0),
+        PICKUP_RETRACT(3),
+        PICKUP_EXTEND(2),
         CLIMBER_RELEASE(4);
         private final int channel;
         private PneumaticChannel(final int ch) {
@@ -194,7 +194,7 @@ public final class Constants {
 
     // pickup constants
     public static final int PICKUP_CARGO_INDICATION = 0;
-    public static final double PICKUP_ROLLER_MOTOR_SPEED = .4;
+    public static final double PICKUP_ROLLER_MOTOR_SPEED = .6;
 
     //magazine constants
     public static final double MAGAZINE_VERTICAL_MOTOR_SPEED = 0.;

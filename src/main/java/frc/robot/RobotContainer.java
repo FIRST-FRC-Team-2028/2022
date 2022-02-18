@@ -116,11 +116,11 @@ public class RobotContainer {
       shifterD.whenPressed(new ShiftGearsU(m_driveSubsystem, Constants.DRIVE_LOW_GEAR));
   }
     
-    if (Constants.PICKUP_AVAILABLE) {
+    if (Constants.PICKUP_AVAILABLE /*&& Constants.MAGAZINE_AVAILABLE*/) {
       JoystickButton pickupDeployer = new JoystickButton(m_joystick, Constants.DEPLOY_PICKUP_BUTTON);
       JoystickButton pickupUnDeployer = new JoystickButton(m_joystick, Constants.RETRACT_PICKUP_BUTTON);
-      pickupDeployer.whenPressed(new PickupTargets(pickup,magazine));
-      pickupUnDeployer.whenPressed(new TurnoffPickup(pickup,magazine));
+      pickupDeployer.whenPressed(new PickupTargets(pickup/*,magazine*/));
+      pickupUnDeployer.whenPressed(new TurnoffPickup(pickup/*,magazine*/));
     }
 
     if (Constants.DRIVE_AVAILABLE && Constants.CAMERA_AVAILABLE) {

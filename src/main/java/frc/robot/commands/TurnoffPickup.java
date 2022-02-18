@@ -13,10 +13,10 @@ public class TurnoffPickup extends CommandBase {
   Magazine magazine;
 
   /** turn off the pickup rollers */
-  public TurnoffPickup(Pickup subsystem,Magazine magazine) {
+  public TurnoffPickup(Pickup subsystem /*,Magazine magazine*/) {
     this.pickup = subsystem;
-    this.magazine = magazine;
-    addRequirements(magazine, pickup);
+    //this.magazine = magazine;
+    addRequirements(/*magazine,*/ pickup);
   }
 
   // Called when the command is initially scheduled.
@@ -24,7 +24,7 @@ public class TurnoffPickup extends CommandBase {
   public void initialize() {
     pickup.stopRollers();
     pickup.retract();
-    magazine.horizontaloff();
+    //magazine.horizontaloff();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

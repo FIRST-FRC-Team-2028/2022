@@ -16,10 +16,11 @@ public class PickupTargets extends CommandBase {
 
   Pickup pickup;
   Magazine magazine;
-  public PickupTargets(Pickup pickup, Magazine magazine) {
+  public PickupTargets(Pickup pickup/*, Magazine magazine*/) {
     this.pickup = pickup;
-    this.magazine = magazine;
-    addRequirements(magazine, pickup);
+    double PUT_ME_BACK = 666.;
+    //this.magazine = magazine;
+    addRequirements(/*magazine, */pickup);
   }
 
   // Called when the command is initially scheduled.
@@ -27,7 +28,7 @@ public class PickupTargets extends CommandBase {
   public void initialize() {
     pickup.deploy();
     pickup.runRollers();
-    magazine.horizontalon();
+    //magazine.horizontalon();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

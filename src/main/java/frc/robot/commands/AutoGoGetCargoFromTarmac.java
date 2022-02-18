@@ -19,7 +19,7 @@ public class AutoGoGetCargoFromTarmac extends ParallelCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new AutoDriveToCargo(drive),
-      new PickupTargets(pickup, magazine)
+      new PickupTargets(pickup/*, magazine*/)
     );
   }
 }

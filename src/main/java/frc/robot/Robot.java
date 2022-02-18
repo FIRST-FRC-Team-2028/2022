@@ -168,7 +168,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     double speed = joystick.getZ();
-    int testState = TestModes.SHOOTER.getID();
+    int testState = TestModes.PICKUP_ROLLERS.getID();
     
     if(testState == TestModes.SHOOTER.getID()) {   // check that stooter rollers toss ball out
       speed=(speed+1.)/2.*5700.;  // 0 < speed < 5700
@@ -180,10 +180,11 @@ public class Robot extends TimedRobot {
       SmartDashboard.putNumber("elevationAngle", turret.getElevation());
 
     } else if (testState == TestModes.PICKUP_ROLLERS.getID()) {  //  pickup rollers
-      speed=(speed+1.)/2.*5700.;  // 0 < speed < 5700
+      speed=(speed+1.)/2.;  // 0 < speed < 1
       pickup.runRollers(speed);
       if (joystick.getRawButtonPressed(10))pickup.deploy();
       if (joystick.getRawButtonReleased(10))pickup.retract();
+      SmartDashboard.putNumber("pickupSpeed", speed);
 
     } else if (testState == TestModes.MAG_HORI.getID()) {  //  magazine
 
