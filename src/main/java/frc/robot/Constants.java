@@ -143,18 +143,18 @@ public final class Constants {
     public static final double SHOOTER_FCN_ACOEF = 0.;
     public static final double SHOOTER_FCN_BCOEF = 0.;
     public static final double SHOOTER_FCN_CCOEF = 0.;
-    public static final int ELEVATOR_MOTOR_ENCODER_RATIO = 0;
-    public static final double ELEVATOR_MOTOR_ZEROING_SPEED = 0.;
+    public static final double ELEVATOR_MOTOR_ZEROING_SPEED = 0.; // better be negative
     public static final double ELEVATOR_FCN_ACOEF = 0.;
     public static final double ELEVATOR_FCN_BCOEF = 0.;
     public static final double ELEVATOR_FCN_CCOEF = 0.;
-    public static final double ELEVATOR_ENCODER_RATIO = 0.;
+    public static final double ELEVATOR_ENCODER_RATIO =  42. / 24.;
     public static final double TURRET_CAMERA_HEIGHT = 36.; //inches
     public static final double TURRET_TIME_TO_SHOOT = 0.;
     public static final int TURRET_SWITCH_CHANNEL = 0;
-    public static final double SHOOTER_SPEED = 0.;
-    public static final double SHOOTER_SLOW_SPEED = 0.;
+    public static final double SHOOTER_SPEED = 0.;  // 0 -> 1
+    public static final double SHOOTER_SLOW_SPEED = 0.;  // 0 -> 1
     public static final double TURRET_MOTOR_SPEED = 0;
+    public static final double SHOOT_INDICATOR = 0;  // delta rpm
 
 
     // drive constants
@@ -204,16 +204,16 @@ public final class Constants {
     public static final double CLIMBER_TIME_TO_CLIMB = 0.;
 
     // field measurements
-    public static final double HUB_HEIGHT = 0.; //inches
+    public static final double HUB_HEIGHT = 104.; //inches
     public static final double TARMAC_DISTANCE = 0.;  // inches from Hub
     public static final double PAD_ONE_DISTANCE =0.;
     public static final double PAD_TWO_DISTANCE =0.;
+    public static final double FIELD_TARMAC_TO_CARGO = 40.44 - 0.;   // inches
+    public static final double FIELD_HUB_TO_PAD1 = 202.95;  // inches
+    public static final double FIELD_HUB_TO_PAD2 = 244.77;  // inches
 
     // Robot measurements
     public static final double ROBOT_LENGTH = 38.;  // inches
     public static final double ROBOT_WIDTH = 0.;  // inches
-    public static final double FIELD_TARMAC_TO_CARGO = 40.44 - 0.;   // inches
-    public static final double FIELD_HUB_TO_PAD1 = 202.95;  // inches
-    public static final double FIELD_HUB_TO_PAD2 = 244.77;  // inches
     
 }

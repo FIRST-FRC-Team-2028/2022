@@ -47,6 +47,10 @@ public class Turret extends SubsystemBase {
   CANSparkMax shooter;
   SparkMaxPIDController shooter_controller;
   RelativeEncoder shooterSpeed;
+  static final int NUM_ENC = 50;
+  double[] encoder_velocity = new double[NUM_ENC]; 
+  int iter = 0;
+  double enc_avg;
   double shooter_kp=0.1;
   double shooter_ki=0.;
   double shooter_kd=0.;
@@ -98,6 +102,9 @@ public class Turret extends SubsystemBase {
 
     SmartDashboard.putNumber("Turret Alert", 0.);  // Tells driver that turret is located in a safe region
 
+    for(int i = 0; i < NUM_ENC; i++ ) encoder_velocity[i] = 0; 
+    enc_avg = 0.;
+
     /** 2d arrays describe elavation and motor speed as functions of distance */
     /*
     double[][] motorspeed = {{3.,4.,8.,16.}, {.4,.5,.8,1.}};
@@ -114,17 +121,36 @@ public class Turret extends SubsystemBase {
 
   }
 
+  boolean shooteron;
   /** for testing set some arbitrary -1 < value <1 */
   public void shooterOn() {
     shooter.set(Constants.SHOOTER_SPEED);
+    
+    shooteron = true;
   }
+
+  
+  public boolean hasShot() {
+    if (enc_avg - shooterSpeed.getVelocity() > Constants.SHOOT_INDICATOR) {
+      return true;
+    }
+    return false;
+  }
+
   /** for closed loop testing set a value -4000 < speed < 4000 (max rpm is 5700) */
   public void shooterSpeed(double speed) {
     shooter_controller.setReference(speed, CANSparkMax.ControlType.kVelocity);
+    for(int i = 0; i < NUM_ENC; i++) encoder_velocity[i] = speed;
+    enc_avg = speed;
+    iter = 0;
   }
   
   public void shooterOff() {
     shooter.set(0.);
+    for(int i = 0; i < NUM_ENC; i++) encoder_velocity[i] = 0.;
+    enc_avg = 0.;
+    iter = 0;
+    shooteron = false;
   }
 
   /** Use quadratic curve fit for rpm(distance)  = a x^2 +b x + c */
@@ -141,10 +167,13 @@ public class Turret extends SubsystemBase {
     return Math.abs(shooter.get() - mapRPM(distance)) < shooter_tolerance;
   }
 
+
+
 /**given distance, run motor at set speed */
   public void shooterdistance() {
     //shooter_controller.setReference(fitterm.yout(distance), CANSparkMax.ControlType.kVelocity);
     shooter_controller.setReference(mapRPM(distance), CANSparkMax.ControlType.kVelocity);
+    shooteron = true;
   }
   
   public void setelevation() {
@@ -257,6 +286,15 @@ public class Turret extends SubsystemBase {
     if(badposition && Math.abs(turretencoder.getPosition() -turret_position) > 20) {
       turretMotor.set(0.);
       SmartDashboard.putNumber("Turret Alert", 2.);
+    }
+
+
+    if(shooteron) {
+      enc_avg = enc_avg  - encoder_velocity[iter]/NUM_ENC;
+      encoder_velocity[iter] = shooterSpeed.getVelocity();
+      iter = (iter+1)%NUM_ENC;
+      enc_avg = enc_avg  + shooterSpeed.getVelocity()/NUM_ENC;
+
     }
   }
 

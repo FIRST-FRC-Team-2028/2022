@@ -25,6 +25,7 @@ public class TurnoffPickup extends CommandBase {
     pickup.stopRollers();
     pickup.retract();
     //magazine.horizontaloff();
+    magazine.horizontaloff();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

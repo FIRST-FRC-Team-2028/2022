@@ -10,6 +10,7 @@ import frc.robot.commands.AutoDriveToCargo;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveTowardBall;
 import frc.robot.commands.PickupTargets;
+import frc.robot.commands.RetractPickup;
 import frc.robot.commands.StopMotor;
 import frc.robot.commands.TurnoffPickup;
 import frc.robot.commands.TurretCCW;
@@ -120,7 +121,8 @@ public class RobotContainer {
       JoystickButton pickupDeployer = new JoystickButton(m_joystick, Constants.DEPLOY_PICKUP_BUTTON);
       JoystickButton pickupUnDeployer = new JoystickButton(m_joystick, Constants.RETRACT_PICKUP_BUTTON);
       pickupDeployer.whenPressed(new PickupTargets(pickup/*,magazine*/));
-      pickupUnDeployer.whenPressed(new TurnoffPickup(pickup/*,magazine*/));
+      //pickupUnDeployer.whenPressed(new TurnoffPickup(pickup/*,magazine*/));
+      pickupUnDeployer.whenPressed(new RetractPickup(pickup));
     }
 
     if (Constants.DRIVE_AVAILABLE && Constants.CAMERA_AVAILABLE) {

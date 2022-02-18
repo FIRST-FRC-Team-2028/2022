@@ -4,12 +4,15 @@
 
 package frc.robot.subsystems;
 
+import java.security.PublicKey;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -25,6 +28,7 @@ public class Pickup extends SubsystemBase {
   PneumaticHub pcm;
   //PneumaticsControlModule pcm;
   DoubleSolenoid arms;
+  int magazineammo = 0;
 
   boolean rollersOn = false;
   static final int NUM_ENC = 200;
@@ -39,6 +43,7 @@ public class Pickup extends SubsystemBase {
     enc_avg = 0.;
     this.pcm = pcm;
     arms = pcm.makeDoubleSolenoid(Constants.PneumaticChannel.PICKUP_EXTEND.getChannel(), Constants.PneumaticChannel.PICKUP_RETRACT.getChannel());
+    ammo = 1;
   }
 
   public void deploy () {
@@ -56,6 +61,7 @@ public class Pickup extends SubsystemBase {
     rollers.set(Constants.PICKUP_ROLLER_MOTOR_SPEED);
     for(int i = 0; i < NUM_ENC; i++ ) encoder_velocity[i] = Constants.PICKUP_ROLLER_MOTOR_SPEED;
     enc_avg = Constants.PICKUP_ROLLER_MOTOR_SPEED;
+    engagedcargo = false;
     rollersOn = true;
   }
   public void runRollers(double speed){
@@ -65,6 +71,9 @@ public class Pickup extends SubsystemBase {
   public void stopRollers() {
     rollers.set(0.);
     rollersOn = false;
+    for(int i = 0; i < NUM_ENC; i++ ) encoder_velocity[i] = 0.;
+    enc_avg = 0.;
+    engagedcargo = false;
   }
 
   /**
@@ -73,9 +82,38 @@ public class Pickup extends SubsystemBase {
    */
   public boolean hasCargo() {
     double IAMNOTDONE = 3;
-    return (encoder.getVelocity() - enc_avg) < Constants.PICKUP_CARGO_INDICATION;
+    
+    if( engagingCargo() && (encoder.getVelocity() - enc_avg) < Constants.PICKUP_CARGO_INDICATION) {
+      ammo = ammo + 1;
+      SmartDashboard.putNumber(" Magazine Ammo", ammo);
+      engagedcargo = false;
+      return true;
+    }
+    return false;
+  } 
+
+  boolean engagedcargo;
+
+  public boolean engagingCargo() {
+    if( (encoder.getVelocity() - enc_avg) > Constants.PICKUP_CARGO_INDICATION) {
+      engagedcargo = true;
+    }
+    return engagedcargo;
   }
-  
+   
+  int ammo;
+
+  public int usedAmmo() {
+    ammo = ammo - 1;
+    return ammo;
+  }
+  /**
+   * checks if we have gotten cargo then 
+   * @return number of cargo balls
+   */
+  public int numCargo() {
+    return ammo;
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -85,6 +123,9 @@ public class Pickup extends SubsystemBase {
       encoder_velocity[iter] = encoder.getVelocity();
       iter = (iter+1)%NUM_ENC;
       enc_avg = enc_avg  + encoder.getVelocity()/NUM_ENC;
+      SmartDashboard.putNumber("Pickup Roller Speed", encoder.getVelocity());
     }
+    
+      
   }
 }
