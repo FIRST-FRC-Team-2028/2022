@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Magazine;
+import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Turret;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -18,9 +19,9 @@ public class AutoShootAndLeaveTarmac extends SequentialCommandGroup {
   /** Shoot the starting cargo and 
    *  leave the tarmac using the AutoLeaveTarmac and Autoshoot commands
    */
-  public AutoShootAndLeaveTarmac(Turret turret, Magazine magazine, DriveSubsystem drive) {
+  public AutoShootAndLeaveTarmac(Turret turret, Magazine magazine, DriveSubsystem drive, Pickup pickup)  {
     addCommands(
-      new AutoShoot(turret, magazine),
+      new AutoShoot(turret, magazine, pickup),
 
       new AutoShootWait(Constants.TURRET_TIME_TO_SHOOT),
       // Will shoot happen instantaneously?

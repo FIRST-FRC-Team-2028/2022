@@ -19,7 +19,7 @@ public class AutoShootAndGetCargo extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands( 
-     new AutoShoot(turret, magazine), 
+     new AutoShoot(turret, magazine, pickup), 
      new AutoGoGetCargoFromTarmac(drive, pickup, magazine)
     );
   }

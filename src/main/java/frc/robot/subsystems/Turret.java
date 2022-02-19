@@ -33,7 +33,8 @@ public class Turret extends SubsystemBase {
   boolean badposition = true;
   CANSparkMax elevationMotor;
   RelativeEncoder elevatorencoder;
-  boolean elevator_zeroed = false;
+  boolean elevator_zeroed = true;
+  double FIX_ME = 1.;  //TODO:FIX Elevator zeroed
   double elevator_zero_position;
   SparkMaxLimitSwitch limitswitch;
   SparkMaxPIDController elevator_controller;

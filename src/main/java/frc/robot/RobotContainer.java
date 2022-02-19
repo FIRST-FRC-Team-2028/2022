@@ -134,7 +134,7 @@ public class RobotContainer {
 
     if (Constants.TURRET_AVAILABLE) {
       JoystickButton shooter = new JoystickButton(m_joystick,Constants.SHOOT_BUTTON);
-      shooter.whenPressed(new Shoot(magazine, turret));
+      shooter.whenPressed(new Shoot(magazine, turret, pickup));
       shooter.whenReleased(new ShootStop(magazine, turret));
       JoystickButton aimerCW = new JoystickButton(m_joystick,Constants.TURRETCW_BUTTON);
       shooter.whenPressed(new TurretCW(turret));

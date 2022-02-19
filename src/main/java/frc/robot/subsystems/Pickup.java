@@ -46,6 +46,10 @@ public class Pickup extends SubsystemBase {
     ammo = 1;
   }
 
+  public CANSparkMax getrollers() {
+    return rollers;
+  }
+
   public void deploy () {
     if (arms.get() != DoubleSolenoid.Value.kReverse) {
       arms.set(DoubleSolenoid.Value.kReverse);
@@ -76,15 +80,36 @@ public class Pickup extends SubsystemBase {
     engagedcargo = false;
   }
 
+  // allows the world to see roller velocity
+  public double getRollerVelocity() {
+     return encoder.getVelocity();
+  }
+
   /**
    * this method checks to see if pickup picked up
    * @return
    */
   public boolean hasCargo() {
+    //System.out.println("avg , current: " + enc_avg + " " + encoder.getVelocity() );
+    //notice when the RPM drops from the running average
+    if(!engagedcargo && enc_avg - encoder.getVelocity() > Constants.PICKUP_CARGO_INDICATION) {
+      engagedcargo = true;
+      System.out.println("I was engaged");
+      return false;
+    }
+    // notice when the RPM reverts to the running average
+    if(engagedcargo && Math.abs(encoder.getVelocity() - enc_avg) < 10.) {
+      ammo = ammo + 1;
+      SmartDashboard.putNumber(" Magazine Ammo", ammo);
+      engagedcargo = false;
+      return true;
+    }
+    return false;
+  }
+  public boolean hasCargoNOT() {
     double IAMNOTDONE = 3;
     
-    if( engagingCargo() && (encoder.getVelocity() - enc_avg) < Constants.PICKUP_CARGO_INDICATION) {
-      ammo = ammo + 1;
+    if( engagingCargo() && Math.abs(encoder.getVelocity() - enc_avg) < 10.) {
       SmartDashboard.putNumber(" Magazine Ammo", ammo);
       engagedcargo = false;
       return true;
@@ -94,7 +119,7 @@ public class Pickup extends SubsystemBase {
 
   boolean engagedcargo;
 
-  public boolean engagingCargo() {
+  private boolean engagingCargo() {
     if( (encoder.getVelocity() - enc_avg) > Constants.PICKUP_CARGO_INDICATION) {
       engagedcargo = true;
     }
@@ -127,5 +152,18 @@ public class Pickup extends SubsystemBase {
     }
     
       
+  }
+
+  /** initialize agv RPM detector for testing */
+  public void initAvg() {
+    enc_avg = 6500;
+    for (int i=0; i<NUM_ENC; i++) { encoder_velocity[i]=6500.; }
+    iter = (iter+1)%NUM_ENC;
+  }
+  public void avg_update() {
+    enc_avg = enc_avg  - encoder_velocity[iter]/NUM_ENC;
+    encoder_velocity[iter] = encoder.getVelocity();
+    iter = (iter+1)%NUM_ENC;
+    enc_avg = enc_avg  + encoder.getVelocity()/NUM_ENC;
   }
 }

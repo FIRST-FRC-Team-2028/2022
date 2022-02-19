@@ -185,8 +185,8 @@ public final class Constants {
     //  So much for theory; what really happens in practice the ratio is 2.1
     public static final double DRIVE_LOW_GEAR_RATIO = 2.1*DRIVE_HIGH_GEAR_RATIO;  // high:low ratio of gear box
     public static final double SHIFTER_THRESHOLD = 0.476;
-    public static final DoubleSolenoid.Value DRIVE_HIGH_GEAR = DoubleSolenoid.Value.kForward;
-    public static final DoubleSolenoid.Value DRIVE_LOW_GEAR = DoubleSolenoid.Value.kReverse;
+    public static final DoubleSolenoid.Value DRIVE_LOW_GEAR = DoubleSolenoid.Value.kForward;
+    public static final DoubleSolenoid.Value DRIVE_HIGH_GEAR = DoubleSolenoid.Value.kReverse;
     public static final double DRIVE_LEAVE_TARMAC_SPEED = 0.2;
     public static final double DRIVE_LEAVE_TARMAC_DISTANCE = 0.;    // inches
     public static final double DRIVE_TIME_TO_LEAVE_TARMAC = 0.;
@@ -199,7 +199,7 @@ public final class Constants {
     
 
     // pickup constants
-    public static final int PICKUP_CARGO_INDICATION = 0;
+    public static final int PICKUP_CARGO_INDICATION = 200;  //RPM difference
     public static final double PICKUP_ROLLER_MOTOR_SPEED = .6;
 
     //magazine constants

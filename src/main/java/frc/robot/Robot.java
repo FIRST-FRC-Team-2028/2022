@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
@@ -164,6 +165,7 @@ public class Robot extends TimedRobot {
   private JoystickButton elevationUp;
   private JoystickButton elevationDown;
 
+  boolean startedTesting=false;
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
@@ -180,11 +182,22 @@ public class Robot extends TimedRobot {
       SmartDashboard.putNumber("elevationAngle", turret.getElevation());
 
     } else if (testState == TestModes.PICKUP_ROLLERS.getID()) {  //  pickup rollers
+      if (!startedTesting) {
+        pickup.initAvg();
+        startedTesting = true;
+      }
+      pickup.avg_update();
       speed=(speed+1.)/2.;  // 0 < speed < 1
       pickup.runRollers(speed);
-      if (joystick.getRawButtonPressed(10))pickup.deploy();
-      if (joystick.getRawButtonReleased(10))pickup.retract();
+      if (joystick.getRawButtonPressed(11))pickup.deploy();
+      if (joystick.getRawButtonPressed(10))pickup.retract();
       SmartDashboard.putNumber("pickupSpeed", speed);
+      SmartDashboard.putNumber("pickupRPM", pickup.getRollerVelocity());
+      /**Dont understand sendable registry */
+      //SendableRegistry.setName(pickup.getrollers(), "Pickup", "Rollers");
+      if(pickup.hasCargo()) {
+        System.out.println("pickup has" + pickup.numCargo());
+      }
 
     } else if (testState == TestModes.MAG_HORI.getID()) {  //  magazine
 
