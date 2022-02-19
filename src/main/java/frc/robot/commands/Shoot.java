@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Magazine;
+import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Turret;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -18,12 +19,12 @@ public class Shoot extends SequentialCommandGroup {
    *    set up the range
    *    fire the cargo
   */
-  public Shoot(Magazine magazine, Turret turret) {
+  public Shoot(Magazine magazine, Turret turret, Pickup pickup) {
     addCommands(
       /**sets motor speed and elevation */
       new ShootInit(turret),
       /** moves ball from magazine to turret*/
-      new ShootFire(magazine)
+      new ShootFire(magazine, pickup, turret)
     );
   }
 }

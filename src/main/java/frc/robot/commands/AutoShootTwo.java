@@ -21,7 +21,7 @@ public class AutoShootTwo extends SequentialCommandGroup {
     addCommands(
       new AutoShootAndGetCargo(turret, magazine, drive, pickup),
       new CheckForCargo(pickup),
-      new AutoShoot(turret, magazine)
+      new AutoShoot(turret, magazine,pickup)
     );
   }
 }
