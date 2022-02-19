@@ -11,7 +11,7 @@ import frc.robot.subsystems.Turret;
 public class ShootStop extends CommandBase {
   Magazine magazine;
   Turret turret;
-  /** Creates a new ShootStop. */
+  /** Turns off vertical magazine and turret motors */
   public ShootStop(Magazine magazine, Turret turret) {
     addRequirements(magazine,turret);
     this.turret = turret;

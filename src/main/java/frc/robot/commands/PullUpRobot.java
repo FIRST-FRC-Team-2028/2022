@@ -9,7 +9,7 @@ import frc.robot.subsystems.Climber;
 
 public class PullUpRobot extends CommandBase {
   Climber climber;
-  /** Creates a new PullUpRobot. */
+  /** pull up robot */
   public PullUpRobot(Climber climber) {
     addRequirements(climber);
     this.climber = climber;

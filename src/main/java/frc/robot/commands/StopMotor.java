@@ -9,7 +9,7 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class StopMotor extends CommandBase {
   DriveSubsystem drive;
-  /** Creates a new StopMotor. */
+  /** Stops  Motors */
   public StopMotor(DriveSubsystem drive) {
     this.drive = drive;
     addRequirements(drive);

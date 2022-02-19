@@ -16,7 +16,7 @@ public class DefaultDriveCommand extends CommandBase {
   private final Joystick m_joystick;
   private int iterCount;
 
-  /** Creates a new DefaultDriveCommand. */
+  /** drives robot */
   public DefaultDriveCommand(DriveSubsystem drive, Joystick joystick) {
     m_drive = drive;
     m_joystick = joystick;

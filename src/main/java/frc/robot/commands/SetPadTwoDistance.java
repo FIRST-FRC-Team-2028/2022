@@ -10,7 +10,7 @@ import frc.robot.subsystems.Turret;
 
 public class SetPadTwoDistance extends CommandBase {
   Turret turret;
-  /** Creates a new SetTarmacDistance. */
+  /**sets turret distance to use pad two distance */
   public SetPadTwoDistance(Turret turret) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(turret);

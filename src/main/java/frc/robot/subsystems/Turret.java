@@ -236,6 +236,11 @@ public class Turret extends SubsystemBase {
        }
      }
 
+    //get distance from pixy to object
+    distance = (Constants.HUB_HEIGHT - Constants.CAM_HEIGHT)
+                              / ((Constants.PIXY_VERT_CENTER - biggest.getY()) / Constants.PIXY_VERT_CENTER)
+                              / Constants.PIXY_TAN_VERT_FOV;
+
     // use PIDcontroller to aim turret
     double measure = biggest.getX();
     if ( measure < 0.) return 0.;
@@ -243,6 +248,8 @@ public class Turret extends SubsystemBase {
     turretMotor.set(pidVal);
     SmartDashboard.putNumber("Turret Aim Error", Constants.CENTER_OF_CAMERA-measure);
     return Constants.CENTER_OF_CAMERA - measure;
+
+    ///Constants.CENTER_OF_CAMERA));
   }
 
   public void stopAimer()

@@ -9,7 +9,7 @@ import frc.robot.subsystems.Climber;
 
 public class DeployClimber extends CommandBase {
   Climber climber;
-  /** Creates a new DeployClimber. */
+  /** deploys climber. */
   public DeployClimber(Climber climber) {
     addRequirements(climber);
     this.climber = climber;

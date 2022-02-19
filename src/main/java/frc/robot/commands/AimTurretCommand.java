@@ -12,7 +12,7 @@ public class AimTurretCommand extends CommandBase {
   double turretError;
   private static final double tolerance = 2.;  // pixels, presumably
   
-  /** Creates a new AimTurretCommand. */
+  /** Aims turret towards hub */
   public AimTurretCommand(Turret m_turret) {
     turret = m_turret;
     addRequirements(turret);

@@ -10,7 +10,7 @@ import frc.robot.subsystems.Turret;
 
 public class SetTarmacDistance extends CommandBase {
   Turret turret;
-  /** Creates a new SetTarmacDistance. */
+  /** sets turret distance to  tarmack distance. */
   public SetTarmacDistance(Turret turret) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(turret);

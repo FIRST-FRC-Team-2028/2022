@@ -115,7 +115,10 @@ public final class Constants {
     public static final int TURRETCW_BUTTON = 0;
     public static final int TURRETCCW_BUTTON = 0;
 
-    // Camera constants
+    /* Camera constants ,
+    from measurements half of horizontal field of view = 43, 
+    half of vertical field of view = 27.4 degree
+     */
     public static final int CENTER_OF_CAMERA = 316/2; //hardwired for Pixy2 x-resolution
     public static final int PIXY_VERT_CENTER =200/2;
     public static final int PIXY_FOV_VERT = 40;  // degrees 
@@ -129,6 +132,9 @@ public final class Constants {
     public static final int PIXY_SIG_BLUE = 1;
     public static final int PIXY_SIG_RED = 2;
     public static final int PIXY_SIG_HUB = 3;
+    public static final double PIXY_TAN_HORIZ_FOV = 47.25/50.5;
+    public static final double PIXY_TAN_VERT_FOV  = 47.25/91.;
+    public static final double CAM_HEIGHT = 0; //FIXME
 
     // Turret constants
     /* NEO 550 for turret and elevator

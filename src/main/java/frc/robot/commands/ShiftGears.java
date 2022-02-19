@@ -11,7 +11,7 @@ import frc.robot.subsystems.DriveSubsystem;
 public class ShiftGears extends CommandBase {
   DriveSubsystem drive;
   Timer timeTilRepeat;
-  /** Creates a new ShiftGears. */
+  /** Switches gears*/
   public ShiftGears(DriveSubsystem drive) {
     this.drive = drive;
     addRequirements(drive);
