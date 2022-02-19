@@ -38,14 +38,14 @@ public class DefaultDriveCommand extends CommandBase {
     } else {
       turn = m_joystick.getX();
     }
-     m_drive.driveMe(turn, -m_joystick.getY());
-     if (m_joystick.getRawButton(Constants.SHIFTER_BUTTON)){
+    m_drive.driveMe(turn, -m_joystick.getY());
+    if (m_joystick.getRawButton(Constants.SHIFTER_BUTTON)){
        m_drive.switchGears();
-     }
-     iterCount++;
-     SmartDashboard.putNumber("defCom iter", (double)iterCount);
-     SmartDashboard.putNumber("defComX", m_joystick.getX());
-     System.out.println("here is getX "+iterCount+" "+m_joystick.getX());
+    }
+    iterCount++;
+    //SmartDashboard.putNumber("defCom iter", (double)iterCount);
+    //SmartDashboard.putNumber("defComX", m_joystick.getX());
+    System.out.println("here is getX "+iterCount+" "+m_joystick.getX());
   }
 
   // Called once the command ends or is interrupted.

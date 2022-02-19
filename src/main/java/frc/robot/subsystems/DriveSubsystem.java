@@ -182,9 +182,9 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putString("Gear: ",shifter.get()==Constants.DRIVE_HIGH_GEAR ?"High":"Low");
     double gearedTurn = turnDriveStick*gearRatio;
     double gearedStrait = straitDriveStick*gearRatio;
-    SmartDashboard.putNumber("to arcade: gearedStrait" , gearedStrait);
-    SmartDashboard.putNumber("to arcade: gearedTurn" , gearedTurn);
-    SmartDashboard.putNumber("to arcade: gearRatio ", gearRatio);
+    //SmartDashboard.putNumber("to arcade: gearedStrait" , gearedStrait);
+    //SmartDashboard.putNumber("to arcade: gearedTurn" , gearedTurn);
+    //SmartDashboard.putNumber("to arcade: gearRatio ", gearRatio);
     driverControl.arcadeDrive(gearedStrait, gearedTurn);
   }
   

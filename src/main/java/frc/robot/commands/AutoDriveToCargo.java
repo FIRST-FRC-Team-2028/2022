@@ -50,9 +50,9 @@ public class AutoDriveToCargo extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    SmartDashboard.putNumber("autoPosition", currentPosition-initPosition);
+    //SmartDashboard.putNumber("autoPosition", currentPosition-initPosition);
     double error = Math.abs(currentPosition-initPosition - Constants.FIELD_TARMAC_TO_CARGO);
-    SmartDashboard.putNumber("autoPoserr", error);
+    //SmartDashboard.putNumber("autoPoserr", error);
     return  error < tolerance;
   }
 }

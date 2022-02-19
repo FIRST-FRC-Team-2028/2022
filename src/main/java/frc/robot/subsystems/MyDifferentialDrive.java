@@ -75,16 +75,16 @@ public class MyDifferentialDrive extends DifferentialDrive {
     //SmartDashboard.putNumber("before deadband Rotation:",zRotation);
     xSpeed = MathUtil.applyDeadband(xSpeed, m_deadband);
     zRotation = MathUtil.applyDeadband(zRotation, m_deadband);
-    SmartDashboard.putNumber("after deadband Speed:",xSpeed);
-    SmartDashboard.putNumber("after deadband Rotation:",zRotation);
+    //SmartDashboard.putNumber("after deadband Speed:",xSpeed);
+    //SmartDashboard.putNumber("after deadband Rotation:",zRotation);
     
     var speeds = arcadeDriveIK(xSpeed, zRotation, squareInputs);
 
     if (Constants.DRIVE_VELOCITY_CONTROLLED) {
       /* with closed loop control */
-      SmartDashboard.putNumber("myArcade left", speeds.left);
-      SmartDashboard.putNumber("myArcade right", speeds.right);
-      SmartDashboard.putNumber("myArcade m_maxOutput", m_maxOutput);
+      //SmartDashboard.putNumber("myArcade left", speeds.left);
+      //SmartDashboard.putNumber("myArcade right", speeds.right);
+      //SmartDashboard.putNumber("myArcade m_maxOutput", m_maxOutput);
       m_leftController.setReference(speeds.left * Constants.SPARKMAX_RPM, CANSparkMax.ControlType.kVelocity);
       m_rightController.setReference(speeds.right * Constants.SPARKMAX_RPM, CANSparkMax.ControlType.kVelocity);
     } else {
@@ -122,7 +122,7 @@ public class MyDifferentialDrive extends DifferentialDrive {
     double rightSpeed;
 
     double maxInput = Math.copySign(Math.max(Math.abs(xSpeed), Math.abs(zRotation)), xSpeed);
-    SmartDashboard.putNumber("IK maxInput", maxInput);
+    //SmartDashboard.putNumber("IK maxInput", maxInput);
 
     if (xSpeed >= 0.0) {
       // First quadrant, else second quadrant
@@ -146,7 +146,7 @@ public class MyDifferentialDrive extends DifferentialDrive {
     
     // Normalize the wheel speeds
     double maxMagnitude = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
-    SmartDashboard.putNumber("IK ", maxMagnitude);
+    //SmartDashboard.putNumber("IK ", maxMagnitude);
     if (maxMagnitude > 1.0) {
       leftSpeed /= maxMagnitude;
       rightSpeed /= maxMagnitude;

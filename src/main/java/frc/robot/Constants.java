@@ -32,7 +32,7 @@ public final class Constants {
      * Flags that tell the code systems exist
      */
     public static final boolean DRIVE_AVAILABLE         = true;
-    public static final boolean AUTOSHIFT_AVAILABLE     = false;
+    public static final boolean AUTOSHIFT_AVAILABLE     = true;
     public static final boolean CAMERA_AVAILABLE        = false;
     public static final boolean AIM_AVAILABLE           = false;
     public static final boolean TURRET_AVAILABLE        = false;
@@ -45,7 +45,7 @@ public final class Constants {
     public static final boolean GYRO_AVAILABLE          = false;
     public static final boolean BUTTONBOX_AVAILABLE     = false;
     public static final boolean USBCAMERA_AVAILABLE     = false;
-    public static final boolean JOYSTICK_EXTREME3D = false;
+    public static final boolean JOYSTICK_EXTREME3D = true;
 
     // CAN connections
     public enum CANIDs {
@@ -123,7 +123,7 @@ public final class Constants {
     public static final int PIXY_VERT_CENTER =200/2;
     public static final int PIXY_FOV_VERT = 40;  // degrees 
     public static final int TURRET_PIXY_ANALOG = 0;
-    public static final int TURRET_PIXY_ADDRESS = 0x5c;
+    public static final int TURRET_PIXY_ADDRESS = 0x48;
     public static final int DRIVE_PIXY_ADDRESS = 0x54;
     public static final int PIXY_USE_MXP = 0;
     public static final double PIXY_TARGET_AR = 2.;
@@ -140,8 +140,10 @@ public final class Constants {
     /* NEO 550 for turret and elevator
      *    11000 max RPM
      *    42 encoder counts/revolution
-     *    gear ratio for elevation = 100
-     *    gear ratio for azimuth = 100
+     *    gear ratio for elevation = 100 from gear box
+     *    gear ratio to elevator = 18 : 42
+     *    gear ratio for azimuth = 100 from gear box
+     *    gear ratio to turret = N : M
      * 
      * NEO 1650 for shooter
      *    5700 max RPM
@@ -153,13 +155,13 @@ public final class Constants {
     public static final double ELEVATOR_FCN_ACOEF = 0.;
     public static final double ELEVATOR_FCN_BCOEF = 0.;
     public static final double ELEVATOR_FCN_CCOEF = 0.;
-    public static final double ELEVATOR_ENCODER_RATIO =  42. / 24.;
+    public static final double ELEVATOR_ENCODER_RATIO =  42. / 18. /100.;
     public static final double TURRET_CAMERA_HEIGHT = 36.; //inches
     public static final double TURRET_TIME_TO_SHOOT = 0.;
     public static final int TURRET_SWITCH_CHANNEL = 0;
     public static final double SHOOTER_SPEED = 0.;  // 0 -> 1
     public static final double SHOOTER_SLOW_SPEED = 0.;  // 0 -> 1
-    public static final double TURRET_MOTOR_SPEED = 0;
+    public static final double TURRET_MOTOR_SPEED = 0;  // 0 -> 1
     public static final double SHOOT_INDICATOR = 0;  // delta rpm
 
 

@@ -4,9 +4,16 @@
 
 package frc.robot;
 
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoDriveToCargo;
+import frc.robot.commands.AutoLeaveTarmacDistance;
+import frc.robot.commands.AutoShoot;
+import frc.robot.commands.AutoShootAndGetCargo;
+import frc.robot.commands.AutoShootTwo;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveTowardBall;
 import frc.robot.commands.PickupTargets;
@@ -27,6 +34,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Turret;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
@@ -58,7 +66,9 @@ public class RobotContainer {
   private PneumaticHub pcm;
 
   private final DefaultDriveCommand m_defaultDriveCommand;
-
+  SendableChooser<Command> m_chooser;
+    
+  
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     //Configure default commands
@@ -144,6 +154,27 @@ public class RobotContainer {
       shooter.whenReleased(new TurretStop(turret));
     }
     
+    // choosable autoCommands
+    m_chooser = new SendableChooser<>();
+    final Command m_autoDrive = 
+      new AutoLeaveTarmacDistance(m_driveSubsystem);
+    m_chooser.setDefaultOption("JustDrive", m_autoDrive);
+    final Command m_autoGoToCargo = 
+      new AutoDriveToCargo(m_driveSubsystem);
+    m_chooser.addOption("Go to Cargo", m_autoGoToCargo);
+    /*
+    final Command m_autoShoot = 
+      new AutoShoot(turret, magazine, pickup);
+    m_chooser.addOption("Shoot", m_autoShoot);
+    final Command m_autoShNGC = 
+      new AutoShootAndGetCargo(turret, magazine, drive, pickup);
+    m_chooser.addOption("Shoot and get Cargo", m_autoShNGC);
+    final Command m_autoShootTwo = 
+      new AutoShootTwo(turret, magazine, drive, pickup);
+    m_chooser.addOption("Shoot Two", m_autoShootTwo);
+    */
+    SmartDashboard.putData(m_chooser);
+
     // for testing purposes
     JoystickButton autocargoButton = new JoystickButton(m_joystick, 1);
     autocargoButton.whenPressed(new AutoDriveToCargo(m_driveSubsystem));
@@ -155,10 +186,10 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   
-  /*
+  
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return m_chooser.getSelected();
   }
-  */
+  
 }

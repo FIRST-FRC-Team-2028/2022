@@ -107,7 +107,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -169,7 +169,11 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    double speed = joystick.getZ();
+    double speed;
+    if (Constants.JOYSTICK_EXTREME3D)
+      speed = joystick.getRawAxis(3);
+    else
+      speed = joystick.getZ();
     int testState = TestModes.PICKUP_ROLLERS.getID();
     
     if(testState == TestModes.SHOOTER.getID()) {   // check that stooter rollers toss ball out
@@ -181,7 +185,10 @@ public class Robot extends TimedRobot {
       turret.elevatorMove(speed*1000.);
       SmartDashboard.putNumber("elevationAngle", turret.getElevation());
 
+    } else if (testState == TestModes.TURRET.getID()) {  //  turret azimuth +CW
+
     } else if (testState == TestModes.PICKUP_ROLLERS.getID()) {  //  pickup rollers
+      // initialize the running average
       if (!startedTesting) {
         pickup.initAvg();
         startedTesting = true;
@@ -191,6 +198,7 @@ public class Robot extends TimedRobot {
       pickup.runRollers(speed);
       if (joystick.getRawButtonPressed(11))pickup.deploy();
       if (joystick.getRawButtonPressed(10))pickup.retract();
+      // smartdash data available after disable
       SmartDashboard.putNumber("pickupSpeed", speed);
       SmartDashboard.putNumber("pickupRPM", pickup.getRollerVelocity());
       /**Dont understand sendable registry */
