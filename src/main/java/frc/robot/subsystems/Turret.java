@@ -42,7 +42,8 @@ public class Turret extends SubsystemBase {
   double elevator_ki=0.;
   double elevator_kd=0.;
   double elevator_tolerance=2.;  // encoder counts
-  AnalogInput turretswitch;
+  //AnalogInput turretswitch;
+  SparkMaxLimitSwitch turretswitch;
 
 
   CANSparkMax shooter;
@@ -77,7 +78,8 @@ public class Turret extends SubsystemBase {
     shooter_controller.setD(shooter_kd);
     turretMotor = new CANSparkMax(Constants.CANIDs.TURRET_AZIMUTH.getid(), MotorType.kBrushless);
     turretencoder =  turretMotor.getEncoder();
-    turretswitch = new AnalogInput(Constants.TURRET_SWITCH_CHANNEL);
+    //turretswitch = new AnalogInput(Constants.TURRET_SWITCH_CHANNEL);
+    turretswitch = turretMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
     elevationMotor = new CANSparkMax(Constants.CANIDs.TURRET_ELEVATION.getid(), MotorType.kBrushless);
     limitswitch = elevationMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     elevator_controller = elevationMotor.getPIDController();
@@ -181,6 +183,10 @@ public class Turret extends SubsystemBase {
     //elevator_controller.setReference(fittere.yout(distance) + elevator_zero_position, CANSparkMax.ControlType.kPosition);
     elevator_controller.setReference(mapElevation(distance) + elevator_zero_position, CANSparkMax.ControlType.kPosition);
   }
+
+  /**  report whether elevator has reached set point
+   * @return boolean
+  */
   public boolean iselevatordistance() {
     //return Math.abs( elevatorencoder.getPosition() - fittere.yout(distance) + elevator_zero_position) < elevator_tolerance;
     return Math.abs( elevatorencoder.getPosition() - mapElevation(distance) + elevator_zero_position) < elevator_tolerance;
@@ -277,8 +283,10 @@ public class Turret extends SubsystemBase {
         elevator_zeroed=true;
       }
     }
-    if(turretswitch.getValue() > 4000 && !looking_for_position_two){
-      turret_position = turretencoder.getPosition();
+    //if(turretswitch.getValue() > 4000 
+    if(turretswitch.isPressed() 
+      && !looking_for_position_two){
+        turret_position = turretencoder.getPosition();
       looking_for_position_two = true;
     }
     
@@ -291,7 +299,7 @@ public class Turret extends SubsystemBase {
       looking_for_position_two = false;
     }   
 
-    if(badposition && Math.abs(turretencoder.getPosition() -turret_position) > 20) {
+    if(badposition && Math.abs(turretencoder.getPosition() -turret_position) > 20*Constants.TURRET_ENCODER_RATIO) {
       turretMotor.set(0.);
       SmartDashboard.putNumber("Turret Alert", 2.);
     }

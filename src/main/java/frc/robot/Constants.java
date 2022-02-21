@@ -55,7 +55,7 @@ public final class Constants {
         DRIVE_RIGHT_FOLLOWER (11, true),
         PICKUP_ROLLERS       (60, true),
         TURRET_ELEVATION     (00, false),
-        TURRET_AZIMUTH       (00, false),
+        TURRET_AZIMUTH       (30, false),
         TURRET_SHOOTER       (00, false),
         MAGIZINE_HORIZONTAL  (00, false), 
         MAGIZINE_VERTICAL    (00, false), 
@@ -116,12 +116,14 @@ public final class Constants {
     public static final int TURRETCCW_BUTTON = 0;
 
     /* Camera constants ,
-    from measurements half of horizontal field of view = 43, 
-    half of vertical field of view = 27.4 degree
+     * from measurements:
+     *    half of horizontal field of view = 43, 
+     *    half of vertical field of view = 27.4 degree
+     *  For necessity, aim camera up at 9 degrees (see book to verify)
      */
     public static final int CENTER_OF_CAMERA = 316/2; //hardwired for Pixy2 x-resolution
     public static final int PIXY_VERT_CENTER =200/2;
-    public static final int PIXY_FOV_VERT = 40;  // degrees 
+    public static final int PIXY_FOV_VERT = 43;  // degrees 
     public static final int TURRET_PIXY_ANALOG = 0;
     public static final int TURRET_PIXY_ADDRESS = 0x48;
     public static final int DRIVE_PIXY_ADDRESS = 0x54;
@@ -135,18 +137,18 @@ public final class Constants {
     public static final double PIXY_TAN_HORIZ_FOV = 47.25/50.5;
     public static final double PIXY_TAN_VERT_FOV  = 47.25/91.;
     public static final double CAM_HEIGHT = 0; //FIXME
+    public static final double PIXY_GAM_TURRET_CAM_ANGLE = .158; //FIXME
 
     // Turret constants
     /* NEO 550 for turret and elevator
      *    11000 max RPM
-     *    42 encoder counts/revolution
+     *    gear ratio for azimuth = 100 from gear box
+     *    gear ratio to turret = 18 : 180
+     * 
+     * NEO 1650 for shooter and elevator
+     *    5700 max RPM
      *    gear ratio for elevation = 100 from gear box
      *    gear ratio to elevator = 18 : 42
-     *    gear ratio for azimuth = 100 from gear box
-     *    gear ratio to turret = N : M
-     * 
-     * NEO 1650 for shooter
-     *    5700 max RPM
      */
     public static final double SHOOTER_FCN_ACOEF = 0.;
     public static final double SHOOTER_FCN_BCOEF = 0.;
@@ -155,13 +157,15 @@ public final class Constants {
     public static final double ELEVATOR_FCN_ACOEF = 0.;
     public static final double ELEVATOR_FCN_BCOEF = 0.;
     public static final double ELEVATOR_FCN_CCOEF = 0.;
-    public static final double ELEVATOR_ENCODER_RATIO =  42. / 18. /100.;
-    public static final double TURRET_CAMERA_HEIGHT = 36.; //inches
+    public static final double ELEVATOR_ENCODER_RATIO =  100. /18 *42. /360.;  // rev / deg
+    public static final double TURRET_CAMERA_HEIGHT = 30.; //inches
     public static final double TURRET_TIME_TO_SHOOT = 0.;
     public static final int TURRET_SWITCH_CHANNEL = 0;
+    public static final double TURRET_ENCODER_RATIO = 100./18.*180./360.;  //  rev / deg 
     public static final double SHOOTER_SPEED = 0.;  // 0 -> 1
     public static final double SHOOTER_SLOW_SPEED = 0.;  // 0 -> 1
-    public static final double TURRET_MOTOR_SPEED = 0;  // 0 -> 1
+    public static final double TURRET_MOTOR_SPEED = 1.;  // 0 -> 1
+    public static final double TURRET_MOTOR_SLOW_SPEED = 0.3;  // 0 -> 1
     public static final double SHOOT_INDICATOR = 0;  // delta rpm
 
 
@@ -211,17 +215,16 @@ public final class Constants {
     // climber constants
     public static final double CLIMBER_TIME_TO_CLIMB = 0.;
 
+    // Robot measurements
+    public static final double ROBOT_LENGTH = 31.75 + 3.25 + 3.25;  // inches bumper to bumper
+    public static final double ROBOT_WIDTH = 28.25 + 3.25+3.25;  // inches bumper to bumper
+    public static final double ROBOT_FRONTBUMPER_TO_TURRET = 11.36 + 3.25;  // inches to CAM
+
     // field measurements
     public static final double HUB_HEIGHT = 104.; //inches
-    public static final double TARMAC_DISTANCE = 0.;  // inches from Hub
-    public static final double PAD_ONE_DISTANCE =0.;
-    public static final double PAD_TWO_DISTANCE =0.;
-    public static final double FIELD_TARMAC_TO_CARGO = 40.44 - 0.;   // inches
+    public static final double TARMAC_DISTANCE = 109.7 - ROBOT_FRONTBUMPER_TO_TURRET;  // inches from Hub
+    public static final double FIELD_TARMAC_TO_CARGO = 40.44 - 0.;   // inches, front bumper to cargo
     public static final double FIELD_HUB_TO_PAD1 = 202.95;  // inches
     public static final double FIELD_HUB_TO_PAD2 = 244.77;  // inches
-
-    // Robot measurements
-    public static final double ROBOT_LENGTH = 38.;  // inches
-    public static final double ROBOT_WIDTH = 0.;  // inches
     
 }

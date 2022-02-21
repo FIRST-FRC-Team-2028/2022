@@ -10,7 +10,9 @@ import frc.robot.subsystems.Turret;
 
 public class SetPadOneDistance extends CommandBase {
   Turret turret;
-  /** sets turret distance to use pad 1 distance */
+  /** sets turret distance to pad 1 distance 
+   * does not activate elevator controller
+  */
   public SetPadOneDistance(Turret turret) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(turret);
@@ -20,7 +22,7 @@ public class SetPadOneDistance extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turret.setdistance(Constants.PAD_ONE_DISTANCE);
+    turret.setdistance(Constants.FIELD_HUB_TO_PAD1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
