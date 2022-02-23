@@ -166,7 +166,8 @@ public final class Constants {
     public static final double SHOOTER_SPEED = 0.;  // 0 -> 1
     public static final double SHOOTER_SLOW_SPEED = 0.;  // 0 -> 1
     public static final double TURRET_MOTOR_SPEED = 1.;  // 0 -> 1
-    public static final double TURRET_MOTOR_SLOW_SPEED = 0.3;  // 0 -> 1
+    public static final double TURRET_MOTOR_SLOW_SPEED = 0.3;  // 0 -> 
+    public static final double TURRET_MOTOR_ZEROING_SPEED = 0.;
     public static final double SHOOT_INDICATOR = 0;  // delta rpm
 
 
@@ -227,5 +228,6 @@ public final class Constants {
     public static final double FIELD_TARMAC_TO_CARGO = 40.44 - 0.;   // inches, front bumper to cargo
     public static final double FIELD_HUB_TO_PAD1 = 202.95;  // inches
     public static final double FIELD_HUB_TO_PAD2 = 244.77;  // inches
+   
     
 }

@@ -24,6 +24,7 @@ public class AutoShootAndLeaveTarmac extends SequentialCommandGroup {
       new AutoShoot(turret, magazine, pickup),
 
       new AutoShootWait(Constants.TURRET_TIME_TO_SHOOT),
+      new ZeroTurret(turret),
       // Will shoot happen instantaneously?
       new AutoLeaveTarmacTimed(drive)
     );

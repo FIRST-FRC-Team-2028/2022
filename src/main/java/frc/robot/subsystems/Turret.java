@@ -44,6 +44,9 @@ import frc.robot.Pixy2API.links.I2CLink;
 public class Turret extends SubsystemBase {
   CANSparkMax turretMotor;
   RelativeEncoder turretencoder;
+  double turretupperlimit;
+  double turretlowerlimit;
+  boolean turretiszeroed = true; // starts as true so autonomous doesnt move it
   double turretSpeed;
   double turret_position;
   double turret_position_two;
@@ -290,7 +293,13 @@ public class Turret extends SubsystemBase {
   public void turretCW(double speed){
     turretMotor.set(speed*turretSpeed);
   }
+
+  public void startzeroing() {
+     turretiszeroed = false;
+  }
   
+  boolean AMIPOS = true;
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -303,7 +312,32 @@ public class Turret extends SubsystemBase {
         elevator_zeroed=true;
       }
     }
+
+    if(!turretiszeroed) {
+      turretMotor.set(Constants.TURRET_MOTOR_ZEROING_SPEED);
+      double NEEDS_WORK = 1.e5;
+      // mr.g says look at this to determine direction
+      // and search limit TODO
+      if(limitswitch.isPressed()) {
+        turretMotor.set(0.);
+        double turret_zero_position = turretencoder.getPosition(); 
+        turretupperlimit = turret_zero_position + 
+              (360.*(AMIPOS?0.:1.) + 20.)*Constants.TURRET_ENCODER_RATIO; 
+        turretlowerlimit = turret_zero_position - 
+              (360.*(AMIPOS?1.:0) + 20.)*Constants.TURRET_ENCODER_RATIO;
+        double NOT_DONE_HERE = 666.;  //AMIPOS must be set at autonomous set up time
+        turretiszeroed = true;
+      }
+    }
      
+    if(turretencoder.getPosition() > turretupperlimit ) {
+      turretMotor.set(Math.min(0., turretMotor.get()));
+    } 
+
+    if(turretencoder.getPosition() < turretlowerlimit ) {
+      turretMotor.set(Math.max(0., turretMotor.get()));
+    } 
+   /*
     if(turretswitch.isPressed() 
       && !looking_for_position_two){
         turret_position = turretencoder.getPosition();
@@ -312,7 +346,7 @@ public class Turret extends SubsystemBase {
     
     if( looking_for_position_two
         && Math.abs(turretencoder.getPosition() -turret_position) > 2.*Constants.TURRET_ENCODER_RATIO)  {  // moved since switch pressed){
-      if(badposition = false) {
+      if(badposition == false) {
         alertuser(true );
       }  else{
         alertuser(false);
@@ -328,6 +362,7 @@ public class Turret extends SubsystemBase {
       }
       SmartDashboard.putNumber("Turret Alert", 2.);
     }
+    */
 
 
     if(shooteron) {

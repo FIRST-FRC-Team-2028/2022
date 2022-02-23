@@ -5,50 +5,35 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Magazine;
-import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Turret;
 
-
-public class ShootFire extends CommandBase {
- 
-  Magazine magazine;
-  Pickup pickup;
+public class ZeroTurret extends CommandBase {
   Turret turret;
-  /** pushing ball into running shooter */
-  public ShootFire(Magazine magazine, Pickup pickup, Turret turret) {
-    addRequirements(magazine, pickup, turret);
-    this.magazine = magazine;
-    this.pickup = pickup;
+  /** Finds a known point on turret */
+  public ZeroTurret(Turret turret) {
+    // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
+    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
-  /** Starts magazine */
+  // Stars turret zeroing process
   @Override
   public void initialize() {
-    magazine.verticalon();
+    turret.startzeroing();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  /** checks if shooter has shot then tells pickup*/
-  public void execute() {
-    if(turret.hasShot()) {
-      pickup.usedAmmo();
-    }
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
-  
   @Override
-  public void end(boolean interrupted) {
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    
-    return !pickup.hasCargo();
+    return true;
   }
 }
