@@ -28,6 +28,7 @@ public class Pickup extends SubsystemBase {
   DoubleSolenoid arms;
 
   boolean rollersOn = false;
+  boolean dontCount = true;
   static final int NUM_ENC = 200;
   double [] encoder_velocity = new double[NUM_ENC];
   int iter = 0;
@@ -92,22 +93,24 @@ public class Pickup extends SubsystemBase {
   public boolean hasCargo() {
     //notice when the RPM drops from the running average
     //System.out.println("avg , current: " + enc_avg + " " + encoder.getVelocity() );
-    if(!engagedcargo && enc_avg - encoder.getVelocity() > Constants.PICKUP_CARGO_INDICATION) {
-      engagedcargo = true;
-      System.out.println("I was engaged");
-      return false;
+    if (!dontCount) {
+      if(!engagedcargo && enc_avg - encoder.getVelocity() > Constants.PICKUP_CARGO_INDICATION) {
+        engagedcargo = true;
+        System.out.println("I was engaged");
+        return false;
+      }
+      // notice when the RPM reverts to the running average
+      if(engagedcargo && Math.abs(encoder.getVelocity() - enc_avg) < 10.) {
+        ammo = ammo + 1;
+        SmartDashboard.putNumber(" Magazine Ammo", ammo);
+        engagedcargo = false;
+        return true;
+      } 
     }
-    // notice when the RPM reverts to the running average
-    if(engagedcargo && Math.abs(encoder.getVelocity() - enc_avg) < 10.) {
-      ammo = ammo + 1;
-      SmartDashboard.putNumber(" Magazine Ammo", ammo);
-      engagedcargo = false;
-      return true;
-    } 
     // When rollers spin up from not spinning, the method incorrectly detects ammo
     double I_NEED_WORK = 4.;
     return false;
-  }
+  } 
 
   public int usedAmmo() {
     ammo = ammo - 1;
@@ -123,16 +126,22 @@ public class Pickup extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    /**checks rpm of rollers when active */
+    /**checks rpm of rollers when active */  
     if(rollersOn){
-      enc_avg = enc_avg  - encoder_velocity[iter]/NUM_ENC;
-      encoder_velocity[iter] = encoder.getVelocity();
-      iter = (iter+1)%NUM_ENC;
-      enc_avg = enc_avg  + encoder.getVelocity()/NUM_ENC;
-      SmartDashboard.putNumber("Pickup Roller Speed", encoder.getVelocity());
+      if (dontCount) {
+       if (encoder.getVelocity() >= encoder_velocity[0]) {
+        dontCount = false; //starts counting encoder velocity values
+       }
+       encoder_velocity[0] = encoder.getVelocity();
+      }
+      else {
+        enc_avg = enc_avg  - encoder_velocity[iter]/NUM_ENC;
+        encoder_velocity[iter] = encoder.getVelocity();
+        iter = (iter+1)%NUM_ENC;
+        enc_avg = enc_avg  + encoder.getVelocity()/NUM_ENC;
+        SmartDashboard.putNumber("Pickup Roller Speed", encoder.getVelocity());
+      }
     }
-    
-      
   }
 
   /** initialize agv RPM detector for testing */
