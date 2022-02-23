@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.Turret;
 
 public class TurretCCW extends CommandBase {
@@ -19,7 +18,7 @@ public class TurretCCW extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turret.turretCW(-Constants.TURRET_MOTOR_SPEED);
+    turret.turretCW(-1.);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

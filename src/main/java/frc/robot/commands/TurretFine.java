@@ -7,18 +7,19 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Turret;
 
-public class TurretCW extends CommandBase {
-  Turret turret;
-  /** run turret Clockwise. */
-  public TurretCW(Turret turret) {
-    this.turret = turret;
+public class TurretFine extends CommandBase {
+  private Turret turret;
+  private boolean fine;
+  /** Sets the Turret to fine control */
+  public TurretFine(Turret turret, boolean fine) {
     addRequirements(turret);
+    this.turret=turret;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turret.turretCW(1.);
+    turret.turretFine(fine);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -32,6 +33,6 @@ public class TurretCW extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

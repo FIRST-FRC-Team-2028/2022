@@ -98,22 +98,24 @@ public final class Constants {
 
     // joystick and button numbers
     public static final int JOYSTICK = 0;
-    public static final int LEFT_BUTTON_BOX = 1;
-    public static final int RIGHT_BUTTON_BOX = 2;
     public static final int SHIFTER_BUTTON = 2;
     public static final int SHIFTERU_BUTTON = 5;
     public static final int SHIFTERD_BUTTON = 4;
+    // button box1
+    public static final int LEFT_BUTTON_BOX = 1;
+    public static final int RIGHT_BUTTON_BOX = 2;
     public static final int DRIVE_TO_BALL_BUTTON = 3;
     public static final int DEPLOY_PICKUP_BUTTON = 6;
     public static final int RETRACT_PICKUP_BUTTON = 7;
-    public static final int SHOOT_BUTTON = 0;
-    public static final int TARMAC_DISTANCE_BUTTON = 0;
+    public static final int SHOOT_BUTTON = 8;
+    public static final int TARMAC_DISTANCE_BUTTON = 4;
     public static final int PAD_TWO_DISTANCE_BUTTON = 0;
-    public static final int PAD_ONE_DISTANCE_BUTTON = 0;
+    public static final int PAD_ONE_DISTANCE_BUTTON = 10;
     public static final int ELEVATOR_UP_BUTTON = 0;
     public static final int ELEVATOR_DOWN_BUTTON = 0;
-    public static final int TURRETCW_BUTTON = 0;
-    public static final int TURRETCCW_BUTTON = 0;
+    public static final int TURRETCW_BUTTON = 7;
+    public static final int TURRETCCW_BUTTON = 5;
+    public static final int TURRET_FINE_BUTTON = 6;
 
     /* Camera constants ,
      * from measurements:
@@ -160,7 +162,6 @@ public final class Constants {
     public static final double ELEVATOR_ENCODER_RATIO =  100. /18 *42. /360.;  // rev / deg
     public static final double TURRET_CAMERA_HEIGHT = 30.; //inches
     public static final double TURRET_TIME_TO_SHOOT = 0.;
-    public static final int TURRET_SWITCH_CHANNEL = 0;
     public static final double TURRET_ENCODER_RATIO = 100./18.*180./360.;  //  rev / deg 
     public static final double SHOOTER_SPEED = 0.;  // 0 -> 1
     public static final double SHOOTER_SLOW_SPEED = 0.;  // 0 -> 1

@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.security.PublicKey;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -28,13 +26,15 @@ public class Pickup extends SubsystemBase {
   PneumaticHub pcm;
   //PneumaticsControlModule pcm;
   DoubleSolenoid arms;
-  int magazineammo = 0;
 
   boolean rollersOn = false;
   static final int NUM_ENC = 200;
   double [] encoder_velocity = new double[NUM_ENC];
   int iter = 0;
   double enc_avg;
+
+  boolean engagedcargo;
+  int ammo;
 
   public Pickup(PneumaticHub pcm) {
     rollers = new CANSparkMax(Constants.CANIDs.PICKUP_ROLLERS.getid(), MotorType.kBrushless);
@@ -90,8 +90,8 @@ public class Pickup extends SubsystemBase {
    * @return
    */
   public boolean hasCargo() {
-    //System.out.println("avg , current: " + enc_avg + " " + encoder.getVelocity() );
     //notice when the RPM drops from the running average
+    //System.out.println("avg , current: " + enc_avg + " " + encoder.getVelocity() );
     if(!engagedcargo && enc_avg - encoder.getVelocity() > Constants.PICKUP_CARGO_INDICATION) {
       engagedcargo = true;
       System.out.println("I was engaged");
@@ -103,30 +103,11 @@ public class Pickup extends SubsystemBase {
       SmartDashboard.putNumber(" Magazine Ammo", ammo);
       engagedcargo = false;
       return true;
-    }
+    } 
+    // When rollers spin up from not spinning, the method incorrectly detects ammo
+    double I_NEED_WORK = 4.;
     return false;
   }
-  public boolean hasCargoNOT() {
-    double IAMNOTDONE = 3;
-    
-    if( engagingCargo() && Math.abs(encoder.getVelocity() - enc_avg) < 10.) {
-      SmartDashboard.putNumber(" Magazine Ammo", ammo);
-      engagedcargo = false;
-      return true;
-    }
-    return false;
-  } 
-
-  boolean engagedcargo;
-
-  private boolean engagingCargo() {
-    if( (encoder.getVelocity() - enc_avg) > Constants.PICKUP_CARGO_INDICATION) {
-      engagedcargo = true;
-    }
-    return engagedcargo;
-  }
-   
-  int ammo;
 
   public int usedAmmo() {
     ammo = ammo - 1;

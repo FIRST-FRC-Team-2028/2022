@@ -22,6 +22,7 @@ import frc.robot.commands.StopMotor;
 import frc.robot.commands.TurnoffPickup;
 import frc.robot.commands.TurretCCW;
 import frc.robot.commands.TurretCW;
+import frc.robot.commands.TurretFine;
 import frc.robot.commands.TurretStop;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.commands.DeployClimber;
@@ -152,6 +153,9 @@ public class RobotContainer {
       JoystickButton aimerCCW = new JoystickButton(m_joystick,Constants.TURRETCCW_BUTTON);
       shooter.whenPressed(new TurretCCW(turret));
       shooter.whenReleased(new TurretStop(turret));
+      JoystickButton aimerSpeed = new JoystickButton(m_joystick,Constants.TURRET_FINE_BUTTON);
+      shooter.whenPressed(new TurretFine(turret, true));
+      shooter.whenReleased(new TurretFine(turret, false));
     }
     
     // choosable autoCommands

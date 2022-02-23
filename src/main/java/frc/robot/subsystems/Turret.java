@@ -21,12 +21,30 @@ import frc.robot.Pixy2API.Pixy2CCC;
 import frc.robot.Pixy2API.Pixy2CCC.Block;
 import frc.robot.Pixy2API.links.I2CLink;
 
+/* 
+ * public methods:
+ *     turret:
+ *        aimer
+ *        turretCW
+ *        turretFine
+ * 
+ *     shooter:
+ *        shooterOn
+ *        hasShot
+ *        shooterSpeed
+ *        shooterOff
+ *        isatSpeed
+ *        shooterDistance
+ * 
+ *     elevator:
+ */
 
 /** Turret points toward the hub and shoot balls into it.
  */
 public class Turret extends SubsystemBase {
   CANSparkMax turretMotor;
   RelativeEncoder turretencoder;
+  double turretSpeed;
   double turret_position;
   double turret_position_two;
   boolean looking_for_position_two = false;
@@ -44,7 +62,6 @@ public class Turret extends SubsystemBase {
   double elevator_tolerance=2.;  // encoder counts
   //AnalogInput turretswitch;
   SparkMaxLimitSwitch turretswitch;
-
 
   CANSparkMax shooter;
   SparkMaxPIDController shooter_controller;
@@ -128,7 +145,6 @@ public class Turret extends SubsystemBase {
   /** for testing set some arbitrary -1 < value <1 */
   public void shooterOn() {
     shooter.set(Constants.SHOOTER_SPEED);
-    
     shooteron = true;
   }
 
@@ -264,11 +280,15 @@ public class Turret extends SubsystemBase {
     turretMotor.set(0.);
   }
 
+  public void turretFine(boolean fine) {
+    if (fine) turretSpeed = Constants.TURRET_MOTOR_SLOW_SPEED;
+    else turretSpeed = Constants.TURRET_MOTOR_SPEED;
+  }
   /** move turret
-   * @param speed positive clockwise around up
+   * @param speed [+1, 0., -1] positive clockwise around up vector
    */
   public void turretCW(double speed){
-    turretMotor.set(speed);
+    turretMotor.set(speed*turretSpeed);
   }
   
   @Override
@@ -283,14 +303,15 @@ public class Turret extends SubsystemBase {
         elevator_zeroed=true;
       }
     }
-    //if(turretswitch.getValue() > 4000 
+     
     if(turretswitch.isPressed() 
       && !looking_for_position_two){
         turret_position = turretencoder.getPosition();
       looking_for_position_two = true;
     }
     
-    if( looking_for_position_two){
+    if( looking_for_position_two
+        && Math.abs(turretencoder.getPosition() -turret_position) > 2.*Constants.TURRET_ENCODER_RATIO)  {  // moved since switch pressed){
       if(badposition = false) {
         alertuser(true );
       }  else{
@@ -300,7 +321,11 @@ public class Turret extends SubsystemBase {
     }   
 
     if(badposition && Math.abs(turretencoder.getPosition() -turret_position) > 20*Constants.TURRET_ENCODER_RATIO) {
-      turretMotor.set(0.);
+      if (turretencoder.getPosition()  < turret_position) {
+        turretMotor.set(Math.max(0., turretMotor.get()));
+      } else {
+        turretMotor.set(Math.min(0., turretMotor.get()));
+      }
       SmartDashboard.putNumber("Turret Alert", 2.);
     }
 

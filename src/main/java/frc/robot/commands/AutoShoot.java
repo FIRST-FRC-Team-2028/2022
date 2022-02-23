@@ -25,7 +25,6 @@ public class AutoShoot extends SequentialCommandGroup {
     addCommands(
       new SetTarmacDistance(turret),
       new Shoot(magazine, turret, pickup)
-
     );
   }
 }
