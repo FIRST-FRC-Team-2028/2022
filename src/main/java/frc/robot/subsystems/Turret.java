@@ -335,7 +335,7 @@ public class Turret extends SubsystemBase {
       encoder_velocity[iter] = shooterSpeed.getVelocity();
       iter = (iter+1)%NUM_ENC;
       enc_avg = enc_avg  + shooterSpeed.getVelocity()/NUM_ENC;
-
+      double imNotDone = 0.;  // need to wait until average is stabilized
     }
   }
 
