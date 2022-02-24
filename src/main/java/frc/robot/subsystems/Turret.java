@@ -298,13 +298,13 @@ public class Turret extends SubsystemBase {
      turretiszeroed = false;
   }
   
-  boolean AMIPOS = true;
+  boolean AMIRIGHT = true;
   /**
    * Set side of robot turret is facing at match start
    * @param right 
    */
   public void setTurretStartSector(boolean right) {
-    AMIPOS = right;
+    AMIRIGHT = right;
   }
 
   @Override
@@ -322,7 +322,7 @@ public class Turret extends SubsystemBase {
 
     // Presuming turret is 
     if(!turretiszeroed) {
-      turretMotor.set((AMIPOS?1.:-1.)*Constants.TURRET_MOTOR_ZEROING_SPEED);
+      turretMotor.set((AMIRIGHT?1.:-1.)*Constants.TURRET_MOTOR_ZEROING_SPEED);
       double NEEDS_WORK = 1.e5;
       // mr.g says look at this to determine direction
       // and search limit TODO
@@ -330,9 +330,9 @@ public class Turret extends SubsystemBase {
         turretMotor.set(0.);
         double turret_zero_position = turretencoder.getPosition(); 
         turretupperlimit = turret_zero_position + 
-              (360.*(AMIPOS?0.:1.) + 20.)*Constants.TURRET_ENCODER_RATIO; 
+              (360.*(AMIRIGHT?0.:1.) + 20.)*Constants.TURRET_ENCODER_RATIO; 
         turretlowerlimit = turret_zero_position - 
-              (360.*(AMIPOS?1.:0) + 20.)*Constants.TURRET_ENCODER_RATIO;
+              (360.*(AMIRIGHT?1.:0) + 20.)*Constants.TURRET_ENCODER_RATIO;
         double NOT_DONE_HERE = 666.;  //AMIPOS must be set at autonomous set up time
         turretiszeroed = true;
       }
@@ -346,12 +346,6 @@ public class Turret extends SubsystemBase {
       turretMotor.set(Math.max(0., turretMotor.get()));
     } 
    /*
-    if(turretswitch.isPressed() 
-      && !looking_for_position_two){
-        turret_position = turretencoder.getPosition();
-      looking_for_position_two = true;
-    }
-    
     if( looking_for_position_two
         && Math.abs(turretencoder.getPosition() -turret_position) > 2.*Constants.TURRET_ENCODER_RATIO)  {  // moved since switch pressed){
       if(badposition == false) {
@@ -362,6 +356,12 @@ public class Turret extends SubsystemBase {
       looking_for_position_two = false;
     }   
 
+    if(turretswitch.isPressed() 
+      && !looking_for_position_two){
+        turret_position = turretencoder.getPosition();
+      looking_for_position_two = true;
+    }
+    
     if(badposition && Math.abs(turretencoder.getPosition() -turret_position) > 20*Constants.TURRET_ENCODER_RATIO) {
       if (turretencoder.getPosition()  < turret_position) {
         turretMotor.set(Math.max(0., turretMotor.get()));

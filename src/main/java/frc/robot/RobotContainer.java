@@ -68,6 +68,7 @@ public class RobotContainer {
 
   private final DefaultDriveCommand m_defaultDriveCommand;
   SendableChooser<Command> m_chooser;
+  SendableChooser<Boolean> sideChooser;
     
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -179,7 +180,12 @@ public class RobotContainer {
     FIXME
     */
     SmartDashboard.putData(m_chooser);
-
+    
+    sideChooser = new SendableChooser<>();
+    sideChooser.setDefaultOption("Right", true);
+    sideChooser.addOption("Left", false);
+    SmartDashboard.putData(sideChooser);
+    
     // for testing purposes
     JoystickButton autocargoButton = new JoystickButton(m_joystick, 1);
     autocargoButton.whenPressed(new AutoDriveToCargo(m_driveSubsystem));
