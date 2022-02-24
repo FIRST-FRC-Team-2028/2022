@@ -79,6 +79,7 @@ public class Pickup extends SubsystemBase {
     for(int i = 0; i < NUM_ENC; i++ ) encoder_velocity[i] = 0.;
     enc_avg = 0.;
     engagedcargo = false;
+    dontCount = true;
   }
 
   // allows the world to see roller velocity
@@ -108,7 +109,7 @@ public class Pickup extends SubsystemBase {
       } 
     }
     // When rollers spin up from not spinning, the method incorrectly detects ammo
-    double I_NEED_WORK = 4.;
+    double I_NEED_CHECKED = 4.;
     return false;
   } 
 
@@ -128,13 +129,12 @@ public class Pickup extends SubsystemBase {
     // This method will be called once per scheduler run
     /**checks rpm of rollers when active */  
     if(rollersOn){
-      if (dontCount) {
+      if (dontCount) {  // don't look for cargo until rollers up to speed
        if (encoder.getVelocity() >= encoder_velocity[0]) {
         dontCount = false; //starts counting encoder velocity values
        }
-       encoder_velocity[0] = encoder.getVelocity();
-      }
-      else {
+       encoder_velocity[0] = encoder.getVelocity();  // using one array value for detecting steady state
+      } else {
         enc_avg = enc_avg  - encoder_velocity[iter]/NUM_ENC;
         encoder_velocity[iter] = encoder.getVelocity();
         iter = (iter+1)%NUM_ENC;

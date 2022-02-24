@@ -20,7 +20,7 @@ public class ZeroTurret extends CommandBase {
   // Stars turret zeroing process
   @Override
   public void initialize() {
-    turret.startzeroing();
+    turret.turretstartzeroing();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

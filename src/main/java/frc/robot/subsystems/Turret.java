@@ -294,11 +294,18 @@ public class Turret extends SubsystemBase {
     turretMotor.set(speed*turretSpeed);
   }
 
-  public void startzeroing() {
+  public void turretstartzeroing() {
      turretiszeroed = false;
   }
   
   boolean AMIPOS = true;
+  /**
+   * Set side of robot turret is facing at match start
+   * @param right 
+   */
+  public void setTurretStartSector(boolean right) {
+    AMIPOS = right;
+  }
 
   @Override
   public void periodic() {
@@ -313,8 +320,9 @@ public class Turret extends SubsystemBase {
       }
     }
 
+    // Presuming turret is 
     if(!turretiszeroed) {
-      turretMotor.set(Constants.TURRET_MOTOR_ZEROING_SPEED);
+      turretMotor.set((AMIPOS?1.:-1.)*Constants.TURRET_MOTOR_ZEROING_SPEED);
       double NEEDS_WORK = 1.e5;
       // mr.g says look at this to determine direction
       // and search limit TODO
