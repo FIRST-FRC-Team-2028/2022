@@ -34,7 +34,8 @@ public class DefaultDriveCommand extends CommandBase {
   public void execute() {
     double turn;
     if (Constants.JOYSTICK_EXTREME3D) {
-      turn = m_joystick.getZ();
+      // turn = m_joystick.getZ();  // twist control has a terrible bias
+      turn = m_joystick.getX();
     } else {
       turn = m_joystick.getX();
     }

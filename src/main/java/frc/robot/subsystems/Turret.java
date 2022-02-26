@@ -145,16 +145,39 @@ public class Turret extends SubsystemBase {
   }
 
   boolean shooteron;
+  private boolean engagedcargo;
+  private boolean engagedLow;
+  private boolean dontCount;
   /** for testing set some arbitrary -1 < value <1 */
   public void shooterOn() {
     shooter.set(Constants.SHOOTER_SPEED);
     shooteron = true;
   }
 
-  
+  /** determine whether cargo has been shot
+   * based on variations of RPM from the steady state
+    */
   public boolean hasShot() {
-    if (enc_avg - shooterSpeed.getVelocity() > Constants.SHOOT_INDICATOR) {
-      return true;
+    // look for variation
+    double delta;
+    if (!dontCount) {
+      delta = shooterSpeed.getVelocity() - enc_avg;
+      if (!engagedcargo && delta >/*500*/ Constants.SHOOT_INDICATORUP) {
+        engagedcargo = true;
+        System.out.println("Saw the blip up "+delta);
+        return false;
+      }
+      if(engagedcargo && delta < /*-300*/Constants.SHOOT_INDICATORDOWN) {
+        engagedLow = true;
+        System.out.println("Saw the blip down "+delta);
+        return false;
+      }
+      if (engagedcargo && engagedLow && Math.abs(delta) <100) {
+        engagedLow = false;
+        engagedcargo = false;
+        System.out.println("Detected back to avg");
+        return true;
+      }
     }
     return false;
   }
@@ -173,6 +196,14 @@ public class Turret extends SubsystemBase {
     enc_avg = 0.;
     iter = 0;
     shooteron = false;
+    dontCount = true; // wait for steadyState before looking for evidence of shooting
+    dontCounter = 0;
+  }
+
+  /** Gets rid of opponents ball */
+  public void dispose()
+  {
+    shooter.set(Constants.SHOOTER_SLOW_SPEED);
   }
 
   /** Use quadratic curve fit for rpm(distance)  = a x^2 +b x + c */
@@ -184,18 +215,24 @@ public class Turret extends SubsystemBase {
     return (Constants.ELEVATOR_FCN_ACOEF*distance*distance + Constants.ELEVATOR_FCN_BCOEF)*distance+Constants.ELEVATOR_FCN_CCOEF;
   }
   
+  /** report whether shooter has reached desired RPM */
   public boolean isatSpeed() {
-    //return Math.abs(shooter.get() - fitterm.yout(distance)) < shooter_tolerance;
-    return Math.abs(shooter.get() - mapRPM(distance)) < shooter_tolerance;
+    //double desired = fitterm.yout(distance);
+    double desired = mapRPM(distance);
+    return Math.abs(shooter.get() - desired) < shooter_tolerance;
   }
 
-
-
-/**given distance, run motor at set speed */
+  private int dontCountRange;
+  /**given distance, run motor at set speed */
   public void shooterdistance() {
-    //shooter_controller.setReference(fitterm.yout(distance), CANSparkMax.ControlType.kVelocity);
-    shooter_controller.setReference(mapRPM(distance), CANSparkMax.ControlType.kVelocity);
+    //double desired = fitterm.yout(distance);
+    double desired = mapRPM(distance);
+    shooter_controller.setReference(desired, CANSparkMax.ControlType.kVelocity);
     shooteron = true;
+    dontCountRange=200;
+    if (desired > 2000.) dontCountRange = 330;
+    if (desired > 2500.) dontCountRange = 450;
+    if (desired > 3000.) dontCountRange = 650;
   }
   
   public void setelevation() {
@@ -231,12 +268,6 @@ public class Turret extends SubsystemBase {
   }
 
 
-  /** Gets rid of opponents ball */
-  public void dispose()
-  {
-    shooter.set(Constants.SHOOTER_SLOW_SPEED);
-  }
-
   /** Use PID controller to aim turret based on pixy camera data.
    * @return error in pixels relative to image width of 315
    */
@@ -262,10 +293,12 @@ public class Turret extends SubsystemBase {
        }
      }
 
-    //get distance from pixy to object
+    //get distance from pixy to object, assuming pixy aiming level
+    double tana = ((Constants.PIXY_VERT_CENTER - biggest.getY()) / Constants.PIXY_VERT_CENTER)
+                    *Constants.PIXY_TAN_VERT_FOV;
+    double tanApG = (tana + Constants.PIXY_GAM_TURRET_CAM_ANGLE)/(1.-tana*Constants.PIXY_GAM_TURRET_CAM_ANGLE);
     distance = (Constants.HUB_HEIGHT - Constants.CAM_HEIGHT)
-                              / ((Constants.PIXY_VERT_CENTER - biggest.getY()) / Constants.PIXY_VERT_CENTER)
-                              / Constants.PIXY_TAN_VERT_FOV;
+                / tanApG;
 
     // use PIDcontroller to aim turret
     double measure = biggest.getX();
@@ -307,6 +340,15 @@ public class Turret extends SubsystemBase {
     AMIRIGHT = right;
   }
 
+  
+  private int dontCounter;
+  /** 
+   * if necessary, find the elevator zero
+   * if necessary find the turret 180 position
+   * limit turret motion
+   * compute shooter RPM running average
+   * allow shooter to reach speed before shooting is observed
+   */
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -333,7 +375,6 @@ public class Turret extends SubsystemBase {
               (360.*(AMIRIGHT?0.:1.) + 20.)*Constants.TURRET_ENCODER_RATIO; 
         turretlowerlimit = turret_zero_position - 
               (360.*(AMIRIGHT?1.:0) + 20.)*Constants.TURRET_ENCODER_RATIO;
-        double NOT_DONE_HERE = 666.;  //AMIPOS must be set at autonomous set up time
         turretiszeroed = true;
       }
     }
@@ -345,40 +386,21 @@ public class Turret extends SubsystemBase {
     if(turretencoder.getPosition() < turretlowerlimit ) {
       turretMotor.set(Math.max(0., turretMotor.get()));
     } 
-   /*
-    if( looking_for_position_two
-        && Math.abs(turretencoder.getPosition() -turret_position) > 2.*Constants.TURRET_ENCODER_RATIO)  {  // moved since switch pressed){
-      if(badposition == false) {
-        alertuser(true );
-      }  else{
-        alertuser(false);
-      }
-      looking_for_position_two = false;
-    }   
-
-    if(turretswitch.isPressed() 
-      && !looking_for_position_two){
-        turret_position = turretencoder.getPosition();
-      looking_for_position_two = true;
-    }
-    
-    if(badposition && Math.abs(turretencoder.getPosition() -turret_position) > 20*Constants.TURRET_ENCODER_RATIO) {
-      if (turretencoder.getPosition()  < turret_position) {
-        turretMotor.set(Math.max(0., turretMotor.get()));
-      } else {
-        turretMotor.set(Math.min(0., turretMotor.get()));
-      }
-      SmartDashboard.putNumber("Turret Alert", 2.);
-    }
-    */
-
+   
 
     if(shooteron) {
-      enc_avg = enc_avg  - encoder_velocity[iter]/NUM_ENC;
-      encoder_velocity[iter] = shooterSpeed.getVelocity();
-      iter = (iter+1)%NUM_ENC;
-      enc_avg = enc_avg  + shooterSpeed.getVelocity()/NUM_ENC;
-      double imNotDone = 0.;  // need to wait until average is stabilized
+      // based on experiment, it takes a number of iterations to stabilize the RPM from zero
+      if (dontCount) {  
+        dontCounter +=1;
+        if (dontCounter > dontCountRange) {
+          dontCount = false;
+        }
+      }else {
+        enc_avg = enc_avg  - encoder_velocity[iter]/NUM_ENC;
+        encoder_velocity[iter] = shooterSpeed.getVelocity();
+        iter = (iter+1)%NUM_ENC;
+        enc_avg = enc_avg  + shooterSpeed.getVelocity()/NUM_ENC;
+      }
     }
   }
 

@@ -49,6 +49,8 @@ import edu.wpi.first.wpilibj.PneumaticHub;
  */
 public class RobotContainer {
   Joystick m_joystick = new Joystick(Constants.JOYSTICK);
+  Joystick buttonBoxLeft = new Joystick(Constants.LEFT_BUTTON_BOX);
+  Joystick buttonBoxRight = new Joystick(Constants.RIGHT_BUTTON_BOX);
   
 
   // The robot's subsystems and commands are defined here...
@@ -73,6 +75,9 @@ public class RobotContainer {
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    m_joystick = new Joystick(Constants.JOYSTICK);
+    buttonBoxLeft = new Joystick(Constants.LEFT_BUTTON_BOX);
+    buttonBoxRight = new Joystick(Constants.RIGHT_BUTTON_BOX);
     //Configure default commands
     if (Constants.COMPRESSOR_AVAILABLE ){
       pcm = new PneumaticHub(Constants.PNEUMATICS_CONTROL_MODULE);
@@ -130,11 +135,13 @@ public class RobotContainer {
   }
     
     if (Constants.PICKUP_AVAILABLE /*&& Constants.MAGAZINE_AVAILABLE*/) {
-      JoystickButton pickupDeployer = new JoystickButton(m_joystick, Constants.DEPLOY_PICKUP_BUTTON);
-      JoystickButton pickupUnDeployer = new JoystickButton(m_joystick, Constants.RETRACT_PICKUP_BUTTON);
+      JoystickButton pickupDeployer = new JoystickButton(buttonBoxLeft, Constants.DEPLOY_PICKUP_BUTTON);
+      JoystickButton pickupUnDeployer = new JoystickButton(buttonBoxRight, Constants.RETRACT_PICKUP_BUTTON);
+      JoystickButton rollerStopper = new JoystickButton(buttonBoxLeft, Constants.ROLLER_STOP_BUTTON);
       pickupDeployer.whenPressed(new PickupTargets(pickup/*,magazine*/));
       //pickupUnDeployer.whenPressed(new TurnoffPickup(pickup/*,magazine*/));
       pickupUnDeployer.whenPressed(new RetractPickup(pickup));
+      rollerStopper.whenPressed(new TurnoffPickup(pickup));
     }
 
     if (Constants.DRIVE_AVAILABLE && Constants.CAMERA_AVAILABLE) {

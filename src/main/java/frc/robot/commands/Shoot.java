@@ -16,10 +16,12 @@ public class Shoot extends SequentialCommandGroup {
   
   /** Shoot a Cargo into the Hub 
    *    assuming the turret is aimed,
+   *    and there is cargo onboard
    *    set up the range
    *    fire the cargo
   */
   public Shoot(Magazine magazine, Turret turret, Pickup pickup) {
+    double AM_I_DONE = 00000.;  // do we need to ensure there is something to shoot?
     addCommands(
       /**sets motor speed and elevation */
       new ShootInit(turret),

@@ -38,11 +38,10 @@ public final class Constants {
     public static final boolean TURRET_AVAILABLE        = false;
     public static final boolean MAGAZINE_AVAILABLE      = false;
     public static final boolean PICKUP_AVAILABLE        = true;
-    public static final boolean KICKER_AVAILABLE        = false;
     public static final boolean CLIMBER_AVAILABLE       = false;
     public static final boolean CONTROLPANEL_AVAILABLE  = false;
     public static final boolean COMPRESSOR_AVAILABLE    = true;
-    public static final boolean GYRO_AVAILABLE          = false;
+    public static final boolean GYRO_AVAILABLE          = true;
     public static final boolean BUTTONBOX_AVAILABLE     = false;
     public static final boolean USBCAMERA_AVAILABLE     = false;
     public static final boolean JOYSTICK_EXTREME3D = true;
@@ -105,8 +104,9 @@ public final class Constants {
     public static final int LEFT_BUTTON_BOX = 1;
     public static final int RIGHT_BUTTON_BOX = 2;
     public static final int DRIVE_TO_BALL_BUTTON = 3;
-    public static final int DEPLOY_PICKUP_BUTTON = 6;
-    public static final int RETRACT_PICKUP_BUTTON = 7;
+    public static final int DEPLOY_PICKUP_BUTTON = 5;
+    public static final int RETRACT_PICKUP_BUTTON = 2;
+    public static final int ROLLER_STOP_BUTTON = 8;
     public static final int SHOOT_BUTTON = 8;
     public static final int TARMAC_DISTANCE_BUTTON = 4;
     public static final int PAD_TWO_DISTANCE_BUTTON = 0;
@@ -121,7 +121,7 @@ public final class Constants {
      * from measurements:
      *    half of horizontal field of view = 43, 
      *    half of vertical field of view = 27.4 degree
-     *  For necessity, aim camera up at 9 degrees (see book to verify)
+     *  For necessity, aim camera up, gamma = 9 degrees (see book to verify)
      */
     public static final int CENTER_OF_CAMERA = 316/2; //hardwired for Pixy2 x-resolution
     public static final int PIXY_VERT_CENTER =200/2;
@@ -168,7 +168,8 @@ public final class Constants {
     public static final double TURRET_MOTOR_SPEED = 1.;  // 0 -> 1
     public static final double TURRET_MOTOR_SLOW_SPEED = 0.3;  // 0 -> 
     public static final double TURRET_MOTOR_ZEROING_SPEED = 0.;
-    public static final double SHOOT_INDICATOR = 0;  // delta rpm
+    public static final double SHOOT_INDICATORUP = 500;  // delta rpm
+    public static final double SHOOT_INDICATORDOWN = -300;  // delta rpm
 
 
     // drive constants
