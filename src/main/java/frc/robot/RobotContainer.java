@@ -19,6 +19,7 @@ import frc.robot.commands.DriveTowardBall;
 import frc.robot.commands.PickupTargets;
 import frc.robot.commands.RetractPickup;
 import frc.robot.commands.StopMotor;
+import frc.robot.commands.TestHasCargo;
 import frc.robot.commands.TurnoffPickup;
 import frc.robot.commands.TurretCCW;
 import frc.robot.commands.TurretCW;
@@ -142,6 +143,9 @@ public class RobotContainer {
       //pickupUnDeployer.whenPressed(new TurnoffPickup(pickup/*,magazine*/));
       pickupUnDeployer.whenPressed(new RetractPickup(pickup));
       rollerStopper.whenPressed(new TurnoffPickup(pickup));
+      double IM_JUST_FOR_TEST=000.;
+      JoystickButton testHascargobutton = new JoystickButton(m_joystick, 11);
+      testHascargobutton.whenPressed(new TestHasCargo(pickup));
     }
 
     if (Constants.DRIVE_AVAILABLE && Constants.CAMERA_AVAILABLE) {

@@ -80,6 +80,7 @@ public class Pickup extends SubsystemBase {
     enc_avg = 0.;
     engagedcargo = false;
     dontCount = true;
+    SmartDashboard.putBoolean("pickupDontCount", dontCount);
   }
 
   // allows the world to see roller velocity
@@ -132,6 +133,7 @@ public class Pickup extends SubsystemBase {
       if (dontCount) {  // don't look for cargo until rollers up to speed
        if (encoder.getVelocity() >= encoder_velocity[0]) {
         dontCount = false; //starts counting encoder velocity values
+        SmartDashboard.putBoolean("pickupDontCount", dontCount);
        }
        encoder_velocity[0] = encoder.getVelocity();  // using one array value for detecting steady state
       } else {
@@ -140,8 +142,10 @@ public class Pickup extends SubsystemBase {
         iter = (iter+1)%NUM_ENC;
         enc_avg = enc_avg  + encoder.getVelocity()/NUM_ENC;
         SmartDashboard.putNumber("Pickup Roller Speed", encoder.getVelocity());
+        SmartDashboard.putNumber("avg Roller Speed", enc_avg);
       }
     }
+    SmartDashboard.putBoolean("engagedCargo", engagedcargo);
   }
 
   /** initialize agv RPM detector for testing */

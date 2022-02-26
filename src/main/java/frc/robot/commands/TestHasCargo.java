@@ -5,26 +5,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Pickup;
 
-public class TurnoffPickup extends CommandBase {
+public class TestHasCargo extends CommandBase {
+  /** Creates a new TestHasCargo. */
   Pickup pickup;
-  Magazine magazine;
-
-  /** turn off the pickup rollers */
-  public TurnoffPickup(Pickup subsystem /*,Magazine magazine*/) {
-    this.pickup = subsystem;
-    //this.magazine = magazine;
-    addRequirements(/*magazine,*/ pickup);
+  public TestHasCargo(Pickup pickup) {
+    addRequirements(pickup);
+    this.pickup=pickup;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    pickup.stopRollers();
-    pickup.retract();
-    //magazine.horizontaloff();
+    pickup.hasCargo();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -38,6 +32,6 @@ public class TurnoffPickup extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return pickup.hasCargo();
   }
 }
