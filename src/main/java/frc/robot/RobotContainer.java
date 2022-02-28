@@ -18,6 +18,10 @@ import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveTowardBall;
 import frc.robot.commands.PickupTargets;
 import frc.robot.commands.RetractPickup;
+import frc.robot.commands.SetCargoRingDistance;
+import frc.robot.commands.SetPadOneDistance;
+import frc.robot.commands.SetPadTwoDistance;
+import frc.robot.commands.SetTarmacDistance;
 import frc.robot.commands.StopMotor;
 import frc.robot.commands.TestHasCargo;
 import frc.robot.commands.TurnoffPickup;
@@ -126,6 +130,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+
     if (!Constants.AUTOSHIFT_AVAILABLE) {
       JoystickButton shifter = new JoystickButton(m_joystick,Constants.SHIFTER_BUTTON);
       shifter.whenPressed(new ShiftGears(m_driveSubsystem));
@@ -168,6 +173,14 @@ public class RobotContainer {
       JoystickButton aimerSpeed = new JoystickButton(m_joystick,Constants.TURRET_FINE_BUTTON);
       shooter.whenPressed(new TurretFine(turret, true));
       shooter.whenReleased(new TurretFine(turret, false));
+      JoystickButton dist_tarmac = new JoystickButton(buttonBoxRight, Constants.TARMAC_DISTANCE_BUTTON);
+      JoystickButton dist_cargoRing = new JoystickButton(buttonBoxRight, Constants.CARGO_RING_DISTANCE_BUTTON);
+      JoystickButton dist_pad1 = new JoystickButton(buttonBoxRight, Constants.PAD_ONE_DISTANCE_BUTTON);
+      JoystickButton dist_pad2 = new JoystickButton(buttonBoxRight, Constants.PAD_TWO_DISTANCE_BUTTON);
+      dist_tarmac.whenPressed(new SetTarmacDistance(turret));
+      dist_cargoRing.whenPressed(new SetCargoRingDistance(turret));
+      dist_pad1.whenPressed(new SetPadOneDistance(turret));
+      dist_pad2.whenPressed(new SetPadTwoDistance(turret));
     }
     
     // choosable autoCommands

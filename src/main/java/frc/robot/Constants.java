@@ -97,25 +97,28 @@ public final class Constants {
 
     // joystick and button numbers
     public static final int JOYSTICK = 0;
-    public static final int SHIFTER_BUTTON = 2;
-    public static final int SHIFTERU_BUTTON = 5;
-    public static final int SHIFTERD_BUTTON = 4;
-    // button box1
     public static final int LEFT_BUTTON_BOX = 1;
     public static final int RIGHT_BUTTON_BOX = 2;
-    public static final int DRIVE_TO_BALL_BUTTON = 3;
+    // joystick buttons
+    public static final int SHIFTER_BUTTON = 2;
+    public static final int SHIFTERU_BUTTON = 4;
+    public static final int SHIFTERD_BUTTON = 3;
+    // button box1
+    public static final int CARGO_RING_DISTANCE_BUTTON = 1;
     public static final int DEPLOY_PICKUP_BUTTON = 5;
-    public static final int RETRACT_PICKUP_BUTTON = 2;
-    public static final int ROLLER_STOP_BUTTON = 8;
-    public static final int SHOOT_BUTTON = 8;
-    public static final int TARMAC_DISTANCE_BUTTON = 4;
-    public static final int PAD_TWO_DISTANCE_BUTTON = 0;
-    public static final int PAD_ONE_DISTANCE_BUTTON = 10;
-    public static final int ELEVATOR_UP_BUTTON = 0;
+    public static final int ROLLER_STOP_BUTTON = 7;
     public static final int ELEVATOR_DOWN_BUTTON = 0;
-    public static final int TURRETCW_BUTTON = 7;
+    // button box 2
+    public static final int DRIVE_TO_BALL_BUTTON = 1;
+    public static final int RETRACT_PICKUP_BUTTON = 2;
+    public static final int ELEVATOR_UP_BUTTON = 3;
+    public static final int TARMAC_DISTANCE_BUTTON = 4;
     public static final int TURRETCCW_BUTTON = 5;
     public static final int TURRET_FINE_BUTTON = 6;
+    public static final int TURRETCW_BUTTON = 7;
+    public static final int SHOOT_BUTTON = 8;
+    public static final int PAD_TWO_DISTANCE_BUTTON = 0;
+    public static final int PAD_ONE_DISTANCE_BUTTON = 10;
 
     /* Camera constants ,
      * from measurements:
@@ -226,6 +229,7 @@ public final class Constants {
     // field measurements
     public static final double HUB_HEIGHT = 104.; //inches
     public static final double TARMAC_DISTANCE = 109.7 - ROBOT_FRONTBUMPER_TO_TURRET;  // inches from Hub
+    public static final double CARGO_RING_DISTANCE = 153.0 - ROBOT_FRONTBUMPER_TO_TURRET;  // inches from Hub
     public static final double FIELD_TARMAC_TO_CARGO = 40.44 - 0.;   // inches, front bumper to cargo
     public static final double FIELD_HUB_TO_PAD1 = 202.95;  // inches
     public static final double FIELD_HUB_TO_PAD2 = 244.77;  // inches
