@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Turret;
 
@@ -31,6 +32,7 @@ public class Robot extends TimedRobot {
   private PneumaticHub pcm;
   private Turret turret;
   private Pickup pickup;
+  private Magazine magazine;
   private Joystick joystick;
   private Alliance alliance;
   /**
@@ -45,6 +47,7 @@ public class Robot extends TimedRobot {
     pcm = m_robotContainer.getPcm();
     turret = m_robotContainer.getTurret();
     pickup = m_robotContainer.getPickup();
+    magazine = m_robotContainer.getMagazine();
     joystick  = m_robotContainer.getJoystick();
     
     /* test quadraticFitter */
@@ -174,7 +177,8 @@ public class Robot extends TimedRobot {
       speed = joystick.getRawAxis(3);
     else
       speed = joystick.getZ();
-    int testState = TestModes.PICKUP_ROLLERS.getID();
+    System.out.println("test A");
+    int testState = TestModes.MAG_VERT.getID();
     
     if(testState == TestModes.SHOOTER.getID()) {   // check that stooter rollers toss ball out
       speed=(speed+1.)/2.*5700.;  // 0 < speed < 5700
@@ -210,7 +214,13 @@ public class Robot extends TimedRobot {
     } else if (testState == TestModes.MAG_HORI.getID()) {  //  magazine
 
     } else if (testState == TestModes.MAG_VERT.getID()) {  //  magazine
-
+      System.out.println("test B");
+      if (joystick.getRawButtonPressed(11))magazine.verticalon();
+      if (joystick.getRawButtonPressed(10))magazine.verticaloff();
+      speed=(speed+1.)/2.*5700.;  // 0 < speed < 5700
+      turret.shooterSpeed(speed);
+      System.out.println(speed);
+      SmartDashboard.putNumber("shooterSpeed", speed);
     }
   }
 }

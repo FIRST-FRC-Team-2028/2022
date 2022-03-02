@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.AimTurretCommand;
 import frc.robot.commands.AutoDriveToCargo;
 import frc.robot.commands.AutoLeaveTarmacDistance;
 import frc.robot.commands.AutoShoot;
@@ -98,7 +99,7 @@ public class RobotContainer {
       pickup = new Pickup(pcm);
     }
 
-    if (Constants.TURRET_AVAILABLE) {
+    if (Constants.TURRET_AVAILABLE || Constants.SHOOTER_AVAILABLE || Constants.ELEVATOR_AVAILABLE) {
       turret = new Turret();
     }
 
@@ -118,6 +119,9 @@ public class RobotContainer {
   }
   public Pickup getPickup() {
     return pickup;
+  }
+  public Magazine getMagazine() {
+    return magazine;
   }
   public Joystick getJoystick() {
     return m_joystick;
@@ -160,27 +164,29 @@ public class RobotContainer {
     }
 
 
-    if (Constants.TURRET_AVAILABLE) {
-      JoystickButton shooter = new JoystickButton(m_joystick,Constants.SHOOT_BUTTON);
+    if (Constants.SHOOTER_AVAILABLE) {
+      JoystickButton shooter = new JoystickButton(buttonBoxRight,Constants.SHOOT_BUTTON);
       shooter.whenPressed(new Shoot(magazine, turret, pickup));
       shooter.whenReleased(new ShootStop(magazine, turret));
-      JoystickButton aimerCW = new JoystickButton(m_joystick,Constants.TURRETCW_BUTTON);
-      shooter.whenPressed(new TurretCW(turret));
-      shooter.whenReleased(new TurretStop(turret));
-      JoystickButton aimerCCW = new JoystickButton(m_joystick,Constants.TURRETCCW_BUTTON);
-      shooter.whenPressed(new TurretCCW(turret));
-      shooter.whenReleased(new TurretStop(turret));
-      JoystickButton aimerSpeed = new JoystickButton(m_joystick,Constants.TURRET_FINE_BUTTON);
-      shooter.whenPressed(new TurretFine(turret, true));
-      shooter.whenReleased(new TurretFine(turret, false));
       JoystickButton dist_tarmac = new JoystickButton(buttonBoxRight, Constants.TARMAC_DISTANCE_BUTTON);
       JoystickButton dist_cargoRing = new JoystickButton(buttonBoxRight, Constants.CARGO_RING_DISTANCE_BUTTON);
       JoystickButton dist_pad1 = new JoystickButton(buttonBoxRight, Constants.PAD_ONE_DISTANCE_BUTTON);
-      JoystickButton dist_pad2 = new JoystickButton(buttonBoxRight, Constants.PAD_TWO_DISTANCE_BUTTON);
+      //JoystickButton dist_pad2 = new JoystickButton(buttonBoxRight, Constants.PAD_TWO_DISTANCE_BUTTON);
       dist_tarmac.whenPressed(new SetTarmacDistance(turret));
       dist_cargoRing.whenPressed(new SetCargoRingDistance(turret));
       dist_pad1.whenPressed(new SetPadOneDistance(turret));
-      dist_pad2.whenPressed(new SetPadTwoDistance(turret));
+      //dist_pad2.whenPressed(new SetPadTwoDistance(turret));
+    }
+    if (Constants.ELEVATOR_AVAILABLE) {}
+    if (Constants.TURRET_AVAILABLE) {
+      JoystickButton aimMe = new JoystickButton(m_joystick,Constants.TURRET_AUTO_AIM_BUTTON);
+      aimMe.whenPressed(new AimTurretCommand(turret));
+      JoystickButton aimerCCW = new JoystickButton(m_joystick,Constants.TURRETCCW_BUTTON);
+      aimerCCW.whenPressed(new TurretCCW(turret));
+      aimerCCW.whenReleased(new TurretStop(turret));
+      JoystickButton aimerSpeed = new JoystickButton(m_joystick,Constants.TURRET_FINE_BUTTON);
+      aimerSpeed.whenPressed(new TurretFine(turret, true));
+      aimerSpeed.whenReleased(new TurretFine(turret, false));
     }
     
     // choosable autoCommands

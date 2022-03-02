@@ -73,9 +73,11 @@ public class Turret extends SubsystemBase {
   double[] encoder_velocity = new double[NUM_ENC]; 
   int iter = 0;
   double enc_avg;
-  double shooter_kp=0.1;
-  double shooter_ki=0.;
-  double shooter_kd=0.;
+  double shooter_kp=5.e-4;
+  double shooter_ki=1.e-6;
+  double shooter_kd=1.;
+  double shooterkMaxout = 1.;
+  double shooterkMinout = -1.;
   double shooter_tolerance=20.;  // RPM
   double distance;
 
@@ -91,33 +93,45 @@ public class Turret extends SubsystemBase {
   */
 
   public Turret() {
-    shooter = new CANSparkMax(Constants.CANIDs.TURRET_SHOOTER.getid(), MotorType.kBrushless);
-    shooter_controller = shooter.getPIDController();
-    shooter_controller.setP(shooter_kp);
-    shooter_controller.setI(shooter_ki);
-    shooter_controller.setD(shooter_kd);
-    turretMotor = new CANSparkMax(Constants.CANIDs.TURRET_AZIMUTH.getid(), MotorType.kBrushless);
-    turretencoder =  turretMotor.getEncoder();
-    //turretswitch = new AnalogInput(Constants.TURRET_SWITCH_CHANNEL);
-    turretswitch = turretMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-    elevationMotor = new CANSparkMax(Constants.CANIDs.TURRET_ELEVATION.getid(), MotorType.kBrushless);
-    limitswitch = elevationMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-    elevator_controller = elevationMotor.getPIDController();
-    elevator_controller.setP(elevator_kp);
-    elevator_controller.setI(elevator_ki);
-    elevator_controller.setD(elevator_kd);
-    elevatorencoder =  elevationMotor.getEncoder();
-    limitswitch.enableLimitSwitch(false);  // do not shut down elevator
+    if (Constants.SHOOTER_AVAILABLE){
+
+      shooter = new CANSparkMax(Constants.CANIDs.TURRET_SHOOTER.getid(), MotorType.kBrushless);
+      shooter.setInverted(Constants.CANIDs.TURRET_SHOOTER.isInverted());
+      shooter_controller = shooter.getPIDController();
+      shooter_controller.setP(shooter_kp);
+      shooter_controller.setI(shooter_ki);
+      shooter_controller.setD(shooter_kd);
+    }
+    if (Constants.TURRET_AVAILABLE){
+
+      turretMotor = new CANSparkMax(Constants.CANIDs.TURRET_AZIMUTH.getid(), MotorType.kBrushless);
+      turretencoder =  turretMotor.getEncoder();
+      //turretswitch = new AnalogInput(Constants.TURRET_SWITCH_CHANNEL);
+      turretswitch = turretMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+    }
+    if (Constants.ELEVATOR_AVAILABLE){
+      elevationMotor = new CANSparkMax(Constants.CANIDs.TURRET_ELEVATION.getid(), MotorType.kBrushless);
+      limitswitch = elevationMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+      elevator_controller = elevationMotor.getPIDController();
+      elevator_controller.setP(elevator_kp);
+      elevator_controller.setI(elevator_ki);
+      elevator_controller.setD(elevator_kd);
+      elevatorencoder =  elevationMotor.getEncoder();
+      limitswitch.enableLimitSwitch(false);  // do not shut down elevator
+    }
+    
   
     /* pixy on I2C or analog?
        Analog is simpler; train for one signature; report x location of largest
        I2C can return more info, ie width, Y  which indicate distance
      */
     pixyCam = new AnalogInput(Constants.TURRET_PIXY_ANALOG);  // to detect hub
-    pixyCamI2C = Pixy2.createInstance(new I2CLink());
-    int initError = pixyCamI2C.init(Constants.PIXY_USE_MXP, Constants.TURRET_PIXY_ADDRESS);
-    if(initError != 0 ){
-      System.out.println("pixy did not intitialize " + initError);
+    if (Constants.I2C_CAM_AVAILABLE) {
+      pixyCamI2C = Pixy2.createInstance(new I2CLink());
+      int initError = pixyCamI2C.init(Constants.PIXY_USE_MXP, Constants.TURRET_PIXY_ADDRESS);
+      if(initError != 0 ){
+        System.out.println("pixy did not intitialize " + initError);
+      }
     }
     aimer = new PIDController(kp, ki, kd);
     aimer.setSetpoint(0.);
@@ -274,39 +288,42 @@ public class Turret extends SubsystemBase {
   public double aimMe() {
     /* connect the camera as a driver for the motors to find the hub */
     //double error = pixyCam.getValue();
-    int numTargets = pixyCamI2C.getCCC().getBlocks(false, Pixy2CCC.CCC_SIG_ALL,10);
-    if(numTargets == 0) return 0.;    
-    Block biggest=null;
-    double size=0.;
-    double filterSize= Constants.TURRET_AIMER_FILTER_SIZE;
-    for (Block block : pixyCamI2C.getCCC().getBlockCache())  {
-       if (block.getWidth() < filterSize) {
-         block.getSignature();
-         block.getWidth();
-         block.getHeight();
-         
-         double tsize = block.getWidth()*block.getHeight();
-         if (tsize > size && block.getSignature() == Constants.PIXY_SIG_HUB) {
-           size = tsize;
-           biggest = block;
+    if (Constants.I2C_CAM_AVAILABLE) {
+      int numTargets = pixyCamI2C.getCCC().getBlocks(false, Pixy2CCC.CCC_SIG_ALL,10);
+      if(numTargets == 0) return 0.;    
+      Block biggest=null;
+      double size=0.;
+      double filterSize= Constants.TURRET_AIMER_FILTER_SIZE;
+      for (Block block : pixyCamI2C.getCCC().getBlockCache())  {
+         if (block.getWidth() < filterSize) {
+           block.getSignature();
+           block.getWidth();
+           block.getHeight();
+           
+           double tsize = block.getWidth()*block.getHeight();
+           if (tsize > size && block.getSignature() == Constants.PIXY_SIG_HUB) {
+             size = tsize;
+             biggest = block;
+           }
          }
-       }
-     }
+      }
+  
+      //get distance from pixy to object, assuming pixy aiming level
+      double tana = ((Constants.PIXY_VERT_CENTER - biggest.getY()) / Constants.PIXY_VERT_CENTER)
+                      *Constants.PIXY_TAN_VERT_FOV;
+      double tanApG = (tana + Constants.PIXY_GAM_TURRET_CAM_ANGLE)/(1.-tana*Constants.PIXY_GAM_TURRET_CAM_ANGLE);
+      distance = (Constants.HUB_HEIGHT - Constants.CAM_HEIGHT)
+                  / tanApG;
+  
+      // use PIDcontroller to aim turret
+      double measure = biggest.getX();
+      if ( measure < 0.) return 0.;
+      double pidVal = aimer.calculate(measure, Constants.CENTER_OF_CAMERA)/ Constants.CENTER_OF_CAMERA;  // pixels/pixels = O(1)
+      turretMotor.set(pidVal);
+      SmartDashboard.putNumber("Turret Aim Error", Constants.CENTER_OF_CAMERA-measure);
+      return Constants.CENTER_OF_CAMERA - measure;   
+    } else return 0.;
 
-    //get distance from pixy to object, assuming pixy aiming level
-    double tana = ((Constants.PIXY_VERT_CENTER - biggest.getY()) / Constants.PIXY_VERT_CENTER)
-                    *Constants.PIXY_TAN_VERT_FOV;
-    double tanApG = (tana + Constants.PIXY_GAM_TURRET_CAM_ANGLE)/(1.-tana*Constants.PIXY_GAM_TURRET_CAM_ANGLE);
-    distance = (Constants.HUB_HEIGHT - Constants.CAM_HEIGHT)
-                / tanApG;
-
-    // use PIDcontroller to aim turret
-    double measure = biggest.getX();
-    if ( measure < 0.) return 0.;
-    double pidVal = aimer.calculate(measure, Constants.CENTER_OF_CAMERA)/ Constants.CENTER_OF_CAMERA;  // pixels/pixels = O(1)
-    turretMotor.set(pidVal);
-    SmartDashboard.putNumber("Turret Aim Error", Constants.CENTER_OF_CAMERA-measure);
-    return Constants.CENTER_OF_CAMERA - measure;
 
     ///Constants.CENTER_OF_CAMERA));
   }
@@ -353,53 +370,57 @@ public class Turret extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // Move elevator motor down till it finds zero
-    if( !elevator_zeroed ) {
-      elevationMotor.set(Constants.ELEVATOR_MOTOR_ZEROING_SPEED);
-      if(limitswitch.isPressed()){
-        elevationMotor.set(0.); 
-        elevator_zero_position =elevatorencoder.getPosition();
-        elevator_zeroed=true;
-      }
-    }
-
-    // Presuming turret is 
-    if(!turretiszeroed) {
-      turretMotor.set((AMIRIGHT?1.:-1.)*Constants.TURRET_MOTOR_ZEROING_SPEED);
-      double NEEDS_WORK = 1.e5;
-      // mr.g says look at this to determine direction
-      // and search limit TODO
-      if(limitswitch.isPressed()) {
-        turretMotor.set(0.);
-        double turret_zero_position = turretencoder.getPosition(); 
-        turretupperlimit = turret_zero_position + 
-              (360.*(AMIRIGHT?0.:1.) + 20.)*Constants.TURRET_ENCODER_RATIO; 
-        turretlowerlimit = turret_zero_position - 
-              (360.*(AMIRIGHT?1.:0) + 20.)*Constants.TURRET_ENCODER_RATIO;
-        turretiszeroed = true;
-      }
-    }
-     
-    if(turretencoder.getPosition() > turretupperlimit ) {
-      turretMotor.set(Math.min(0., turretMotor.get()));
-    } 
-
-    if(turretencoder.getPosition() < turretlowerlimit ) {
-      turretMotor.set(Math.max(0., turretMotor.get()));
-    } 
-   
-
-    if(shooteron) {
-      // based on experiment, it takes a number of iterations to stabilize the RPM from zero
-      if (dontCount) {  
-        dontCounter +=1;
-        if (dontCounter > dontCountRange) {
-          dontCount = false;
+    if(Constants.ELEVATOR_AVAILABLE) {
+      if( !elevator_zeroed ) {
+        elevationMotor.set(Constants.ELEVATOR_MOTOR_ZEROING_SPEED);
+        if(limitswitch.isPressed()){
+          elevationMotor.set(0.); 
+          elevator_zero_position =elevatorencoder.getPosition();
+          elevator_zeroed=true;
         }
-      }else {
-        enc_avg = enc_avg  - encoder_velocity[iter]/NUM_ENC;
-        encoder_velocity[iter] = shooterSpeed.getVelocity();
-        iter = (iter+1)%NUM_ENC;
-        enc_avg = enc_avg  + shooterSpeed.getVelocity()/NUM_ENC;
+      }
+    } 
+
+    if (Constants.TURRET_AVAILABLE){
+      // Presuming turret is 
+      if(!turretiszeroed) {
+        turretMotor.set((AMIRIGHT?1.:-1.)*Constants.TURRET_MOTOR_ZEROING_SPEED);
+        double NEEDS_WORK = 1.e5;
+        // mr.g says look at this to determine direction
+        // and search limit TODO
+        if(limitswitch.isPressed()) {
+          turretMotor.set(0.);
+          double turret_zero_position = turretencoder.getPosition(); 
+          turretupperlimit = turret_zero_position + 
+                (360.*(AMIRIGHT?0.:1.) + 20.)*Constants.TURRET_ENCODER_RATIO; 
+          turretlowerlimit = turret_zero_position - 
+                (360.*(AMIRIGHT?1.:0) + 20.)*Constants.TURRET_ENCODER_RATIO;
+          turretiszeroed = true;
+        }
+      } 
+      if(turretencoder.getPosition() > turretupperlimit ) {
+        turretMotor.set(Math.min(0., turretMotor.get()));
+      } 
+  
+      if(turretencoder.getPosition() < turretlowerlimit ) {
+        turretMotor.set(Math.max(0., turretMotor.get()));
+      } 
+    }
+
+    if (Constants.SHOOTER_AVAILABLE) {
+      if(shooteron) {
+        // based on experiment, it takes a number of iterations to stabilize the RPM from zero
+        if (dontCount) {  
+          dontCounter +=1;
+          if (dontCounter > dontCountRange) {
+            dontCount = false;
+          }
+        }else {
+          enc_avg = enc_avg  - encoder_velocity[iter]/NUM_ENC;
+          encoder_velocity[iter] = shooterSpeed.getVelocity();
+          iter = (iter+1)%NUM_ENC;
+          enc_avg = enc_avg  + shooterSpeed.getVelocity()/NUM_ENC;
+        }
       }
     }
   }

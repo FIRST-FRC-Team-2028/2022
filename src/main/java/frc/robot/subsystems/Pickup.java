@@ -64,7 +64,7 @@ public class Pickup extends SubsystemBase {
 
   public void runRollers(){
     rollers.set(Constants.PICKUP_ROLLER_MOTOR_SPEED);
-    for(int i = 0; i < NUM_ENC; i++ ) encoder_velocity[i] = Constants.PICKUP_ROLLER_MOTOR_SPEED;
+    for(int i = 0; i < NUM_ENC; i++ ) encoder_velocity[i] = Constants.PICKUP_ROLLER_RPM;
     enc_avg = Constants.PICKUP_ROLLER_MOTOR_SPEED;
     engagedcargo = false;
     rollersOn = true;

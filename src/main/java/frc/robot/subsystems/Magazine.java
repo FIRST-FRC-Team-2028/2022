@@ -18,22 +18,27 @@ public class Magazine extends SubsystemBase {
   /** Uses two separate motors to transport cargo horizontally and vertically
    */
   public Magazine() {
-    horizontalmotor= new CANSparkMax(Constants.CANIDs.MAGIZINE_HORIZONTAL.getid(), MotorType.kBrushless);
+    //horizontalmotor= new CANSparkMax(Constants.CANIDs.MAGIZINE_HORIZONTAL.getid(), MotorType.kBrushless);
     verticalmotor= new CANSparkMax(Constants.CANIDs.MAGIZINE_VERTICAL.getid(), MotorType.kBrushless);
+    verticalmotor.restoreFactoryDefaults();
+    verticalmotor.setInverted(Constants.CANIDs.MAGIZINE_VERTICAL.isInverted());
   }
   
   /**moves cargo along horizontal conveyor */
   public void horizontalon() {
-    horizontalmotor.set(Constants.MAGAZINE_HORIZONTAL_MOTOR_SPEED);
+    //horizontalmotor.set(Constants.MAGAZINE_HORIZONTAL_MOTOR_SPEED);
   }
 
   /**moves cargo along vertical conveyor */
   public void verticalon() {
-    verticalmotor.set(Constants.MAGAZINE_VERTICAL_MOTOR_SPEED);
+    verticalon(1.);
+  }
+  public void verticalon(double direction) {
+    verticalmotor.set(direction*Constants.MAGAZINE_VERTICAL_MOTOR_SPEED);
   }
 
   public void horizontaloff() {
-    horizontalmotor.set(0.);
+   // horizontalmotor.set(0.);
   }
 
   public void verticaloff() {

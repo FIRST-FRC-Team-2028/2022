@@ -36,7 +36,10 @@ public final class Constants {
     public static final boolean CAMERA_AVAILABLE        = false;
     public static final boolean AIM_AVAILABLE           = false;
     public static final boolean TURRET_AVAILABLE        = false;
-    public static final boolean MAGAZINE_AVAILABLE      = false;
+    public static final boolean SHOOTER_AVAILABLE       = true;
+    public static final boolean ELEVATOR_AVAILABLE      = false;
+    public static final boolean I2C_CAM_AVAILABLE       = false;
+    public static final boolean MAGAZINE_AVAILABLE      = true;
     public static final boolean PICKUP_AVAILABLE        = true;
     public static final boolean CLIMBER_AVAILABLE       = false;
     public static final boolean CONTROLPANEL_AVAILABLE  = false;
@@ -55,9 +58,9 @@ public final class Constants {
         PICKUP_ROLLERS       (60, true),
         TURRET_ELEVATION     (00, false),
         TURRET_AZIMUTH       (30, false),
-        TURRET_SHOOTER       (00, false),
+        TURRET_SHOOTER       (28, true),
         MAGIZINE_HORIZONTAL  (00, false), 
-        MAGIZINE_VERTICAL    (00, false), 
+        MAGIZINE_VERTICAL    (41, false), 
         CLIMB_MOTOR          (00,false);
 
         private final int canid;
@@ -107,7 +110,7 @@ public final class Constants {
     public static final int CARGO_RING_DISTANCE_BUTTON = 1;
     public static final int DEPLOY_PICKUP_BUTTON = 5;
     public static final int ROLLER_STOP_BUTTON = 7;
-    public static final int ELEVATOR_DOWN_BUTTON = 0;
+    public static final int ELEVATOR_DOWN_BUTTON = 2;
     // button box 2
     public static final int DRIVE_TO_BALL_BUTTON = 1;
     public static final int RETRACT_PICKUP_BUTTON = 2;
@@ -118,6 +121,7 @@ public final class Constants {
     public static final int TURRETCW_BUTTON = 7;
     public static final int SHOOT_BUTTON = 8;
     public static final int PAD_TWO_DISTANCE_BUTTON = 0;
+    public static final int TURRET_AUTO_AIM_BUTTON = 9;
     public static final int PAD_ONE_DISTANCE_BUTTON = 10;
 
     /* Camera constants ,
@@ -211,20 +215,28 @@ public final class Constants {
     
 
     // pickup constants
+    public static final double PICKUP_ROLLER_RPM = 6500.;   // RPM
     public static final int PICKUP_CARGO_INDICATION = 200;  //RPM difference
     public static final double PICKUP_ROLLER_MOTOR_SPEED = .6;
 
     //magazine constants
-    public static final double MAGAZINE_VERTICAL_MOTOR_SPEED = 0.;
+    public static final double MAGAZINE_VERTICAL_MOTOR_SPEED = 0.75;
     public static final double MAGAZINE_HORIZONTAL_MOTOR_SPEED = 0.;
 
-    // climber constants
+    /* climber constants
+     *    NEO 550 for climber
+     *    11000 max RPM
+     *    gear ratio for azimuth = 16 from gear box
+     *    gear ratio to climber = ?:?
+     */
     public static final double CLIMBER_TIME_TO_CLIMB = 0.;
+    public static final double CLIMBER_GEAR_RATIO = 0; // per inch
 
     // Robot measurements
     public static final double ROBOT_LENGTH = 31.75 + 3.25 + 3.25;  // inches bumper to bumper
     public static final double ROBOT_WIDTH = 28.25 + 3.25+3.25;  // inches bumper to bumper
     public static final double ROBOT_FRONTBUMPER_TO_TURRET = 11.36 + 3.25;  // inches to CAM
+    public static final double ROBOT_CLIMBER_STARTING_HEIGHT = 0.; // inches
 
     // field measurements
     public static final double HUB_HEIGHT = 104.; //inches
@@ -233,6 +245,10 @@ public final class Constants {
     public static final double FIELD_TARMAC_TO_CARGO = 40.44 - 0.;   // inches, front bumper to cargo
     public static final double FIELD_HUB_TO_PAD1 = 202.95;  // inches
     public static final double FIELD_HUB_TO_PAD2 = 244.77;  // inches
+    public static final double HANGAR_BAR_HEIGHT = 60.25 + 3.; // inches
+    public static final double HEIGHT_TO_CLIMB = 3. + 4.; // inches
+
+   
    
     
 }
