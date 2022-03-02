@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Pixy2API.Pixy2;
 import frc.robot.commands.AimTurretCommand;
 import frc.robot.commands.AutoDriveToCargo;
 import frc.robot.commands.AutoLeaveTarmacDistance;
@@ -62,12 +63,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_driveSubsystem;
 
-  /* Make final only when available
-  private final Pickup pickup;
-  private final Turret turret;
-  private final Pixy2 driveCamera;
-  private final Magazine magazine;
-  */
+  //private Pixy2 driveCamera;
   private Pickup pickup;
   private Turret turret;
   private Magazine magazine;
@@ -149,9 +145,8 @@ public class RobotContainer {
       JoystickButton pickupUnDeployer = new JoystickButton(buttonBoxRight, Constants.RETRACT_PICKUP_BUTTON);
       JoystickButton rollerStopper = new JoystickButton(buttonBoxLeft, Constants.ROLLER_STOP_BUTTON);
       pickupDeployer.whenPressed(new PickupTargets(pickup/*,magazine*/));
-      //pickupUnDeployer.whenPressed(new TurnoffPickup(pickup/*,magazine*/));
       pickupUnDeployer.whenPressed(new RetractPickup(pickup));
-      rollerStopper.whenPressed(new TurnoffPickup(pickup));
+      rollerStopper.whenPressed(new TurnoffPickup(pickup/*,magazine*/));
       double IM_JUST_FOR_TEST=000.;
       JoystickButton testHascargobutton = new JoystickButton(m_joystick, 11);
       testHascargobutton.whenPressed(new TestHasCargo(pickup));
@@ -176,6 +171,7 @@ public class RobotContainer {
       dist_cargoRing.whenPressed(new SetCargoRingDistance(turret));
       dist_pad1.whenPressed(new SetPadOneDistance(turret));
       //dist_pad2.whenPressed(new SetPadTwoDistance(turret));
+      double I_NEED_THOUGHT = 444.; // NEED COMMAND TO SHOOT SOFT AND/OR TOSS OPPONENT's CARGO
     }
     if (Constants.ELEVATOR_AVAILABLE) {}
     if (Constants.TURRET_AVAILABLE) {
@@ -184,6 +180,9 @@ public class RobotContainer {
       JoystickButton aimerCCW = new JoystickButton(m_joystick,Constants.TURRETCCW_BUTTON);
       aimerCCW.whenPressed(new TurretCCW(turret));
       aimerCCW.whenReleased(new TurretStop(turret));
+      JoystickButton aimerCW = new JoystickButton(m_joystick,Constants.TURRETCW_BUTTON);
+      aimerCW.whenPressed(new TurretCW(turret));
+      aimerCW.whenReleased(new TurretStop(turret));
       JoystickButton aimerSpeed = new JoystickButton(m_joystick,Constants.TURRET_FINE_BUTTON);
       aimerSpeed.whenPressed(new TurretFine(turret, true));
       aimerSpeed.whenReleased(new TurretFine(turret, false));

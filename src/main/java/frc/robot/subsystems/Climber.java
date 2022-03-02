@@ -32,6 +32,7 @@ public class Climber extends SubsystemBase {
     climbMotor = new CANSparkMax(Constants.CANIDs.CLIMB_MOTOR.getid(), MotorType.kBrushless);
     climbMotor.restoreFactoryDefaults();
     climbMotor.setInverted(Constants.CANIDs.CLIMB_MOTOR.isInverted());
+    double I_NEED_WORK = 0.;  // There is a motor for each climber arm; both need controlled
     
     encoder = climbMotor.getEncoder();
     m_pidController = climbMotor.getPIDController();
@@ -62,14 +63,16 @@ public class Climber extends SubsystemBase {
     m_pidController.setReference( Constants.HANGAR_BAR_HEIGHT - Constants.ROBOT_CLIMBER_STARTING_HEIGHT , CANSparkMax.ControlType.kPosition);
   }
 
-//** pulls robot up to the bar */
-public void pullup() {
-  m_pidController.setReference(Constants.HANGAR_BAR_HEIGHT - Constants.HEIGHT_TO_CLIMB, CANSparkMax.ControlType.kPosition);
-}
+  /** pulls robot up to the bar */
+  public void pullup() {
+    m_pidController.setReference(Constants.HANGAR_BAR_HEIGHT - Constants.HEIGHT_TO_CLIMB, CANSparkMax.ControlType.kPosition);
+  }
 
-public boolean amidone() {
-return (Timer.getFPGATimestamp()- starttime) > (Constants.CLIMBER_TIME_TO_CLIMB);
-}
+  /** determine if climber has reached its destination */
+  public boolean amidone() {
+    double I_NEED_WORK = 666.; // it must eventually be true
+    return false;
+  }
 
 
   @Override

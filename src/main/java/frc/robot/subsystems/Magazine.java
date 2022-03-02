@@ -12,23 +12,16 @@ import frc.robot.Constants;
 
 /** Transfers cargo from pickup to shooter */
 public class Magazine extends SubsystemBase {
-  private CANSparkMax horizontalmotor;
   private CANSparkMax verticalmotor;
   
   /** Uses two separate motors to transport cargo horizontally and vertically
    */
   public Magazine() {
-    //horizontalmotor= new CANSparkMax(Constants.CANIDs.MAGIZINE_HORIZONTAL.getid(), MotorType.kBrushless);
     verticalmotor= new CANSparkMax(Constants.CANIDs.MAGIZINE_VERTICAL.getid(), MotorType.kBrushless);
     verticalmotor.restoreFactoryDefaults();
     verticalmotor.setInverted(Constants.CANIDs.MAGIZINE_VERTICAL.isInverted());
   }
   
-  /**moves cargo along horizontal conveyor */
-  public void horizontalon() {
-    //horizontalmotor.set(Constants.MAGAZINE_HORIZONTAL_MOTOR_SPEED);
-  }
-
   /**moves cargo along vertical conveyor */
   public void verticalon() {
     verticalon(1.);
@@ -37,19 +30,10 @@ public class Magazine extends SubsystemBase {
     verticalmotor.set(direction*Constants.MAGAZINE_VERTICAL_MOTOR_SPEED);
   }
 
-  public void horizontaloff() {
-   // horizontalmotor.set(0.);
-  }
-
   public void verticaloff() {
     verticalmotor.set(0.);
   }
 
-  
-
-  
-
-  
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
