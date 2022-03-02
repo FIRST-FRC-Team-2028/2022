@@ -4,7 +4,15 @@
 
 package frc.robot;
 
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -35,6 +43,7 @@ public class Robot extends TimedRobot {
   private Magazine magazine;
   private Joystick joystick;
   private Alliance alliance;
+  private Thread turretUSBthread;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -67,8 +76,47 @@ public class Robot extends TimedRobot {
     for (double each : tests)
       System.out.println(each+" , "+fitter.yout(each));
 
-    if (Constants.USBCAMERA_AVAILABLE)
+    if (Constants.USBCAMERA_AVAILABLE){
+      if (Constants.CAMERA_THREAD){
+        turretUSBthread = 
+          new Thread ( () -> {
+            UsbCamera camera = CameraServer.startAutomaticCapture();
+            // Set the resolution
+            camera.setResolution(640, 480);
+
+            // Get a CvSink. This will capture Mats from the camera
+            CvSink cvSink = CameraServer.getVideo();
+
+            // Setup a CvSource. This will send images back to the Dashboard
+            CvSource outputStream = CameraServer.putVideo("Rectangle", 640, 480);
+
+            // Mats are very memory expensive. Lets reuse this Mat.
+            Mat mat = new Mat();
+
+            while (!Thread.interrupted()) {
+              if (cvSink.grabFrame(mat) == 0) {
+                outputStream.notifyError(cvSink.getError());
+                continue;
+              }
+              // add a vertical line at center and three horizontal lines for range finding
+              Imgproc.line(mat, new Point(320,100), new Point(320,400), new Scalar(255,255,255),5);
+              Imgproc.line(mat, new Point(320-Constants.CAM_HUB_DIST.TARMAC.getW(),Constants.CAM_HUB_DIST.TARMAC.getH()),
+                                new Point(320+Constants.CAM_HUB_DIST.TARMAC.getW(),Constants.CAM_HUB_DIST.TARMAC.getH()), 
+                                new Scalar(255,255,255), 5);
+              Imgproc.line(mat, new Point(320-Constants.CAM_HUB_DIST.CARGO_RING.getW(),Constants.CAM_HUB_DIST.CARGO_RING.getH()),
+                                new Point(320+Constants.CAM_HUB_DIST.CARGO_RING.getW(),Constants.CAM_HUB_DIST.CARGO_RING.getH()), 
+                                new Scalar(255,255,255), 5);
+              Imgproc.line(mat, new Point(320-Constants.CAM_HUB_DIST.PAD1.getW(),Constants.CAM_HUB_DIST.PAD1.getH()),
+                                new Point(320+Constants.CAM_HUB_DIST.PAD1.getW(),Constants.CAM_HUB_DIST.PAD1.getH()), 
+                                new Scalar(255,255,255), 5);
+              outputStream.putFrame(mat);
+            }
+          });
+        turretUSBthread.setDaemon(true);
+        turretUSBthread.start();
+      }else
         CameraServer.startAutomaticCapture();
+    }
 
     alliance = DriverStation.getAlliance();
   }

@@ -124,8 +124,9 @@ public final class Constants {
     public static final int TURRET_AUTO_AIM_BUTTON = 9;
     public static final int PAD_ONE_DISTANCE_BUTTON = 10;
 
-    /* Camera constants ,
-     * from measurements:
+    /* Camera constants:
+     * PIXY
+     *  from measurements:
      *    half of horizontal field of view = 43, 
      *    half of vertical field of view = 27.4 degree
      *  For necessity, aim camera up, gamma = 9 degrees (see book to verify)
@@ -145,8 +146,24 @@ public final class Constants {
     public static final int PIXY_SIG_HUB = 3;
     public static final double PIXY_TAN_HORIZ_FOV = 47.25/50.5;
     public static final double PIXY_TAN_VERT_FOV  = 47.25/91.;
-    public static final double CAM_HEIGHT = 0; //FIXME
+    public static final double TURRET_CAM_HEIGHT = 0; //FIXME
     public static final double PIXY_GAM_TURRET_CAM_ANGLE = .158; //FIXME
+    public static final double DRIVE_CAM_HEIGHT = 0.; // FIXME
+    // USB:  640 x 480 resolution
+    //       tilted up at ? degrees
+    public enum  CAM_HUB_DIST {
+        TARMAC(200, 10),  //TODO these are guesses; fix them
+        CARGO_RING(150, 20),
+        PAD1(60, 200);
+
+        private final int width, height;
+        private CAM_HUB_DIST(int w, int h){
+            width=w;  // actually width/2 in pixels
+            height=h;  // from top of frame
+        }
+        public int getW() {return width;}
+        public int getH() {return height;}
+    };
 
     // Turret constants
     /* NEO 550 for turret and elevator
@@ -247,6 +264,7 @@ public final class Constants {
     public static final double FIELD_HUB_TO_PAD2 = 244.77;  // inches
     public static final double HANGAR_BAR_HEIGHT = 60.25 + 3.; // inches
     public static final double HEIGHT_TO_CLIMB = 3. + 4.; // inches
+    public static final boolean CAMERA_THREAD = false;
 
    
    

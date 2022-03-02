@@ -312,7 +312,7 @@ public class Turret extends SubsystemBase {
       double tana = ((Constants.PIXY_VERT_CENTER - biggest.getY()) / Constants.PIXY_VERT_CENTER)
                       *Constants.PIXY_TAN_VERT_FOV;
       double tanApG = (tana + Constants.PIXY_GAM_TURRET_CAM_ANGLE)/(1.-tana*Constants.PIXY_GAM_TURRET_CAM_ANGLE);
-      distance = (Constants.HUB_HEIGHT - Constants.CAM_HEIGHT)
+      distance = (Constants.HUB_HEIGHT - Constants.TURRET_CAM_HEIGHT)
                   / tanApG;
   
       // use PIDcontroller to aim turret
