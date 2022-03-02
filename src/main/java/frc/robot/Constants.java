@@ -35,18 +35,18 @@ public final class Constants {
     public static final boolean AUTOSHIFT_AVAILABLE     = true;
     public static final boolean CAMERA_AVAILABLE        = false;
     public static final boolean AIM_AVAILABLE           = false;
-    public static final boolean TURRET_AVAILABLE        = false;
-    public static final boolean SHOOTER_AVAILABLE       = true;
+    public static final boolean TURRET_AVAILABLE        = true;
+    public static final boolean SHOOTER_AVAILABLE       = false;
     public static final boolean ELEVATOR_AVAILABLE      = false;
     public static final boolean I2C_CAM_AVAILABLE       = false;
-    public static final boolean MAGAZINE_AVAILABLE      = true;
+    public static final boolean MAGAZINE_AVAILABLE      = false;
     public static final boolean PICKUP_AVAILABLE        = true;
     public static final boolean CLIMBER_AVAILABLE       = false;
     public static final boolean CONTROLPANEL_AVAILABLE  = false;
     public static final boolean COMPRESSOR_AVAILABLE    = true;
     public static final boolean GYRO_AVAILABLE          = true;
     public static final boolean BUTTONBOX_AVAILABLE     = false;
-    public static final boolean USBCAMERA_AVAILABLE     = true;
+    public static final boolean USBCAMERA_AVAILABLE     = false;
     public static final boolean JOYSTICK_EXTREME3D = true;
 
     // CAN connections
@@ -57,11 +57,12 @@ public final class Constants {
         DRIVE_RIGHT_FOLLOWER (11, true),
         PICKUP_ROLLERS       (60, true),
         TURRET_ELEVATION     (00, false),
-        TURRET_AZIMUTH       (30, false),
+        TURRET_AZIMUTH       (30, true),
         TURRET_SHOOTER       (28, true),
         MAGIZINE_HORIZONTAL  (00, false), 
         MAGIZINE_VERTICAL    (41, false), 
-        CLIMB_MOTOR          (00,false);
+        CLIMB_MOTOR          (00,false),
+        CLIMB_MOTOR2         (00,false);
 
         private final int canid;
         private final boolean inverted;

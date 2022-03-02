@@ -11,13 +11,13 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import edu.wpi.first.wpilibj.Timer;
 
 public class Climber extends SubsystemBase {
   CANSparkMax climbMotor;
+  CANSparkMax climbMotor2;
   double starttime;
-  RelativeEncoder encoder;
-  SparkMaxPIDController m_pidController;
+  RelativeEncoder encoder, encoder2;
+  SparkMaxPIDController m_pidController, m_pidController2;
   double kP;
   double kI;
   double kD;
@@ -25,6 +25,9 @@ public class Climber extends SubsystemBase {
   private double kFF;
   private double kMaxOutput;
   private double kMinOutput;
+  boolean pullingUp;
+  double target;
+  double tolerance;
   
   
   /** Creates a new Climber. */
@@ -32,10 +35,19 @@ public class Climber extends SubsystemBase {
     climbMotor = new CANSparkMax(Constants.CANIDs.CLIMB_MOTOR.getid(), MotorType.kBrushless);
     climbMotor.restoreFactoryDefaults();
     climbMotor.setInverted(Constants.CANIDs.CLIMB_MOTOR.isInverted());
-    double I_NEED_WORK = 0.;  // There is a motor for each climber arm; both need controlled
+
+    climbMotor2 = new CANSparkMax(Constants.CANIDs.CLIMB_MOTOR2.getid(), MotorType.kBrushless);
+    climbMotor2.restoreFactoryDefaults();
+    climbMotor2.setInverted(Constants.CANIDs.CLIMB_MOTOR2.isInverted());
     
     encoder = climbMotor.getEncoder();
     m_pidController = climbMotor.getPIDController();
+
+    encoder2 = climbMotor2.getEncoder();
+    m_pidController2 = climbMotor2.getPIDController();
+
+    pullingUp = false;
+    tolerance = 0.5; //inches
 
     kP = 0.1; 
     kI = 1e-4;
@@ -54,29 +66,47 @@ public class Climber extends SubsystemBase {
     encoder.setPositionConversionFactor(Constants.CLIMBER_GEAR_RATIO);
     encoder.setPosition(0.);
     
-
+    m_pidController2.setP(kP);
+    m_pidController2.setI(kI);
+    m_pidController2.setD(kD);
+    m_pidController2.setIZone(kIz);
+    m_pidController2.setFF(kFF);
+    m_pidController2.setOutputRange(kMinOutput, kMaxOutput);
+    encoder2.setPositionConversionFactor(Constants.CLIMBER_GEAR_RATIO);
+    encoder2.setPosition(0.);
   }
 
   /** deploys climber to specified height  */
   public void deployclimber() {
-    
-    m_pidController.setReference( Constants.HANGAR_BAR_HEIGHT - Constants.ROBOT_CLIMBER_STARTING_HEIGHT , CANSparkMax.ControlType.kPosition);
+    m_pidController.setReference(Constants.HANGAR_BAR_HEIGHT - Constants.ROBOT_CLIMBER_STARTING_HEIGHT, CANSparkMax.ControlType.kPosition);
+    m_pidController2.setReference(Constants.HANGAR_BAR_HEIGHT - Constants.ROBOT_CLIMBER_STARTING_HEIGHT, CANSparkMax.ControlType.kPosition);
+    target = Constants.HANGAR_BAR_HEIGHT - Constants.ROBOT_CLIMBER_STARTING_HEIGHT;
   }
 
   /** pulls robot up to the bar */
   public void pullup() {
     m_pidController.setReference(Constants.HANGAR_BAR_HEIGHT - Constants.HEIGHT_TO_CLIMB, CANSparkMax.ControlType.kPosition);
+    target = Constants.HANGAR_BAR_HEIGHT - Constants.HEIGHT_TO_CLIMB;
+    //used in periodic to follow pid1
+    //m_pidController2.setReference(Constants.HANGAR_BAR_HEIGHT - Constants.HEIGHT_TO_CLIMB, CANSparkMax.ControlType.kPosition);
+    pullingUp = true;
   }
 
   /** determine if climber has reached its destination */
   public boolean amidone() {
-    double I_NEED_WORK = 666.; // it must eventually be true
+    if (Math.abs(target - encoder.getPosition()) < tolerance) {
+      return true;
+    }
     return false;
   }
-
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    //after pullup command is called
+    //make controller #2 follow #1
+    if (pullingUp) {
+      m_pidController2.setReference(encoder.getPosition(), CANSparkMax.ControlType.kPosition);
+    }
   }
 }

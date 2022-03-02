@@ -6,7 +6,7 @@ package frc.robot.commands;
 
 //import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -46,7 +46,7 @@ public class DefaultDriveCommand extends CommandBase {
     iterCount++;
     //SmartDashboard.putNumber("defCom iter", (double)iterCount);
     //SmartDashboard.putNumber("defComX", m_joystick.getX());
-    System.out.println("here is getX "+iterCount+" "+m_joystick.getX());
+    //System.out.println("here is getX "+iterCount+" "+m_joystick.getX());
   }
 
   // Called once the command ends or is interrupted.

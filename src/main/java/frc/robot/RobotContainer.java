@@ -173,17 +173,19 @@ public class RobotContainer {
       //dist_pad2.whenPressed(new SetPadTwoDistance(turret));
       double I_NEED_THOUGHT = 444.; // NEED COMMAND TO SHOOT SOFT AND/OR TOSS OPPONENT's CARGO
     }
+    
     if (Constants.ELEVATOR_AVAILABLE) {}
+
     if (Constants.TURRET_AVAILABLE) {
-      JoystickButton aimMe = new JoystickButton(m_joystick,Constants.TURRET_AUTO_AIM_BUTTON);
+      JoystickButton aimMe = new JoystickButton(buttonBoxRight,Constants.TURRET_AUTO_AIM_BUTTON);
       aimMe.whenPressed(new AimTurretCommand(turret));
-      JoystickButton aimerCCW = new JoystickButton(m_joystick,Constants.TURRETCCW_BUTTON);
+      JoystickButton aimerCCW = new JoystickButton(buttonBoxRight,Constants.TURRETCCW_BUTTON);
       aimerCCW.whenPressed(new TurretCCW(turret));
       aimerCCW.whenReleased(new TurretStop(turret));
-      JoystickButton aimerCW = new JoystickButton(m_joystick,Constants.TURRETCW_BUTTON);
+      JoystickButton aimerCW = new JoystickButton(buttonBoxRight,Constants.TURRETCW_BUTTON);
       aimerCW.whenPressed(new TurretCW(turret));
       aimerCW.whenReleased(new TurretStop(turret));
-      JoystickButton aimerSpeed = new JoystickButton(m_joystick,Constants.TURRET_FINE_BUTTON);
+      JoystickButton aimerSpeed = new JoystickButton(buttonBoxRight,Constants.TURRET_FINE_BUTTON);
       aimerSpeed.whenPressed(new TurretFine(turret, true));
       aimerSpeed.whenReleased(new TurretFine(turret, false));
     }

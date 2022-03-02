@@ -201,7 +201,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void switchGears(DoubleSolenoid.Value newGear) {
-    System.out.println("Switch gears "+newGear+" from "+shifter.get());
+    //System.out.println("Switch gears "+newGear+" from "+shifter.get());
     if (Constants.COMPRESSOR_AVAILABLE){
       if (Constants.DRIVE_VELOCITY_CONTROLLED){
         if (newGear == Constants.DRIVE_HIGH_GEAR) {

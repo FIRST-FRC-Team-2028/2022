@@ -65,7 +65,7 @@ public class Pickup extends SubsystemBase {
   public void runRollers(){
     rollers.set(Constants.PICKUP_ROLLER_MOTOR_SPEED);
     for(int i = 0; i < NUM_ENC; i++ ) encoder_velocity[i] = Constants.PICKUP_ROLLER_RPM;
-    enc_avg = Constants.PICKUP_ROLLER_MOTOR_SPEED;
+    enc_avg = Constants.PICKUP_ROLLER_RPM;
     engagedcargo = false;
     rollersOn = true;
   }
@@ -91,11 +91,14 @@ public class Pickup extends SubsystemBase {
   /**
    * this method checks to see if pickup picked up
    * @return
+   * detects if cargo has been noticed,
+   * only returns true if ammo increased
    */
   public boolean hasCargo() {
+    System.out.println("in has cargo");
     //notice when the RPM drops from the running average
     if (!dontCount) {
-      //System.out.println("avg , current: " + enc_avg + " " + encoder.getVelocity() );
+      System.out.println("avg , current: " + enc_avg + " " + encoder.getVelocity() );
       if(!engagedcargo && enc_avg - encoder.getVelocity() > Constants.PICKUP_CARGO_INDICATION) {
         engagedcargo = true;
         System.out.println("I was engaged");
@@ -110,7 +113,7 @@ public class Pickup extends SubsystemBase {
       } 
     }
     // When rollers spin up from not spinning, the method incorrectly detects ammo
-    double I_NEED_CHECKED = 4.;
+    //double I_NEED_CHECKED = 4.;
     return false;
   } 
 

@@ -13,7 +13,7 @@ import frc.robot.subsystems.Turret;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class Shoot extends SequentialCommandGroup {
-  
+  Pickup pickup;
   /** Shoot a Cargo into the Hub 
    *    assuming the turret is aimed,
    *    and there is cargo onboard
@@ -22,6 +22,9 @@ public class Shoot extends SequentialCommandGroup {
   */
   public Shoot(Magazine magazine, Turret turret, Pickup pickup) {
     double AM_I_DONE = 00000.;  // do we need to ensure there is something to shoot?
+    if (pickup.numCargo() < 1) {
+      return;
+    }
     addCommands(
       /**sets motor speed and elevation */
       new ShootInit(turret),

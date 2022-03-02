@@ -11,7 +11,6 @@ import frc.robot.subsystems.Turret;
 
 
 public class ShootFire extends CommandBase {
- 
   Magazine magazine;
   Pickup pickup;
   Turret turret;
@@ -40,7 +39,6 @@ public class ShootFire extends CommandBase {
   }
 
   // Called once the command ends or is interrupted.
-  
   @Override
   public void end(boolean interrupted) {
   }
@@ -48,7 +46,11 @@ public class ShootFire extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    
-    return !pickup.hasCargo();
+    /**if (numCargo = 0) return true, else return false.
+    */
+    if (pickup.numCargo() == 0) {
+      return true;
+    }
+    return false;
   }
 }

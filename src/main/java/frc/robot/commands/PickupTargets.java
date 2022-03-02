@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Pickup;
 
 public class PickupTargets extends CommandBase {
@@ -15,12 +14,9 @@ public class PickupTargets extends CommandBase {
   */
 
   Pickup pickup;
-  Magazine magazine;
-  public PickupTargets(Pickup pickup/*, Magazine magazine*/) {
+  public PickupTargets(Pickup pickup) {
     this.pickup = pickup;
-    double PUT_ME_BACK = 666.;
-    //this.magazine = magazine;
-    addRequirements(/*magazine, */pickup);
+    addRequirements(pickup);
   }
 
   // Called when the command is initially scheduled.
@@ -28,7 +24,6 @@ public class PickupTargets extends CommandBase {
   public void initialize() {
     pickup.deploy();
     pickup.runRollers();
-    //magazine.horizontalon();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
