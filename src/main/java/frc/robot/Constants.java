@@ -46,7 +46,7 @@ public final class Constants {
     public static final boolean COMPRESSOR_AVAILABLE    = true;
     public static final boolean GYRO_AVAILABLE          = true;
     public static final boolean BUTTONBOX_AVAILABLE     = false;
-    public static final boolean USBCAMERA_AVAILABLE     = false;
+    public static final boolean USBCAMERA_AVAILABLE     = true;
     public static final boolean JOYSTICK_EXTREME3D = true;
 
     // CAN connections
