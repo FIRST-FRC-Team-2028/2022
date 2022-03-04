@@ -59,7 +59,7 @@ public class Robot extends TimedRobot {
     magazine = m_robotContainer.getMagazine();
     joystick  = m_robotContainer.getJoystick();
     
-    /* test quadraticFitter */
+    /* test quadraticFitter 
     QuadraticFitter fitter = new QuadraticFitter();
     double [][] testers = {
                           //{0, 1,    4,    9},
@@ -75,12 +75,14 @@ public class Robot extends TimedRobot {
     double [] tests = {0.,1.,2.,3.,4.,5.,6.,7.,8.,9};
     for (double each : tests)
       System.out.println(each+" , "+fitter.yout(each));
+    */
 
     if (Constants.USBCAMERA_AVAILABLE){
       if (Constants.CAMERA_THREAD){
         turretUSBthread = 
           new Thread ( () -> {
             UsbCamera camera = CameraServer.startAutomaticCapture();
+            //System.out.println("running camera thread");
             // Set the resolution
             camera.setResolution(640, 480);
 
@@ -98,17 +100,18 @@ public class Robot extends TimedRobot {
                 outputStream.notifyError(cvSink.getError());
                 continue;
               }
+              //System.out.println("Add lines");
               // add a vertical line at center and three horizontal lines for range finding
-              Imgproc.line(mat, new Point(320,100), new Point(320,400), new Scalar(255,255,255),5);
+              Imgproc.line(mat, new Point(320,100), new Point(320,400), new Scalar(0,0,0),5);
               Imgproc.line(mat, new Point(320-Constants.CAM_HUB_DIST.TARMAC.getW(),Constants.CAM_HUB_DIST.TARMAC.getH()),
                                 new Point(320+Constants.CAM_HUB_DIST.TARMAC.getW(),Constants.CAM_HUB_DIST.TARMAC.getH()), 
-                                new Scalar(255,255,255), 5);
+                                new Scalar(255,0,0), 5);
               Imgproc.line(mat, new Point(320-Constants.CAM_HUB_DIST.CARGO_RING.getW(),Constants.CAM_HUB_DIST.CARGO_RING.getH()),
                                 new Point(320+Constants.CAM_HUB_DIST.CARGO_RING.getW(),Constants.CAM_HUB_DIST.CARGO_RING.getH()), 
-                                new Scalar(255,255,255), 5);
+                                new Scalar(255,125,0), 5);
               Imgproc.line(mat, new Point(320-Constants.CAM_HUB_DIST.PAD1.getW(),Constants.CAM_HUB_DIST.PAD1.getH()),
                                 new Point(320+Constants.CAM_HUB_DIST.PAD1.getW(),Constants.CAM_HUB_DIST.PAD1.getH()), 
-                                new Scalar(255,255,255), 5);
+                                new Scalar(0,0,0), 5);
               outputStream.putFrame(mat);
             }
           });
@@ -194,7 +197,8 @@ public class Robot extends TimedRobot {
     MAG_HORI(5),
     MAG_VERT(6),
     CLIMB_EXTEND(7),
-    CLIMBER(8);
+    CLIMBER(8),
+    TURRET_TURRRET(9);
 
     int id;
     TestModes(final int id){
@@ -237,8 +241,8 @@ public class Robot extends TimedRobot {
       turret.elevatorMove(speed*1000.);
       SmartDashboard.putNumber("elevationAngle", turret.getElevation());
 
-    } else if (testState == TestModes.TURRET.getID()) {  //  turret azimuth +CW
-
+    } else if (testState == TestModes.TURRET_TURRRET.getID()) {  //  turret azimuth +CW
+      turret.turretCW(speed);
     } else if (testState == TestModes.PICKUP_ROLLERS.getID()) {  //  pickup rollers
       // initialize the running average
       if (!startedTesting) {

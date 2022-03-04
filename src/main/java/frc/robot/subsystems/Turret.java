@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 //import frc.robot.QuadraticFitter;
 import frc.robot.Pixy2API.Pixy2;
 import frc.robot.Pixy2API.Pixy2CCC;
@@ -69,6 +70,7 @@ public class Turret extends SubsystemBase {
   CANSparkMax shooter;
   SparkMaxPIDController shooter_controller;
   RelativeEncoder shooterSpeed;
+  RobotContainer robotContainer;
   static final int NUM_ENC = 50;
   double[] encoder_velocity = new double[NUM_ENC]; 
   int iter = 0;
@@ -92,7 +94,8 @@ public class Turret extends SubsystemBase {
   final QuadraticFitter fitterm;
   */
 
-  public Turret() {
+  public Turret(RobotContainer robotContainer) {
+    this.robotContainer = robotContainer;
     if (Constants.SHOOTER_AVAILABLE){
 
       shooter = new CANSparkMax(Constants.CANIDs.TURRET_SHOOTER.getid(), MotorType.kBrushless);
@@ -105,9 +108,11 @@ public class Turret extends SubsystemBase {
     if (Constants.TURRET_AVAILABLE){
 
       turretMotor = new CANSparkMax(Constants.CANIDs.TURRET_AZIMUTH.getid(), MotorType.kBrushless);
+      turretSpeed = Constants.TURRET_MOTOR_SPEED;
       turretencoder =  turretMotor.getEncoder();
       //turretswitch = new AnalogInput(Constants.TURRET_SWITCH_CHANNEL);
       turretswitch = turretMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+      
     }
     if (Constants.ELEVATOR_AVAILABLE){
       elevationMotor = new CANSparkMax(Constants.CANIDs.TURRET_ELEVATION.getid(), MotorType.kBrushless);
@@ -345,16 +350,21 @@ public class Turret extends SubsystemBase {
   }
 
   public void turretstartzeroing() {
+    System.out.println("Test 45");
      turretiszeroed = false;
+     AMIRIGHT = robotContainer.getRightOrLeft();
+     System.out.println("Zeoring From " + (AMIRIGHT?"Right":"Left") );
   }
+
   
-  boolean AMIRIGHT = true;
+  boolean AMIRIGHT;
   /**
    * Set side of robot turret is facing at match start
    * @param right 
    */
   public void setTurretStartSector(boolean right) {
     AMIRIGHT = right;
+
   }
 
   

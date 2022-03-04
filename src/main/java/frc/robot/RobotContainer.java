@@ -31,6 +31,7 @@ import frc.robot.commands.TurretCCW;
 import frc.robot.commands.TurretCW;
 import frc.robot.commands.TurretFine;
 import frc.robot.commands.TurretStop;
+import frc.robot.commands.ZeroTurretForTesting;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.commands.DeployClimber;
 import frc.robot.commands.Shoot;
@@ -96,7 +97,7 @@ public class RobotContainer {
     }
 
     if (Constants.TURRET_AVAILABLE || Constants.SHOOTER_AVAILABLE || Constants.ELEVATOR_AVAILABLE) {
-      turret = new Turret();
+      turret = new Turret(this);
     }
 
     if (Constants.MAGAZINE_AVAILABLE) {
@@ -188,6 +189,8 @@ public class RobotContainer {
       JoystickButton aimerSpeed = new JoystickButton(buttonBoxRight,Constants.TURRET_FINE_BUTTON);
       aimerSpeed.whenPressed(new TurretFine(turret, true));
       aimerSpeed.whenReleased(new TurretFine(turret, false));
+      JoystickButton zeroturret = new JoystickButton(buttonBoxLeft, Constants.TURRET_ZEROING_BUTTON);
+      zeroturret.whenPressed(new ZeroTurretForTesting(turret));
     }
     
     // choosable autoCommands
@@ -233,5 +236,7 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
     return m_chooser.getSelected();
   }
-  
+  public Boolean getRightOrLeft() {
+    return sideChooser.getSelected();
+  }
 }

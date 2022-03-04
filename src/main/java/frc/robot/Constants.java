@@ -39,15 +39,16 @@ public final class Constants {
     public static final boolean SHOOTER_AVAILABLE       = false;
     public static final boolean ELEVATOR_AVAILABLE      = false;
     public static final boolean I2C_CAM_AVAILABLE       = false;
-    public static final boolean MAGAZINE_AVAILABLE      = false;
+    public static final boolean MAGAZINE_AVAILABLE      = true;
     public static final boolean PICKUP_AVAILABLE        = true;
     public static final boolean CLIMBER_AVAILABLE       = false;
     public static final boolean CONTROLPANEL_AVAILABLE  = false;
     public static final boolean COMPRESSOR_AVAILABLE    = true;
     public static final boolean GYRO_AVAILABLE          = true;
     public static final boolean BUTTONBOX_AVAILABLE     = false;
-    public static final boolean USBCAMERA_AVAILABLE     = false;
+    public static final boolean USBCAMERA_AVAILABLE     = true;
     public static final boolean JOYSTICK_EXTREME3D = true;
+    public static final boolean CAMERA_THREAD = true;
 
     // CAN connections
     public enum CANIDs {
@@ -112,6 +113,7 @@ public final class Constants {
     public static final int DEPLOY_PICKUP_BUTTON = 5;
     public static final int ROLLER_STOP_BUTTON = 7;
     public static final int ELEVATOR_DOWN_BUTTON = 2;
+    public static final int TURRET_ZEROING_BUTTON = 4;
     // button box 2
     public static final int DRIVE_TO_BALL_BUTTON = 1;
     public static final int RETRACT_PICKUP_BUTTON = 2;
@@ -150,11 +152,15 @@ public final class Constants {
     public static final double TURRET_CAM_HEIGHT = 0; //FIXME
     public static final double PIXY_GAM_TURRET_CAM_ANGLE = .158; //FIXME
     public static final double DRIVE_CAM_HEIGHT = 0.; // FIXME
-    // USB:  640 x 480 resolution
-    //       tilted up at ? degrees
+    /* USB:  640 x 480 resolution
+     *       tilted up at 10 degrees
+     *       field of view: 61 horiz, 34 vert
+     *       installation height
+    */
+    // the hub as seen through the USB camera will appear as an arc
     public enum  CAM_HUB_DIST {
         TARMAC(200, 10),  //TODO these are guesses; fix them
-        CARGO_RING(150, 20),
+        CARGO_RING(150, 27),
         PAD1(60, 200);
 
         private final int width, height;
@@ -265,7 +271,6 @@ public final class Constants {
     public static final double FIELD_HUB_TO_PAD2 = 244.77;  // inches
     public static final double HANGAR_BAR_HEIGHT = 60.25 + 3.; // inches
     public static final double HEIGHT_TO_CLIMB = 3. + 4.; // inches
-    public static final boolean CAMERA_THREAD = false;
 
    
    
