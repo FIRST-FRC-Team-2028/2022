@@ -92,8 +92,8 @@ public class MyDifferentialDrive extends DifferentialDrive {
       m_leftMotor.set(speeds.left * m_maxOutput);
       m_rightMotor.set(speeds.right * m_maxOutput);
     }
-    SmartDashboard.putNumber("leftRPM",m_leftEncoder.getVelocity());
-    SmartDashboard.putNumber("rightRPM",m_rightEncoder.getVelocity());
+    //SmartDashboard.putNumber("leftRPM",m_leftEncoder.getVelocity());
+    //SmartDashboard.putNumber("rightRPM",m_rightEncoder.getVelocity());
     feed();
   }
 

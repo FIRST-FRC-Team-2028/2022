@@ -131,7 +131,7 @@ public class QuadraticFitter {
                 abc[i] += matinv[i][j]*rhs[j];
             }
         }
-        //if (debug)
+        if (debug)
            System.out.println(String.format("fitter coefficients a = %f, b=%f, c=%f",abc[0],abc[1],abc[2]));
     }
 

@@ -19,7 +19,7 @@ public class TestHasCargo extends CommandBase {
   @Override
   public void initialize() {
     pickup.hasCargo();
-    System.out.println("eygdcfknsugh");
+    //System.out.println("eygdcfknsugh");
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -40,8 +40,10 @@ public class DefaultDriveCommand extends CommandBase {
       turn = m_joystick.getX();
     }
     m_drive.driveMe(turn, -m_joystick.getY());
-    if (m_joystick.getRawButton(Constants.SHIFTER_BUTTON)){
-       m_drive.switchGears();
+    if (! Constants.AUTOSHIFT_AVAILABLE) {
+      if (m_joystick.getRawButton(Constants.SHIFTER_BUTTON)){
+         m_drive.switchGears();
+      }
     }
     iterCount++;
     //SmartDashboard.putNumber("defCom iter", (double)iterCount);

@@ -229,7 +229,7 @@ public class Robot extends TimedRobot {
       speed = joystick.getRawAxis(3);
     else
       speed = joystick.getZ();
-    System.out.println("test A");
+    //System.out.println("test A");
     int testState = TestModes.MAG_VERT.getID();
     
     if(testState == TestModes.SHOOTER.getID()) {   // check that stooter rollers toss ball out

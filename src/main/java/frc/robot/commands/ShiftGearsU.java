@@ -25,7 +25,7 @@ public class ShiftGearsU extends CommandBase {
   @Override
   public void initialize() {
     drive.switchGears(gear);
-    System.out.println("SiftGearsU "+gear);
+    //System.out.println("SiftGearsU "+gear);
     //timeTilRepeat.start();
   }
 

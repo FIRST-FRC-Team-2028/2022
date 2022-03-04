@@ -32,23 +32,23 @@ public final class Constants {
      * Flags that tell the code systems exist
      */
     public static final boolean DRIVE_AVAILABLE         = true;
-    public static final boolean AUTOSHIFT_AVAILABLE     = true;
+    public static final boolean AUTOSHIFT_AVAILABLE     = false;
     public static final boolean CAMERA_AVAILABLE        = false;
     public static final boolean AIM_AVAILABLE           = false;
-    public static final boolean TURRET_AVAILABLE        = true;
+    public static final boolean TURRET_AVAILABLE        = false;
     public static final boolean SHOOTER_AVAILABLE       = false;
     public static final boolean ELEVATOR_AVAILABLE      = false;
     public static final boolean I2C_CAM_AVAILABLE       = false;
-    public static final boolean MAGAZINE_AVAILABLE      = true;
+    public static final boolean MAGAZINE_AVAILABLE      = false;
     public static final boolean PICKUP_AVAILABLE        = true;
     public static final boolean CLIMBER_AVAILABLE       = false;
     public static final boolean CONTROLPANEL_AVAILABLE  = false;
     public static final boolean COMPRESSOR_AVAILABLE    = true;
-    public static final boolean GYRO_AVAILABLE          = true;
+    public static final boolean GYRO_AVAILABLE          = false;
     public static final boolean BUTTONBOX_AVAILABLE     = false;
-    public static final boolean USBCAMERA_AVAILABLE     = true;
-    public static final boolean JOYSTICK_EXTREME3D = true;
-    public static final boolean CAMERA_THREAD = true;
+    public static final boolean USBCAMERA_AVAILABLE     = false;
+    public static final boolean JOYSTICK_EXTREME3D      = false;
+    public static final boolean CAMERA_THREAD           = false;
 
     // CAN connections
     public enum CANIDs {
@@ -104,20 +104,24 @@ public final class Constants {
     public static final int JOYSTICK = 0;
     public static final int LEFT_BUTTON_BOX = 1;
     public static final int RIGHT_BUTTON_BOX = 2;
+    public static final int ELEVATOR_DOWN_BUTTON = 11;
+    public static final int ELEVATOR_UP_BUTTON = 12;
     // joystick buttons
     public static final int SHIFTER_BUTTON = 2;
     public static final int SHIFTERU_BUTTON = 4;
     public static final int SHIFTERD_BUTTON = 3;
-    // button box1
+    // button box1 (left)
     public static final int CARGO_RING_DISTANCE_BUTTON = 1;
-    public static final int DEPLOY_PICKUP_BUTTON = 5;
-    public static final int ROLLER_STOP_BUTTON = 7;
-    public static final int ELEVATOR_DOWN_BUTTON = 2;
+    public static final int MAGAZINE_STOP_BUTTON = 2;
     public static final int TURRET_ZEROING_BUTTON = 4;
-    // button box 2
+    public static final int DEPLOY_PICKUP_BUTTON = 5;
+    public static final int DRIBBLE_BUTTON = 6;
+    public static final int ROLLER_STOP_BUTTON = 7;
+    public static final int TURRET_REPORT_BUTTON = 8;
+    // button box 2 (right)
     public static final int DRIVE_TO_BALL_BUTTON = 1;
     public static final int RETRACT_PICKUP_BUTTON = 2;
-    public static final int ELEVATOR_UP_BUTTON = 3;
+    public static final int MAGAZINE_UP_BUTTON = 3;
     public static final int TARMAC_DISTANCE_BUTTON = 4;
     public static final int TURRETCCW_BUTTON = 5;
     public static final int TURRET_FINE_BUTTON = 6;
@@ -197,10 +201,15 @@ public final class Constants {
     public static final double SHOOTER_SPEED = 0.;  // 0 -> 1
     public static final double SHOOTER_SLOW_SPEED = 0.;  // 0 -> 1
     public static final double TURRET_MOTOR_SPEED = 1.;  // 0 -> 1
-    public static final double TURRET_MOTOR_SLOW_SPEED = 0.3;  // 0 -> 
-    public static final double TURRET_MOTOR_ZEROING_SPEED = 0.;
+    public static final double TURRET_MOTOR_SLOW_SPEED = 0.15;  // 0 -> 
+    public static final double TURRET_MOTOR_ZEROING_SPEED = 0.1;
     public static final double SHOOT_INDICATORUP = 500;  // delta rpm
     public static final double SHOOT_INDICATORDOWN = -300;  // delta rpm
+    public static final double SHOOTER_DRIBBLE_DISTANCE = 10.;  // inches
+    public static final double DRIBBLE_RPM = 1300.;
+    public static final double TARMAC_RPM = 2900.;
+    public static final double CARGO_RING_RPM = 3250.;
+    public static final double PAD_ONE_RPM = 3250.;  // TODO test this
 
 
     // drive constants

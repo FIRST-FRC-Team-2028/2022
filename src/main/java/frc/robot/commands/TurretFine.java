@@ -14,6 +14,7 @@ public class TurretFine extends CommandBase {
   public TurretFine(Turret turret, boolean fine) {
     addRequirements(turret);
     this.turret=turret;
+    this.fine = fine;
   }
 
   // Called when the command is initially scheduled.

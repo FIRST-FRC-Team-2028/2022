@@ -7,10 +7,10 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Magazine;
 
-public class MagazineDown extends CommandBase {
+public class MagazineStop extends CommandBase {
   Magazine magazine;
   /** Creates a new MagazineUp. */
-  public MagazineDown(Magazine magazine) {
+  public MagazineStop(Magazine magazine) {
     addRequirements(magazine);
     this.magazine=magazine;
   }
@@ -18,7 +18,7 @@ public class MagazineDown extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    magazine.verticalon(-1.);
+    magazine.verticalon(0.);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

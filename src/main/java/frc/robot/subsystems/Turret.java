@@ -66,6 +66,7 @@ public class Turret extends SubsystemBase {
   double elevator_tolerance=2.;  // encoder counts
   //AnalogInput turretswitch;
   SparkMaxLimitSwitch turretswitch;
+  int zeroiter = 0;
 
   CANSparkMax shooter;
   SparkMaxPIDController shooter_controller;
@@ -99,6 +100,7 @@ public class Turret extends SubsystemBase {
     if (Constants.SHOOTER_AVAILABLE){
 
       shooter = new CANSparkMax(Constants.CANIDs.TURRET_SHOOTER.getid(), MotorType.kBrushless);
+      shooter.restoreFactoryDefaults();
       shooter.setInverted(Constants.CANIDs.TURRET_SHOOTER.isInverted());
       shooter_controller = shooter.getPIDController();
       shooter_controller.setP(shooter_kp);
@@ -108,6 +110,9 @@ public class Turret extends SubsystemBase {
     if (Constants.TURRET_AVAILABLE){
 
       turretMotor = new CANSparkMax(Constants.CANIDs.TURRET_AZIMUTH.getid(), MotorType.kBrushless);
+      turretMotor.restoreFactoryDefaults();
+      turretMotor.setInverted(Constants.CANIDs.TURRET_AZIMUTH.isInverted());
+      turretMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
       turretSpeed = Constants.TURRET_MOTOR_SPEED;
       turretencoder =  turretMotor.getEncoder();
       //turretswitch = new AnalogInput(Constants.TURRET_SWITCH_CHANNEL);
@@ -116,6 +121,9 @@ public class Turret extends SubsystemBase {
     }
     if (Constants.ELEVATOR_AVAILABLE){
       elevationMotor = new CANSparkMax(Constants.CANIDs.TURRET_ELEVATION.getid(), MotorType.kBrushless);
+      elevationMotor.restoreFactoryDefaults();
+      elevationMotor.setInverted(Constants.CANIDs.TURRET_ELEVATION.isInverted());
+      elevationMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
       limitswitch = elevationMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
       elevator_controller = elevationMotor.getPIDController();
       elevator_controller.setP(elevator_kp);
@@ -142,7 +150,7 @@ public class Turret extends SubsystemBase {
     aimer.setSetpoint(0.);
     aimer.setIntegratorRange(-1., 1.);
 
-    SmartDashboard.putNumber("Turret Alert", 0.);  // Tells driver that turret is located in a safe region
+    //SmartDashboard.putNumber("Turret Alert", 0.);  // Tells driver that turret is located in a safe region
 
     for(int i = 0; i < NUM_ENC; i++ ) encoder_velocity[i] = 0; 
     enc_avg = 0.;
@@ -226,8 +234,18 @@ public class Turret extends SubsystemBase {
   }
 
   /** Use quadratic curve fit for rpm(distance)  = a x^2 +b x + c */
+  /* Use discrete vlues from test
+     tarmac: 2300 low, 2900 high; both went in
+     cargo ring:  2900 low, 3250 high; both went in
+     pad1: untested
+     dribble or low hub: 1300
+     */
   double mapRPM(double distance) {
-    return (Constants.SHOOTER_FCN_ACOEF*distance*distance + Constants.SHOOTER_FCN_BCOEF)*distance+Constants.SHOOTER_FCN_CCOEF;
+    //return (Constants.SHOOTER_FCN_ACOEF*distance*distance + Constants.SHOOTER_FCN_BCOEF)*distance+Constants.SHOOTER_FCN_CCOEF;
+    if (distance >= Constants.FIELD_HUB_TO_PAD1) return Constants.PAD_ONE_RPM;
+    if (distance >= Constants.CARGO_RING_DISTANCE) return Constants.CARGO_RING_RPM;
+    if (distance >= Constants.TARMAC_DISTANCE) return Constants.TARMAC_RPM;
+    return Constants.DRIBBLE_RPM;
   }
   /** Use quadratic curve fit for rpm(distance)  = a x^2 +b x + c */
   double mapElevation(double distance) {
@@ -325,7 +343,7 @@ public class Turret extends SubsystemBase {
       if ( measure < 0.) return 0.;
       double pidVal = aimer.calculate(measure, Constants.CENTER_OF_CAMERA)/ Constants.CENTER_OF_CAMERA;  // pixels/pixels = O(1)
       turretMotor.set(pidVal);
-      SmartDashboard.putNumber("Turret Aim Error", Constants.CENTER_OF_CAMERA-measure);
+      //SmartDashboard.putNumber("Turret Aim Error", Constants.CENTER_OF_CAMERA-measure);
       return Constants.CENTER_OF_CAMERA - measure;   
     } else return 0.;
 
@@ -339,6 +357,7 @@ public class Turret extends SubsystemBase {
   }
 
   public void turretFine(boolean fine) {
+    //System.out.println("fine");
     if (fine) turretSpeed = Constants.TURRET_MOTOR_SLOW_SPEED;
     else turretSpeed = Constants.TURRET_MOTOR_SPEED;
   }
@@ -350,8 +369,9 @@ public class Turret extends SubsystemBase {
   }
 
   public void turretstartzeroing() {
-    System.out.println("Test 45");
+    //System.out.println("Test 45");
      turretiszeroed = false;
+     zeroiter = 0;
      AMIRIGHT = robotContainer.getRightOrLeft();
      System.out.println("Zeoring From " + (AMIRIGHT?"Right":"Left") );
   }
@@ -394,11 +414,14 @@ public class Turret extends SubsystemBase {
     if (Constants.TURRET_AVAILABLE){
       // Presuming turret is 
       if(!turretiszeroed) {
+        //System.out.println("turretmotor: " + zeroiter );
+        zeroiter += 1;
         turretMotor.set((AMIRIGHT?1.:-1.)*Constants.TURRET_MOTOR_ZEROING_SPEED);
         double NEEDS_WORK = 1.e5;
         // mr.g says look at this to determine direction
         // and search limit TODO
-        if(limitswitch.isPressed()) {
+        if(turretswitch.isPressed()) {
+
           turretMotor.set(0.);
           double turret_zero_position = turretencoder.getPosition(); 
           turretupperlimit = turret_zero_position + 
@@ -407,14 +430,19 @@ public class Turret extends SubsystemBase {
                 (360.*(AMIRIGHT?1.:0) + 20.)*Constants.TURRET_ENCODER_RATIO;
           turretiszeroed = true;
         }
-      } 
-      if(turretencoder.getPosition() > turretupperlimit ) {
-        turretMotor.set(Math.min(0., turretMotor.get()));
-      } 
-  
-      if(turretencoder.getPosition() < turretlowerlimit ) {
-        turretMotor.set(Math.max(0., turretMotor.get()));
-      } 
+      } else {
+        //System.out.println("Encoder Value " + turretencoder.getPosition());
+        //System.out.println("Turret Speed " + turretMotor.get());
+
+        if(turretencoder.getPosition() > turretupperlimit ) {
+          turretMotor.set(Math.min(0., turretMotor.get()));
+        } 
+    
+        if(turretencoder.getPosition() < turretlowerlimit ) {
+          turretMotor.set(Math.max(0., turretMotor.get()));
+        } 
+      }
+     
     }
 
     if (Constants.SHOOTER_AVAILABLE) {
@@ -441,5 +469,11 @@ public class Turret extends SubsystemBase {
     } else{
       SmartDashboard.putNumber("Turret Alert", 0.);}
      badposition = alert;
+  }
+
+  public void reportLimits() {
+    System.out.println("Upper Limit " + turretupperlimit);
+    System.out.println("Turret Posi " + turretencoder.getPosition());
+    System.out.println("Lower Limit " + turretlowerlimit);
   }
 }

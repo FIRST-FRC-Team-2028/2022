@@ -7,11 +7,10 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Turret;
 
-public class ZeroTurretForTesting extends CommandBase {
+public class TurretReportForTesting extends CommandBase {
   Turret turret;
-  /** u */
-  public ZeroTurretForTesting(Turret turret) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  /** Creates a new TurretReportForTesting. */
+  public TurretReportForTesting(Turret turret) {
     addRequirements(turret);
     this.turret = turret;
   }
@@ -19,8 +18,7 @@ public class ZeroTurretForTesting extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turret.turretstartzeroing();
-    //System.out.println("zeroing");
+    turret.reportLimits();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

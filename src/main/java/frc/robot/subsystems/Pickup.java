@@ -95,13 +95,13 @@ public class Pickup extends SubsystemBase {
    * only returns true if ammo increased
    */
   public boolean hasCargo() {
-    System.out.println("in has cargo");
+    //System.out.println("in has cargo");
     //notice when the RPM drops from the running average
     if (!dontCount) {
-      System.out.println("avg , current: " + enc_avg + " " + encoder.getVelocity() );
+      //System.out.println("avg , current: " + enc_avg + " " + encoder.getVelocity() );
       if(!engagedcargo && enc_avg - encoder.getVelocity() > Constants.PICKUP_CARGO_INDICATION) {
         engagedcargo = true;
-        System.out.println("I was engaged");
+        //System.out.println("I was engaged");
         return false;
       }
       // notice when the RPM reverts to the running average

@@ -5,22 +5,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Turret;
 
-public class ZeroTurretForTesting extends CommandBase {
+public class SetDribbleDistance extends CommandBase {
   Turret turret;
-  /** u */
-  public ZeroTurretForTesting(Turret turret) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(turret);
+  /** Set Turret distance for just lightly shooting */
+  public SetDribbleDistance(Turret turret) {
+    addRequirements( turret);
     this.turret = turret;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turret.turretstartzeroing();
-    //System.out.println("zeroing");
+    turret.setdistance(Constants.SHOOTER_DRIBBLE_DISTANCE);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,6 +33,6 @@ public class ZeroTurretForTesting extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

@@ -19,7 +19,7 @@ public class TurretCCW extends CommandBase {
   @Override
   public void initialize() {
     turret.turretCW(-1.);
-    System.out.println("turretccw working");
+    //System.out.println("turretccw working");
   }
 
   // Called every time the scheduler runs while the command is scheduled.

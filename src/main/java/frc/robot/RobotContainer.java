@@ -18,9 +18,12 @@ import frc.robot.commands.AutoShootAndGetCargo;
 import frc.robot.commands.AutoShootTwo;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveTowardBall;
+import frc.robot.commands.MagazineStop;
+import frc.robot.commands.MagazineUp;
 import frc.robot.commands.PickupTargets;
 import frc.robot.commands.RetractPickup;
 import frc.robot.commands.SetCargoRingDistance;
+import frc.robot.commands.SetDribbleDistance;
 import frc.robot.commands.SetPadOneDistance;
 import frc.robot.commands.SetPadTwoDistance;
 import frc.robot.commands.SetTarmacDistance;
@@ -30,6 +33,7 @@ import frc.robot.commands.TurnoffPickup;
 import frc.robot.commands.TurretCCW;
 import frc.robot.commands.TurretCW;
 import frc.robot.commands.TurretFine;
+import frc.robot.commands.TurretReportForTesting;
 import frc.robot.commands.TurretStop;
 import frc.robot.commands.ZeroTurretForTesting;
 import frc.robot.subsystems.DriveSubsystem;
@@ -167,10 +171,12 @@ public class RobotContainer {
       JoystickButton dist_tarmac = new JoystickButton(buttonBoxRight, Constants.TARMAC_DISTANCE_BUTTON);
       JoystickButton dist_cargoRing = new JoystickButton(buttonBoxRight, Constants.CARGO_RING_DISTANCE_BUTTON);
       JoystickButton dist_pad1 = new JoystickButton(buttonBoxRight, Constants.PAD_ONE_DISTANCE_BUTTON);
+      JoystickButton dribble = new JoystickButton(buttonBoxRight, Constants.DRIBBLE_BUTTON);
       //JoystickButton dist_pad2 = new JoystickButton(buttonBoxRight, Constants.PAD_TWO_DISTANCE_BUTTON);
       dist_tarmac.whenPressed(new SetTarmacDistance(turret));
       dist_cargoRing.whenPressed(new SetCargoRingDistance(turret));
       dist_pad1.whenPressed(new SetPadOneDistance(turret));
+      dribble.whenPressed(new SetDribbleDistance(turret));
       //dist_pad2.whenPressed(new SetPadTwoDistance(turret));
       double I_NEED_THOUGHT = 444.; // NEED COMMAND TO SHOOT SOFT AND/OR TOSS OPPONENT's CARGO
     }
@@ -191,6 +197,15 @@ public class RobotContainer {
       aimerSpeed.whenReleased(new TurretFine(turret, false));
       JoystickButton zeroturret = new JoystickButton(buttonBoxLeft, Constants.TURRET_ZEROING_BUTTON);
       zeroturret.whenPressed(new ZeroTurretForTesting(turret));
+      JoystickButton reportturret = new JoystickButton(buttonBoxLeft, Constants.TURRET_REPORT_BUTTON);
+      reportturret.whenPressed(new TurretReportForTesting(turret));
+    }
+
+    if(Constants.MAGAZINE_AVAILABLE) {
+      JoystickButton magUp = new JoystickButton(buttonBoxRight,Constants.MAGAZINE_UP_BUTTON);
+      magUp.whenPressed(new MagazineUp(magazine));
+      JoystickButton magStop = new JoystickButton(buttonBoxLeft,Constants.MAGAZINE_STOP_BUTTON);
+      magStop.whenPressed(new MagazineStop(magazine));
     }
     
     // choosable autoCommands
@@ -220,9 +235,10 @@ public class RobotContainer {
     sideChooser.addOption("Left", false);
     SmartDashboard.putData(sideChooser);
     
-    // for testing purposes
+    /* for testing purposes
     JoystickButton autocargoButton = new JoystickButton(m_joystick, 1);
     autocargoButton.whenPressed(new AutoDriveToCargo(m_driveSubsystem));
+    */
   }
 
   /**
