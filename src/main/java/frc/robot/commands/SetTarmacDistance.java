@@ -21,6 +21,8 @@ public class SetTarmacDistance extends CommandBase {
   @Override
   public void initialize() {
     turret.setdistance(Constants.TARMAC_DISTANCE);
+    turret.setelevation();
+    turret.shooterdistance();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -20,6 +20,8 @@ public class SetDribbleDistance extends CommandBase {
   @Override
   public void initialize() {
     turret.setdistance(Constants.SHOOTER_DRIBBLE_DISTANCE);
+    turret.setelevation();
+    turret.shooterdistance();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

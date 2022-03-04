@@ -167,7 +167,7 @@ public class RobotContainer {
     if (Constants.SHOOTER_AVAILABLE) {
       JoystickButton shooter = new JoystickButton(buttonBoxRight,Constants.SHOOT_BUTTON);
       shooter.whenPressed(new Shoot(magazine, turret, pickup));
-      shooter.whenReleased(new ShootStop(magazine, turret));
+      //shooter.whenReleased(new ShootStop(magazine, turret));
       JoystickButton dist_tarmac = new JoystickButton(buttonBoxRight, Constants.TARMAC_DISTANCE_BUTTON);
       JoystickButton dist_cargoRing = new JoystickButton(buttonBoxRight, Constants.CARGO_RING_DISTANCE_BUTTON);
       JoystickButton dist_pad1 = new JoystickButton(buttonBoxRight, Constants.PAD_ONE_DISTANCE_BUTTON);

@@ -21,6 +21,8 @@ public class SetCargoRingDistance extends CommandBase {
   @Override
   public void initialize() {
     turret.setdistance(Constants.CARGO_RING_DISTANCE);
+    turret.setelevation();
+    turret.shooterdistance();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

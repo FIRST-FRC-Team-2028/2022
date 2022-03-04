@@ -21,10 +21,12 @@ public class Shoot extends SequentialCommandGroup {
    *    fire the cargo
   */
   public Shoot(Magazine magazine, Turret turret, Pickup pickup) {
+    /* TODO: eventually
     double AM_I_DONE = 00000.;  // do we need to ensure there is something to shoot?
     if (pickup.numCargo() < 1) {
       return;
     }
+    */
     addCommands(
       /**sets motor speed and elevation */
       new ShootInit(turret),

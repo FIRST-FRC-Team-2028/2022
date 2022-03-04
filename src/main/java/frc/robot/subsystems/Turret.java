@@ -53,6 +53,7 @@ public class Turret extends SubsystemBase {
   double turret_position_two;
   boolean looking_for_position_two = false;
   boolean badposition = true;
+
   CANSparkMax elevationMotor;
   RelativeEncoder elevatorencoder;
   boolean elevator_zeroed = true;
@@ -106,6 +107,7 @@ public class Turret extends SubsystemBase {
       shooter_controller.setP(shooter_kp);
       shooter_controller.setI(shooter_ki);
       shooter_controller.setD(shooter_kd);
+      shooterSpeed = shooter.getEncoder();
     }
     if (Constants.TURRET_AVAILABLE){
 
@@ -273,19 +275,26 @@ public class Turret extends SubsystemBase {
   }
   
   public void setelevation() {
+    if (Constants.ELEVATOR_AVAILABLE) {
     //elevator_controller.setReference(fittere.yout(distance) + elevator_zero_position, CANSparkMax.ControlType.kPosition);
     elevator_controller.setReference(mapElevation(distance) + elevator_zero_position, CANSparkMax.ControlType.kPosition);
+    }
   }
 
   /**  report whether elevator has reached set point
    * @return boolean
   */
   public boolean iselevatordistance() {
-    //return Math.abs( elevatorencoder.getPosition() - fittere.yout(distance) + elevator_zero_position) < elevator_tolerance;
-    return Math.abs( elevatorencoder.getPosition() - mapElevation(distance) + elevator_zero_position) < elevator_tolerance;
+    if (Constants.ELEVATOR_AVAILABLE) {
+      //return Math.abs( elevatorencoder.getPosition() - fittere.yout(distance) + elevator_zero_position) < elevator_tolerance;
+      return Math.abs( elevatorencoder.getPosition() - mapElevation(distance) + elevator_zero_position) < elevator_tolerance;
+    }
+    return true;
   }
   public void setelevation(double angle) {
-    elevator_controller.setReference(angle*Constants.ELEVATOR_ENCODER_RATIO + elevator_zero_position, CANSparkMax.ControlType.kPosition);
+    if (Constants.ELEVATOR_AVAILABLE) {
+      elevator_controller.setReference(angle*Constants.ELEVATOR_ENCODER_RATIO + elevator_zero_position, CANSparkMax.ControlType.kPosition);
+    }
   }
 
   /** set speed of elevation motor

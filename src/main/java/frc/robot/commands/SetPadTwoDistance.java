@@ -23,6 +23,8 @@ public class SetPadTwoDistance extends CommandBase {
   @Override
   public void initialize() {
     turret.setdistance(Constants.FIELD_HUB_TO_PAD2);
+    turret.setelevation();
+    turret.shooterdistance();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
