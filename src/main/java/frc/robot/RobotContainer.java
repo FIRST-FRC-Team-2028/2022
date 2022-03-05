@@ -18,6 +18,7 @@ import frc.robot.commands.AutoShootAndGetCargo;
 import frc.robot.commands.AutoShootTwo;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveTowardBall;
+import frc.robot.commands.MagazineDown;
 import frc.robot.commands.MagazineStop;
 import frc.robot.commands.MagazineUp;
 import frc.robot.commands.PickupTargets;
@@ -33,12 +34,14 @@ import frc.robot.commands.TurnoffPickup;
 import frc.robot.commands.TurretCCW;
 import frc.robot.commands.TurretCW;
 import frc.robot.commands.TurretFine;
+import frc.robot.commands.TurretLimitOverride;
 import frc.robot.commands.TurretReportForTesting;
 import frc.robot.commands.TurretStop;
 import frc.robot.commands.ZeroTurretForTesting;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.commands.DeployClimber;
 import frc.robot.commands.Shoot;
+import frc.robot.commands.ShootFireTeleop;
 import frc.robot.commands.ShootStop;
 import frc.robot.commands.ShiftGears;
 import frc.robot.commands.ShiftGearsU;
@@ -166,12 +169,13 @@ public class RobotContainer {
 
     if (Constants.SHOOTER_AVAILABLE) {
       JoystickButton shooter = new JoystickButton(buttonBoxRight,Constants.SHOOT_BUTTON);
-      shooter.whenPressed(new Shoot(magazine, turret, pickup));
-      //shooter.whenReleased(new ShootStop(magazine, turret));
+      shooter.whenPressed(new ShootFireTeleop(magazine, pickup, turret));
+      JoystickButton shooterstop = new JoystickButton(buttonBoxRight,Constants.SHOOTER_STOP_BUTTON);
+      shooterstop.whenPressed(new ShootStop(magazine, turret));
       JoystickButton dist_tarmac = new JoystickButton(buttonBoxRight, Constants.TARMAC_DISTANCE_BUTTON);
       JoystickButton dist_cargoRing = new JoystickButton(buttonBoxRight, Constants.CARGO_RING_DISTANCE_BUTTON);
       JoystickButton dist_pad1 = new JoystickButton(buttonBoxRight, Constants.PAD_ONE_DISTANCE_BUTTON);
-      JoystickButton dribble = new JoystickButton(buttonBoxRight, Constants.DRIBBLE_BUTTON);
+      JoystickButton dribble = new JoystickButton(buttonBoxLeft, Constants.DRIBBLE_BUTTON);
       //JoystickButton dist_pad2 = new JoystickButton(buttonBoxRight, Constants.PAD_TWO_DISTANCE_BUTTON);
       dist_tarmac.whenPressed(new SetTarmacDistance(turret));
       dist_cargoRing.whenPressed(new SetCargoRingDistance(turret));
@@ -184,8 +188,8 @@ public class RobotContainer {
     if (Constants.ELEVATOR_AVAILABLE) {}
 
     if (Constants.TURRET_AVAILABLE) {
-      JoystickButton aimMe = new JoystickButton(buttonBoxRight,Constants.TURRET_AUTO_AIM_BUTTON);
-      aimMe.whenPressed(new AimTurretCommand(turret));
+      //JoystickButton aimMe = new JoystickButton(buttonBoxRight,Constants.TURRET_AUTO_AIM_BUTTON);
+      //aimMe.whenPressed(new AimTurretCommand(turret));
       JoystickButton aimerCCW = new JoystickButton(buttonBoxRight,Constants.TURRETCCW_BUTTON);
       aimerCCW.whenPressed(new TurretCCW(turret));
       aimerCCW.whenReleased(new TurretStop(turret));
@@ -197,15 +201,19 @@ public class RobotContainer {
       aimerSpeed.whenReleased(new TurretFine(turret, false));
       JoystickButton zeroturret = new JoystickButton(buttonBoxLeft, Constants.TURRET_ZEROING_BUTTON);
       zeroturret.whenPressed(new ZeroTurretForTesting(turret));
-      JoystickButton reportturret = new JoystickButton(buttonBoxLeft, Constants.TURRET_REPORT_BUTTON);
+      JoystickButton reportturret = new JoystickButton(m_joystick, 9);
       reportturret.whenPressed(new TurretReportForTesting(turret));
-    }
+      JoystickButton overrideturret = new JoystickButton(buttonBoxLeft, Constants.TURRET_LIMIT_OVERRIDE_BUTTON);
+      overrideturret.whenPressed(new TurretLimitOverride(turret));
+      }
 
     if(Constants.MAGAZINE_AVAILABLE) {
       JoystickButton magUp = new JoystickButton(buttonBoxRight,Constants.MAGAZINE_UP_BUTTON);
       magUp.whenPressed(new MagazineUp(magazine));
-      JoystickButton magStop = new JoystickButton(buttonBoxLeft,Constants.MAGAZINE_STOP_BUTTON);
-      magStop.whenPressed(new MagazineStop(magazine));
+      magUp.whenReleased(new MagazineStop(magazine));
+      JoystickButton magDown = new JoystickButton(buttonBoxLeft,Constants.MAGAZINE_DOWN_BUTTON);
+      magDown.whenPressed(new MagazineDown(magazine));
+      magDown.whenReleased(new MagazineStop(magazine));
     }
     
     // choosable autoCommands

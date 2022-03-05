@@ -28,6 +28,12 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
  */
 public final class Constants {
 
+    //Parameters that may need to be tweaked. 
+    public static final double DRIBBLE_RPM = 1300.;
+    public static final double TARMAC_RPM = 2900.;
+    public static final double CARGO_RING_RPM = 3250.;
+    public static final double PAD_ONE_RPM = 3250.;  // TODO test this
+
     /*
      * Flags that tell the code systems exist
      */
@@ -35,7 +41,7 @@ public final class Constants {
     public static final boolean AUTOSHIFT_AVAILABLE     = false;
     public static final boolean CAMERA_AVAILABLE        = false;
     public static final boolean AIM_AVAILABLE           = false;
-    public static final boolean TURRET_AVAILABLE        = false;
+    public static final boolean TURRET_AVAILABLE        = true;
     public static final boolean SHOOTER_AVAILABLE       = true;
     public static final boolean ELEVATOR_AVAILABLE      = false;
     public static final boolean HOOD_AVAILABLE          = false;
@@ -49,7 +55,7 @@ public final class Constants {
     public static final boolean BUTTONBOX_AVAILABLE     = false;
     public static final boolean USBCAMERA_AVAILABLE     = true;
     public static final boolean JOYSTICK_EXTREME3D      = false;
-    public static final boolean CAMERA_THREAD           = false;
+    public static final boolean CAMERA_THREAD           = true;
 
     // CAN connections
     public enum CANIDs {
@@ -108,17 +114,18 @@ public final class Constants {
     public static final int ELEVATOR_DOWN_BUTTON = 11;
     public static final int ELEVATOR_UP_BUTTON = 12;
     // joystick buttons
-    public static final int SHIFTER_BUTTON = 2;
+    public static final int SHIFTER_BUTTON = 1;
     public static final int SHIFTERU_BUTTON = 4;
     public static final int SHIFTERD_BUTTON = 3;
     // button box1 (left)
     public static final int CARGO_RING_DISTANCE_BUTTON = 1;
-    public static final int MAGAZINE_STOP_BUTTON = 2;
+    public static final int MAGAZINE_DOWN_BUTTON = 2;
     public static final int TURRET_ZEROING_BUTTON = 4;
     public static final int DEPLOY_PICKUP_BUTTON = 5;
     public static final int DRIBBLE_BUTTON = 6;
     public static final int ROLLER_STOP_BUTTON = 7;
     public static final int TURRET_REPORT_BUTTON = 8;
+    public static final int TURRET_LIMIT_OVERRIDE_BUTTON = 8;
     // button box 2 (right)
     public static final int DRIVE_TO_BALL_BUTTON = 1;
     public static final int RETRACT_PICKUP_BUTTON = 2;
@@ -129,7 +136,7 @@ public final class Constants {
     public static final int TURRETCW_BUTTON = 7;
     public static final int SHOOT_BUTTON = 8;
     public static final int PAD_TWO_DISTANCE_BUTTON = 0;
-    public static final int TURRET_AUTO_AIM_BUTTON = 9;
+    public static final int SHOOTER_STOP_BUTTON = 9;
     public static final int PAD_ONE_DISTANCE_BUTTON = 10;
 
     /* Camera constants:
@@ -154,7 +161,7 @@ public final class Constants {
     public static final int PIXY_SIG_HUB = 3;
     public static final double PIXY_TAN_HORIZ_FOV = 47.25/50.5;
     public static final double PIXY_TAN_VERT_FOV  = 47.25/91.;
-    public static final double TURRET_CAM_HEIGHT = 0; //FIXME
+    public static final double TURRET_CAM_HEIGHT = 31; //inches
     public static final double PIXY_GAM_TURRET_CAM_ANGLE = .158; //FIXME
     public static final double DRIVE_CAM_HEIGHT = 0.; // FIXME
     /* USB:  640 x 480 resolution
@@ -207,10 +214,6 @@ public final class Constants {
     public static final double SHOOT_INDICATORUP = 500;  // delta rpm
     public static final double SHOOT_INDICATORDOWN = -300;  // delta rpm
     public static final double SHOOTER_DRIBBLE_DISTANCE = 10.;  // inches
-    public static final double DRIBBLE_RPM = 1300.;
-    public static final double TARMAC_RPM = 2900.;
-    public static final double CARGO_RING_RPM = 3250.;
-    public static final double PAD_ONE_RPM = 3250.;  // TODO test this
 
 
     // drive constants
@@ -237,7 +240,7 @@ public final class Constants {
     public static final double SHIFTER_THRESHOLD = 0.476;
     public static final DoubleSolenoid.Value DRIVE_LOW_GEAR = DoubleSolenoid.Value.kForward;
     public static final DoubleSolenoid.Value DRIVE_HIGH_GEAR = DoubleSolenoid.Value.kReverse;
-    public static final double DRIVE_LEAVE_TARMAC_SPEED = 0.2;
+    public static final double DRIVE_LEAVE_TARMAC_SPEED = 0.2;  /////////////////////////////////////////////////////////////////
     public static final double DRIVE_LEAVE_TARMAC_DISTANCE = 0.;    // inches
     public static final double DRIVE_TIME_TO_LEAVE_TARMAC = 0.;
     public static final int DRIVE_SMOOTHER_SAMPLES = 10;
@@ -254,7 +257,7 @@ public final class Constants {
     public static final double PICKUP_ROLLER_MOTOR_SPEED = .6;
 
     //magazine constants
-    public static final double MAGAZINE_VERTICAL_MOTOR_SPEED = 0.75;
+    public static final double MAGAZINE_VERTICAL_MOTOR_SPEED = 0.75; ////////////////////////////////////////////////
     public static final double MAGAZINE_HORIZONTAL_MOTOR_SPEED = 0.;
 
     /* climber constants

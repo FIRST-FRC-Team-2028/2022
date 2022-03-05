@@ -7,19 +7,18 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Turret;
 
-public class TurretCW extends CommandBase {
+public class TurretLimitOverride extends CommandBase {
   Turret turret;
-  /** run turret Clockwise. */
-  public TurretCW(Turret turret) {
-    this.turret = turret;
+  /** OverRide turret limit switch */
+  public TurretLimitOverride(Turret turret) {
     addRequirements(turret);
+    this.turret=turret;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("CW");
-    turret.turretCW(1.);
+    turret.overRideLimit();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,6 +32,6 @@ public class TurretCW extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

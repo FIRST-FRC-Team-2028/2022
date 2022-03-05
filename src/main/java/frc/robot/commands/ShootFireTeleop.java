@@ -5,30 +5,43 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Magazine;
+import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Turret;
 
-public class TurretCW extends CommandBase {
+
+public class ShootFireTeleop extends CommandBase {
+  Magazine magazine;
+  Pickup pickup;
   Turret turret;
-  /** run turret Clockwise. */
-  public TurretCW(Turret turret) {
+  /** pushing ball into running shooter */
+  public ShootFireTeleop(Magazine magazine, Pickup pickup, Turret turret) {
+    addRequirements(magazine, pickup, turret);
+    this.magazine = magazine;
+    this.pickup = pickup;
     this.turret = turret;
-    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
+  /** Starts magazine */
   @Override
   public void initialize() {
-    System.out.println("CW");
-    turret.turretCW(1.);
+    magazine.verticalon();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  /** checks if shooter has shot then tells pickup*/
+  public void execute() {
+    if(turret.hasShot()) {
+      pickup.usedAmmo();
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
