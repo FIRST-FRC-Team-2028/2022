@@ -47,10 +47,10 @@ public class ShootFire extends CommandBase {
   @Override
   public boolean isFinished() {
     /**if (numCargo = 0) return true, else return false.
-    */
     if (pickup.numCargo() == 0) {
       return true;
     }
-    return false;
+    return false;*/
+    return true;
   }
 }

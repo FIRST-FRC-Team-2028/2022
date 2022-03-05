@@ -224,16 +224,17 @@ public class RobotContainer {
     final Command m_autoGoToCargo = 
       new AutoDriveToCargo(m_driveSubsystem);
     m_chooser.addOption("Go to Cargo", m_autoGoToCargo);
-    /*
+    
     final Command m_autoShoot = 
       new AutoShoot(turret, magazine, pickup);
     m_chooser.addOption("Shoot", m_autoShoot);
     final Command m_autoShNGC = 
-      new AutoShootAndGetCargo(turret, magazine, drive, pickup);
+      new AutoShootAndGetCargo(turret, magazine, m_driveSubsystem, pickup);
     m_chooser.addOption("Shoot and get Cargo", m_autoShNGC);
     final Command m_autoShootTwo = 
-      new AutoShootTwo(turret, magazine, drive, pickup);
+      new AutoShootTwo(turret, magazine, m_driveSubsystem, pickup);
     m_chooser.addOption("Shoot Two", m_autoShootTwo);
+    /*
     FIXME
     */
     SmartDashboard.putData(m_chooser);
