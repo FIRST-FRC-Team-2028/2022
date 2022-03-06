@@ -39,6 +39,8 @@ import frc.robot.Pixy2API.links.I2CLink;
  *        shooterDistance
  * 
  *     elevator:
+ *        iselevatordistance
+ *        setelevation
  */
 
 /** Turret points toward the hub and shoot balls into it.
@@ -321,11 +323,11 @@ public class Turret extends SubsystemBase {
    * @param speed [+1, 0., -1] positive clockwise around up vector
    */
   public void turretCW(double speed){
-    System.out.println("CW speed"+speed+" "+turretSpeed);
+    //System.out.println("CW speed"+speed+" "+turretSpeed);
 
     turretMotor.set(speed*turretSpeed);
 
-    System.out.println("Speed * turretspeed     "+speed*turretSpeed);
+    //System.out.println("Speed * turretspeed     "+speed*turretSpeed);
   }
 
   public void overRideLimit() {

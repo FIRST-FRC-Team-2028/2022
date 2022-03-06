@@ -12,7 +12,7 @@ public class AutoLeaveTarmacDistance extends CommandBase {
   private DriveSubsystem drive;
   private double initPosition;
   private double currentPosition;
-  private static final double tolerance= .1;  //feet
+  private static final double tolerance= 1.;  // inches
 
   /** drive far enough to leave tarmac */
   public AutoLeaveTarmacDistance(DriveSubsystem drive) {
@@ -40,6 +40,7 @@ public class AutoLeaveTarmacDistance extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(currentPosition-initPosition - Constants.ROBOT_LENGTH*0.5) < tolerance;
+    System.out.println(currentPosition+" + "+initPosition+" - "+Constants.ROBOT_LENGTH);
+    return Math.abs(currentPosition-initPosition - Constants.ROBOT_LENGTH +2.) < tolerance;
   }
 }

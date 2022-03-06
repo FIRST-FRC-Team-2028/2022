@@ -44,6 +44,12 @@ public class DefaultDriveCommand extends CommandBase {
       if (m_joystick.getRawButton(Constants.SHIFTER_BUTTON)){
          m_drive.switchGears();
       }
+      if (m_joystick.getRawButton(Constants.SHIFTERU_BUTTON)){
+         m_drive.switchGears(Constants.DRIVE_HIGH_GEAR);
+      }
+      if (m_joystick.getRawButton(Constants.SHIFTERD_BUTTON)){
+         m_drive.switchGears(Constants.DRIVE_LOW_GEAR);
+      }
     }
     iterCount++;
     //SmartDashboard.putNumber("defCom iter", (double)iterCount);

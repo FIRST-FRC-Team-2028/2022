@@ -80,7 +80,7 @@ public class Pickup extends SubsystemBase {
     enc_avg = 0.;
     engagedcargo = false;
     dontCount = true;
-    SmartDashboard.putBoolean("pickupDontCount", dontCount);
+    SmartDashboard.putNumber("pickupCount", ammo);
   }
 
   // allows the world to see roller velocity

@@ -29,10 +29,10 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 public final class Constants {
 
     //Parameters that may need to be tweaked. 
-    public static final double DRIBBLE_RPM = 1300.;
-    public static final double TARMAC_RPM = 2900.;
+    public static final double DRIBBLE_RPM = 1950.;
+    public static final double TARMAC_RPM = 2850.;   ///was 2900
     public static final double CARGO_RING_RPM = 3250.;
-    public static final double PAD_ONE_RPM = 3250.;  // TODO test this
+    public static final double PAD_ONE_RPM = 4200.;  // 3900 seemed good...was 3250
 
     /*
      * Flags that tell the code systems exist
@@ -171,9 +171,10 @@ public final class Constants {
     */
     // the hub as seen through the USB camera will appear as an arc
     public enum  CAM_HUB_DIST {
-        TARMAC(200, 10),  //TODO these are guesses; fix them
-        CARGO_RING(150, 27),
-        PAD1(60, 200);
+        TARMAC(200,      20),     // blue TODO these are guesses; fix them
+      
+        CARGO_RING(130,  165),    //cyan
+        PAD1(100,         220);     //black
 
         private final int width, height;
         private CAM_HUB_DIST(int w, int h){
@@ -211,7 +212,7 @@ public final class Constants {
     public static final double TURRET_MOTOR_SPEED = 1.;  // 0 -> 1
     public static final double TURRET_MOTOR_SLOW_SPEED = 0.15;  // 0 -> 
     public static final double TURRET_MOTOR_ZEROING_SPEED = 0.1;
-    public static final double SHOOT_INDICATORUP = 500;  // delta rpm
+    public static final double SHOOT_INDICATORUP = 200;  // delta rpm
     public static final double SHOOT_INDICATORDOWN = -300;  // delta rpm
     public static final double SHOOTER_DRIBBLE_DISTANCE = 10.;  // inches
 
@@ -242,7 +243,7 @@ public final class Constants {
     public static final DoubleSolenoid.Value DRIVE_HIGH_GEAR = DoubleSolenoid.Value.kReverse;
     public static final double DRIVE_LEAVE_TARMAC_SPEED = 0.2;  /////////////////////////////////////////////////////////////////
     public static final double DRIVE_LEAVE_TARMAC_DISTANCE = 0.;    // inches
-    public static final double DRIVE_TIME_TO_LEAVE_TARMAC = 0.;
+    public static final double DRIVE_TIME_TO_LEAVE_TARMAC = 4.;
     public static final int DRIVE_SMOOTHER_SAMPLES = 10;
     public static final boolean DRIVE_VELOCITY_CONTROLLED = true;
     //public static final double DRIVE_DISTANCE_ENCODER_RATIO_LOW = 42.0/2.26;  //  per inch
@@ -282,8 +283,8 @@ public final class Constants {
     public static final double FIELD_TARMAC_TO_CARGO = 40.44 - 0.;   // inches, front bumper to cargo
     public static final double FIELD_HUB_TO_PAD1 = 202.95;  // inches
     public static final double FIELD_HUB_TO_PAD2 = 244.77;  // inches
-    public static final double HANGAR_BAR_HEIGHT = 60.25 + 3.; // inches
-    public static final double HEIGHT_TO_CLIMB = 3. + 4.; // inches
+    public static final double HANGAR_BAR_HEIGHT = 60.25 + 3.; // inches, bar height + enough to get hook over
+    public static final double HEIGHT_TO_CLIMB = 3. + 4.; // inches, same distance over the bar + how far to get the robot off the ground
 
    
    

@@ -49,13 +49,16 @@ public class Climber extends SubsystemBase {
     pullingUp = false;
     tolerance = 0.5; //inches
 
-    kP = 0.1; 
+    kP = 0.1;   // PID values are uneducated guesses
     kI = 1e-4;
-    kD = 1; 
+    kD = 0.; 
     kIz = 0; 
     kFF = 0; 
     kMaxOutput = 1; 
     kMinOutput = -1;
+    /* TODO: perhaps need two sets of PID values,
+      one for deploying the arms and another for lifting the robot
+      */
 
     m_pidController.setP(kP);
     m_pidController.setI(kI);
@@ -85,6 +88,7 @@ public class Climber extends SubsystemBase {
 
   /** pulls robot up to the bar */
   public void pullup() {
+    // TODO: do the PID parameters need to be different for lifting the robot?
     m_pidController.setReference(Constants.HANGAR_BAR_HEIGHT - Constants.HEIGHT_TO_CLIMB, CANSparkMax.ControlType.kPosition);
     target = Constants.HANGAR_BAR_HEIGHT - Constants.HEIGHT_TO_CLIMB;
     //used in periodic to follow pid1

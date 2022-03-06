@@ -38,7 +38,7 @@ public class AutoLeaveTarmacTimed extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drive.drive(Constants.DRIVE_LEAVE_TARMAC_SPEED, Constants.DRIVE_LEAVE_TARMAC_SPEED);
+    drive.driveMe(0., Constants.DRIVE_LEAVE_TARMAC_SPEED);
   }
 
   // Called once the command ends or is interrupted.
