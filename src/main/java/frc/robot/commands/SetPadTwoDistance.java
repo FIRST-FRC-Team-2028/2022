@@ -6,14 +6,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Shooter;
 
 public class SetPadTwoDistance extends CommandBase {
-  Turret turret;
+  Shooter turret;
   /**sets turret distance to pad two distance,
    * does not activate elevator controler
    */
-  public SetPadTwoDistance(Turret turret) {
+  public SetPadTwoDistance(Shooter turret) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(turret);
     this.turret = turret;

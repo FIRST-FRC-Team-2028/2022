@@ -6,12 +6,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Shooter;
 
 public class SetTarmacDistance extends CommandBase {
-  Turret turret;
+  Shooter turret;
   /** sets turret distance to  tarmack distance. */
-  public SetTarmacDistance(Turret turret) {
+  public SetTarmacDistance(Shooter turret) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(turret);
     this.turret = turret;

@@ -4,31 +4,39 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 
-public class SetCargoRingDistance extends CommandBase {
-  Shooter turret;
-  /** sets turret distance to  Cargo Ring distance. */
-  public SetCargoRingDistance(Shooter turret) {
-    // Use addRequirements() here to declare subsystem dependencies.
+public class DefaultTurretCommand extends CommandBase {
+  Turret turret;
+  Joystick buttons;
+  /** Creates a new DefaultTurretCommand. */
+  public DefaultTurretCommand(Turret turret, Joystick buttons) {
     addRequirements(turret);
     this.turret = turret;
+    this.buttons = buttons;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    turret.setdistance(Constants.CARGO_RING_DISTANCE);
-    turret.setelevation();
-    turret.shooterdistance();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+      if (buttons.getRawButton(Constants.TURRETCW_BUTTON)){
+         turret.turretCW(1.);
+      }else if (buttons.getRawButton(Constants.TURRETCCW_BUTTON)){
+         turret.turretCW(-1.);
+      }else{
+         turret.turretCW(0.);
+      }
+      if (buttons.getRawButton(Constants.TURRET_FINE_BUTTON)){
+         turret.turretFine(true);
+      }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -37,6 +45,6 @@ public class SetCargoRingDistance extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

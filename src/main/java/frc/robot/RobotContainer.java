@@ -17,6 +17,7 @@ import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoShootAndGetCargo;
 import frc.robot.commands.AutoShootTwo;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.DefaultTurretCommand;
 import frc.robot.commands.DriveTowardBall;
 import frc.robot.commands.MagazineDown;
 import frc.robot.commands.MagazineStop;
@@ -49,6 +50,7 @@ import frc.robot.commands.TurnoffPickup;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Pickup;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -75,10 +77,12 @@ public class RobotContainer {
   private Pickup pickup;
   private Turret turret;
   private Magazine magazine;
+  private Shooter shooter;
   
   private PneumaticHub pcm;
 
   private final DefaultDriveCommand m_defaultDriveCommand;
+  private final DefaultTurretCommand m_defaultTurretCommand;
   SendableChooser<Command> m_chooser;
   SendableChooser<Boolean> sideChooser;
     
@@ -103,8 +107,13 @@ public class RobotContainer {
       pickup = new Pickup(pcm);
     }
 
-    if (Constants.TURRET_AVAILABLE || Constants.SHOOTER_AVAILABLE || Constants.ELEVATOR_AVAILABLE) {
+    if (Constants.TURRET_AVAILABLE ) {
       turret = new Turret(this);
+      m_defaultTurretCommand = new DefaultTurretCommand(turret, buttonBoxLeft);
+    }
+
+    if (Constants.SHOOTER_AVAILABLE || Constants.ELEVATOR_AVAILABLE) {
+      shooter = new Shooter(this);
     }
 
     if (Constants.MAGAZINE_AVAILABLE) {
@@ -120,6 +129,9 @@ public class RobotContainer {
   }
   public Turret getTurret() {
     return turret;
+  }
+  public Shooter getShooter() {
+    return shooter;
   }
   public Pickup getPickup() {
     return pickup;
@@ -168,44 +180,44 @@ public class RobotContainer {
 
 
     if (Constants.SHOOTER_AVAILABLE) {
-      JoystickButton shooter = new JoystickButton(buttonBoxRight,Constants.SHOOT_BUTTON);
-      shooter.whenPressed(new ShootFireTeleop(magazine, pickup, turret));
+      JoystickButton shooterb = new JoystickButton(buttonBoxRight,Constants.SHOOT_BUTTON);
+      shooterb.whenPressed(new ShootFireTeleop(magazine, pickup, shooter));
       JoystickButton shooterstop = new JoystickButton(buttonBoxRight,Constants.SHOOTER_STOP_BUTTON);
-      shooterstop.whenPressed(new ShootStop(magazine, turret));
+      shooterstop.whenPressed(new ShootStop(magazine, shooter));
       JoystickButton dist_tarmac = new JoystickButton(buttonBoxRight, Constants.TARMAC_DISTANCE_BUTTON);
       JoystickButton dist_cargoRing = new JoystickButton(buttonBoxRight, Constants.CARGO_RING_DISTANCE_BUTTON);
       JoystickButton dist_pad1 = new JoystickButton(buttonBoxRight, Constants.PAD_ONE_DISTANCE_BUTTON);
       JoystickButton dribble = new JoystickButton(buttonBoxLeft, Constants.DRIBBLE_BUTTON);
       //JoystickButton dist_pad2 = new JoystickButton(buttonBoxRight, Constants.PAD_TWO_DISTANCE_BUTTON);
-      dist_tarmac.whenPressed(new SetTarmacDistance(turret));
-      dist_cargoRing.whenPressed(new SetCargoRingDistance(turret));
-      dist_pad1.whenPressed(new SetPadOneDistance(turret));
-      dribble.whenPressed(new SetDribbleDistance(turret));
-      //dist_pad2.whenPressed(new SetPadTwoDistance(turret));
+      dist_tarmac.whenPressed(new SetTarmacDistance(shooter));
+      dist_cargoRing.whenPressed(new SetCargoRingDistance(shooter));
+      dist_pad1.whenPressed(new SetPadOneDistance(shooter));
+      dribble.whenPressed(new SetDribbleDistance(shooter));
+      //dist_pad2.whenPressed(new SetPadTwoDistance(shooter));
       double I_NEED_THOUGHT = 444.; // NEED COMMAND TO SHOOT SOFT AND/OR TOSS OPPONENT's CARGO
     }
     
     if (Constants.ELEVATOR_AVAILABLE) {}
 
-    if (Constants.TURRET_AVAILABLE) {
-      //JoystickButton aimMe = new JoystickButton(buttonBoxRight,Constants.TURRET_AUTO_AIM_BUTTON);
-      //aimMe.whenPressed(new AimTurretCommand(turret));
-      JoystickButton aimerCCW = new JoystickButton(buttonBoxRight,Constants.TURRETCCW_BUTTON);
-      aimerCCW.whenPressed(new TurretCCW(turret));
-      aimerCCW.whenReleased(new TurretStop(turret));
-      JoystickButton aimerCW = new JoystickButton(buttonBoxRight,Constants.TURRETCW_BUTTON);
-      aimerCW.whenPressed(new TurretCW(turret));
-      aimerCW.whenReleased(new TurretStop(turret));
-      JoystickButton aimerSpeed = new JoystickButton(buttonBoxRight,Constants.TURRET_FINE_BUTTON);
-      aimerSpeed.whenPressed(new TurretFine(turret, true));
-      aimerSpeed.whenReleased(new TurretFine(turret, false));
-      JoystickButton zeroturret = new JoystickButton(buttonBoxLeft, Constants.TURRET_ZEROING_BUTTON);
-      zeroturret.whenPressed(new ZeroTurretForTesting(turret));
-      JoystickButton reportturret = new JoystickButton(m_joystick, 9);
-      reportturret.whenPressed(new TurretReportForTesting(turret));
-      JoystickButton overrideturret = new JoystickButton(buttonBoxLeft, Constants.TURRET_LIMIT_OVERRIDE_BUTTON);
-      overrideturret.whenPressed(new TurretLimitOverride(turret));
-      }
+    // if (Constants.TURRET_AVAILABLE) {
+    //   //JoystickButton aimMe = new JoystickButton(buttonBoxRight,Constants.TURRET_AUTO_AIM_BUTTON);
+    //   //aimMe.whenPressed(new AimTurretCommand(turret));
+    //   JoystickButton aimerCCW = new JoystickButton(buttonBoxRight,Constants.TURRETCCW_BUTTON);
+    //   aimerCCW.whenPressed(new TurretCCW(turret));
+    //   aimerCCW.whenReleased(new TurretStop(turret));
+    //   JoystickButton aimerCW = new JoystickButton(buttonBoxRight,Constants.TURRETCW_BUTTON);
+    //   aimerCW.whenPressed(new TurretCW(turret));
+    //   aimerCW.whenReleased(new TurretStop(turret));
+    //   JoystickButton aimerSpeed = new JoystickButton(buttonBoxRight,Constants.TURRET_FINE_BUTTON);
+    //   aimerSpeed.whenPressed(new TurretFine(turret, true));
+    //   aimerSpeed.whenReleased(new TurretFine(turret, false));
+    //   JoystickButton zeroturret = new JoystickButton(buttonBoxLeft, Constants.TURRET_ZEROING_BUTTON);
+    //   zeroturret.whenPressed(new ZeroTurretForTesting(turret));
+    //   JoystickButton reportturret = new JoystickButton(m_joystick, 9);
+    //   reportturret.whenPressed(new TurretReportForTesting(turret));
+    //   JoystickButton overrideturret = new JoystickButton(buttonBoxLeft, Constants.TURRET_LIMIT_OVERRIDE_BUTTON);
+    //   overrideturret.whenPressed(new TurretLimitOverride(turret));
+    //   }
 
     if(Constants.MAGAZINE_AVAILABLE) {
       JoystickButton magUp = new JoystickButton(buttonBoxRight,Constants.MAGAZINE_UP_BUTTON);
@@ -226,13 +238,13 @@ public class RobotContainer {
     m_chooser.addOption("Go to Cargo", m_autoGoToCargo);
     
     final Command m_autoShoot = 
-      new AutoShoot(turret, magazine, pickup);
+      new AutoShoot(shooter, magazine, pickup);
     m_chooser.addOption("Shoot", m_autoShoot);
     final Command m_autoShNGC = 
-      new AutoShootAndGetCargo(turret, magazine, m_driveSubsystem, pickup);
+      new AutoShootAndGetCargo(shooter, magazine, m_driveSubsystem, pickup);
     m_chooser.addOption("Shoot and get Cargo", m_autoShNGC);
     final Command m_autoShootTwo = 
-      new AutoShootTwo(turret, magazine, m_driveSubsystem, pickup);
+      new AutoShootTwo(shooter, magazine, m_driveSubsystem, pickup);
     m_chooser.addOption("Shoot Two", m_autoShootTwo);
     /*
     FIXME
@@ -242,7 +254,7 @@ public class RobotContainer {
     sideChooser = new SendableChooser<>();
     sideChooser.setDefaultOption("Right", true);
     sideChooser.addOption("Left", false);
-    SmartDashboard.putData(sideChooser);
+    //SmartDashboard.putData(sideChooser);
     
     /* for testing purposes
     JoystickButton autocargoButton = new JoystickButton(m_joystick, 1);

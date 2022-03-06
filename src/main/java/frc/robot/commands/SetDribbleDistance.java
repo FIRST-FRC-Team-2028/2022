@@ -6,12 +6,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Shooter;
 
 public class SetDribbleDistance extends CommandBase {
-  Turret turret;
+  Shooter turret;
   /** Set Turret distance for just lightly shooting */
-  public SetDribbleDistance(Turret turret) {
+  public SetDribbleDistance(Shooter turret) {
     addRequirements( turret);
     this.turret = turret;
   }

@@ -6,13 +6,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Magazine;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Shooter;
 
 public class ShootStop extends CommandBase {
   Magazine magazine;
-  Turret turret;
+  Shooter turret;
   /** Turns off vertical magazine and turret motors */
-  public ShootStop(Magazine magazine, Turret turret) {
+  public ShootStop(Magazine magazine, Shooter turret) {
     addRequirements(magazine,turret);
     this.turret = turret;
     this.magazine = magazine;

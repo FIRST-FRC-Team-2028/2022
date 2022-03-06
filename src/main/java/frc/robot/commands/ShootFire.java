@@ -7,15 +7,15 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Pickup;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Shooter;
 
 
 public class ShootFire extends CommandBase {
   Magazine magazine;
   Pickup pickup;
-  Turret turret;
+  Shooter turret;
   /** pushing ball into running shooter */
-  public ShootFire(Magazine magazine, Pickup pickup, Turret turret) {
+  public ShootFire(Magazine magazine, Pickup pickup, Shooter turret) {
     addRequirements(magazine, pickup, turret);
     this.magazine = magazine;
     this.pickup = pickup;

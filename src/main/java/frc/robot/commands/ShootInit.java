@@ -5,13 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Shooter;
 
 /**  sets a motors speed amd elavation angle based off of distance from the target  */
 public class ShootInit extends CommandBase {
-Turret shooter;
+Shooter shooter;
   /** Creates a new Shoot. */
-  public ShootInit(Turret shooter) {
+  public ShootInit(Shooter shooter) {
     addRequirements(shooter);
     this.shooter = shooter;
   }

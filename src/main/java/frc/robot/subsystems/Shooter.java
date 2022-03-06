@@ -25,11 +25,6 @@ import frc.robot.Pixy2API.links.I2CLink;
 
 /* 
  * public methods:
- *     turret:
- *        aimer
- *        turretCW
- *        turretFine
- * 
  *     shooter:
  *        shooterOn
  *        hasShot

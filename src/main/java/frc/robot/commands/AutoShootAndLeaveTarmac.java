@@ -9,7 +9,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Pickup;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Shooter;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -19,7 +19,7 @@ public class AutoShootAndLeaveTarmac extends SequentialCommandGroup {
   /** Shoot the starting cargo and 
    *  leave the tarmac using the AutoLeaveTarmac and Autoshoot commands
    */
-  public AutoShootAndLeaveTarmac(Turret turret, Magazine magazine, DriveSubsystem drive, Pickup pickup)  {
+  public AutoShootAndLeaveTarmac(Shooter turret, Magazine magazine, DriveSubsystem drive, Pickup pickup)  {
     addCommands(
       new AutoShoot(turret, magazine, pickup),
 

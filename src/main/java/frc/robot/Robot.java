@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Pickup;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Shooter;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -39,6 +40,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   private PneumaticHub pcm;
   private Turret turret;
+  private Shooter shooter;
   private Pickup pickup;
   private Magazine magazine;
   private Joystick joystick;
@@ -55,6 +57,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     pcm = m_robotContainer.getPcm();
     turret = m_robotContainer.getTurret();
+    shooter = m_robotContainer.getShooter();
     pickup = m_robotContainer.getPickup();
     magazine = m_robotContainer.getMagazine();
     joystick  = m_robotContainer.getJoystick();
@@ -234,12 +237,12 @@ public class Robot extends TimedRobot {
     
     if(testState == TestModes.SHOOTER.getID()) {   // check that stooter rollers toss ball out
       speed=(speed+1.)/2.*5700.;  // 0 < speed < 5700
-      turret.shooterSpeed(speed);
+      shooter.shooterSpeed(speed);
       SmartDashboard.putNumber("shooterSpeed", speed);
 
     } else if (testState == TestModes.ELEVATOR.getID()) {  // check that positive is elevator up/forward
-      turret.elevatorMove(speed*1000.);
-      SmartDashboard.putNumber("elevationAngle", turret.getElevation());
+      shooter.elevatorMove(speed*1000.);
+      SmartDashboard.putNumber("elevationAngle", shooter.getElevation());
 
     } else if (testState == TestModes.TURRET_TURRRET.getID()) {  //  turret azimuth +CW
       turret.turretCW(speed);
@@ -270,7 +273,7 @@ public class Robot extends TimedRobot {
       if (joystick.getRawButtonPressed(11))magazine.verticalon();
       if (joystick.getRawButtonPressed(10))magazine.verticaloff();
       speed=(speed+1.)/2.*5700.;  // 0 < speed < 5700
-      turret.shooterSpeed(speed);
+      shooter.shooterSpeed(speed);
       System.out.println(speed);
       SmartDashboard.putNumber("shooterSpeed", speed);
     }
